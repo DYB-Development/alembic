@@ -9,3 +9,7 @@ const drawn = (component, props = {}, text = "Title") => renderToStaticMarkup(Re
 test("a label is keystone's field label", () => {
   assert.equal(drawn(Label), '<label class="ks-label">Title</label>')
 })
+
+test("a label keeps its extra classes and other props", () => {
+  assert.equal(drawn(Label, { className: "mb-1", htmlFor: "title" }), '<label for="title" class="ks-label mb-1">Title</label>')
+})
