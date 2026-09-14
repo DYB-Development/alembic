@@ -3,7 +3,7 @@ import { action } from "./styles"
 
 const TypePicker = ({ entries, at, onPick, onConnect, onDismiss }) => (
   <div className="ks-panel shadow-lg" style={{ position: "absolute", zIndex: 9, top: at.y, left: at.x, width: 210, padding: 8, borderRadius: 8 }}>
-    <p style={{ margin: "0 0 6px", fontSize: 11, color: "#6b7280" }}>Add a step</p>
+    <p className="text-gray-500 dark:text-gray-400" style={{ margin: "0 0 6px", fontSize: 11 }}>Add a step</p>
     {entries.map((entry) => (
       <button key={entry.type} style={action} onClick={() => onPick(entry)}>
         {entry.label}
