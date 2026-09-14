@@ -24,3 +24,9 @@ const classesWith = (html, attribute) => (html.match(new RegExp(`<[^<>]*${attrib
 test("borders the steps not in the flow yet in keystone's border color", () => {
   assert.ok(classesWith(drawn(loose), "data-loose").includes("border-gray-300"))
 })
+
+const classesOf = (html, text) => (html.match(new RegExp(`<[^<>]*class="([^"]*)"[^<>]*>${text}`))?.[1] || "").split(" ")
+
+test("writes the caption above steps not in the flow in keystone's muted text color", () => {
+  assert.ok(classesOf(drawn(loose), "Not in the flow yet").includes("text-gray-500"))
+})

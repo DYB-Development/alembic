@@ -97,7 +97,7 @@ const Canvas = ({ base, token, initial }) => {
 
         {loose.length > 0 && (
           <div data-loose className="border border-dashed border-gray-300 bg-gray-50 dark:border-zinc-700 dark:bg-zinc-900" style={waiting}>
-            <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 6 }}>Not in the flow yet — drag one onto a connection</div>
+            <div className="text-gray-500 dark:text-gray-400" style={{ fontSize: 11, marginBottom: 6 }}>Not in the flow yet — drag one onto a connection</div>
             {loose.map((node) => (
               <div key={node.id} style={{ marginBottom: 8 }}>
                 <StepCard
