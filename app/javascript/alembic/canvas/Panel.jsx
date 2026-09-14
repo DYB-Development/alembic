@@ -15,8 +15,8 @@ const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, 
   <aside className="ks-panel" style={sheet} data-builder-panel>
     <div style={{ display: "flex", alignItems: "start", justifyContent: "space-between", gap: 8 }}>
       <h2 style={{ fontWeight: 600 }} data-flow-name>{flow.title || flow.slug}</h2>
-      <button title="Close" onClick={onClose}
-              style={{ border: "none", background: "none", cursor: "pointer", fontSize: 18, lineHeight: 1, color: "#6b7280" }}>×</button>
+      <button title="Close" onClick={onClose} className="text-gray-500 dark:text-gray-400"
+              style={{ border: "none", background: "none", cursor: "pointer", fontSize: 18, lineHeight: 1 }}>×</button>
     </div>
     <a className="text-accent-600 dark:text-accent-400" style={{ fontSize: 12, display: "block" }} href={flow.history_url} data-history>{standing(flow)}</a>
 

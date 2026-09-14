@@ -176,3 +176,7 @@ test("links to the definition as keystone's secondary button", () => {
 test("links to editing the details as keystone's secondary button", () => {
   assert.ok(classesOn(panel({}), "data-details").includes("ks-button-secondary"))
 })
+
+test("colors the close button with keystone's muted text color", () => {
+  assert.ok(withText(panel({}), "×").props.className?.split(" ").includes("text-gray-500"))
+})
