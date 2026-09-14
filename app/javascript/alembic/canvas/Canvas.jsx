@@ -19,6 +19,12 @@ const waiting = { position: "absolute", top: 56, left: 16, zIndex: 5, width: CAR
 const grid = { display: "grid", rowGap: GAP_Y, columnGap: 0, padding: 40, justifyContent: "center", position: "relative" }
 const notice = { position: "sticky", zIndex: 8, top: 8, margin: "8px auto 0", width: "fit-content", padding: "6px 12px", borderRadius: 6, fontSize: 12 }
 
+export const Choosing = ({ port, onCancel }) => (
+  <div className="bg-accent-100 text-accent-800 dark:bg-accent-900 dark:text-accent-100" style={notice}>
+    Choose the step “{port || "next"}” should lead to — <button onClick={onCancel} style={{ border: "none", background: "none", color: "#1e40af", textDecoration: "underline", cursor: "pointer", fontSize: 12, padding: 0 }}>cancel</button>
+  </div>
+)
+
 const Canvas = ({ base, token, initial }) => {
   const { flow, error, notice, send } = useFlow(base, token, initial)
   const [ selected, setSelected ] = useState(null)
@@ -81,9 +87,7 @@ const Canvas = ({ base, token, initial }) => {
       <div ref={surface} className="bg-surface-50 dark:bg-surface-950" style={scroll}
            onClick={(event) => { if (event.target === surface.current) { setSelected(null); setArmed(null); setShowing(false) } }}>
         {armed && (
-          <div style={{ ...notice, background: "#dbeafe", color: "#1e40af" }}>
-            Choose the step “{armed[1] || "next"}” should lead to — <button onClick={() => setArmed(null)} style={{ border: "none", background: "none", color: "#1e40af", textDecoration: "underline", cursor: "pointer", fontSize: 12, padding: 0 }}>cancel</button>
-          </div>
+          <Choosing port={armed[1]} onCancel={() => setArmed(null)} />
         )}
         <Toolbar undoable={flow.undoable} redoable={flow.redoable}
                  onAdd={() => setAdding({ at: { x: 16, y: 52 } })}

@@ -2,7 +2,7 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
-import Canvas from "../../app/javascript/alembic/canvas/Canvas.jsx"
+import Canvas, { Choosing } from "../../app/javascript/alembic/canvas/Canvas.jsx"
 
 const drawn = (nodes = []) => renderToStaticMarkup(React.createElement(Canvas, {
   base: "/flows/1/canvas", token: "t",
@@ -29,4 +29,10 @@ const classesOf = (html, text) => (html.match(new RegExp(`<[^<>]*class="([^"]*)"
 
 test("writes the caption above steps not in the flow in keystone's muted text color", () => {
   assert.ok(classesOf(drawn(loose), "Not in the flow yet").includes("text-gray-500"))
+})
+
+test("shows the choose-a-step notice in the accent colors", () => {
+  const notice = Choosing({ port: "yes", onCancel: () => {} })
+
+  assert.ok(notice.props.className.split(" ").includes("bg-accent-100"))
 })
