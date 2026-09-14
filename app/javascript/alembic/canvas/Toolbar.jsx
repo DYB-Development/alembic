@@ -1,12 +1,11 @@
 import React from "react"
-import { action } from "./styles"
 
-const stepper = { ...action, width: "auto", marginBottom: 0, padding: "5px 12px" }
 const round = { width: 24, height: 24, padding: 0, fontSize: 15, lineHeight: "15px" }
 
 const Stepper = ({ label, title, idle, enabled, onUse }) => (
   <button title={enabled ? title : idle} disabled={!enabled} onClick={onUse}
-          style={{ ...stepper, opacity: enabled ? 1 : 0.4, cursor: enabled ? "pointer" : "default" }}>{label}</button>
+          className="ks-button ks-button-secondary ks-button-sm"
+          style={{ opacity: enabled ? 1 : 0.4, cursor: enabled ? "pointer" : "default" }}>{label}</button>
 )
 
 const Toolbar = ({ undoable, redoable, onAdd, onUndo, onRedo }) => (

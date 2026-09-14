@@ -13,3 +13,7 @@ const classesWith = (html, attribute) => (html.match(new RegExp(`<[^<>]*${attrib
 test("draws adding a step as a round keystone button", () => {
   assert.deepEqual(classesWith(drawn(), 'title="Add a step"'), [ "ks-button", "ks-button-secondary", "rounded-full" ])
 })
+
+test("offers undo as keystone's secondary button", () => {
+  assert.ok(classesWith(drawn(), 'title="Undo the last change"').includes("ks-button-secondary"))
+})
