@@ -136,3 +136,7 @@ test("colors a problem amber", () => {
 
   assert.ok(classesOn(tree, "data-problem").includes("text-amber-700"))
 })
+
+test("labels the title field with keystone's label", () => {
+  assert.equal(withText(panel({}), "Title").props.className, "ks-label")
+})

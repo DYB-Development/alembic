@@ -40,7 +40,7 @@ const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, 
 
     <h2 style={heading}>Details</h2>
     <label style={field}>
-      <span style={caption}>Title</span>
+      <span className="ks-label" style={{ marginBottom: 3 }}>Title</span>
       <input style={control} defaultValue={flow.title ?? ""} onBlur={settling(flow, "title", onSaveDetails)} data-flow-title />
     </label>
 
