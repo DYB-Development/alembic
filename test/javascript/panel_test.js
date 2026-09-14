@@ -130,3 +130,9 @@ test("colors a refusal red", () => {
 test("colors a notice green", () => {
   assert.ok(classesOn(panel({ notice: "Created version 2." }), "data-notice").includes("text-emerald-800"))
 })
+
+test("colors a problem amber", () => {
+  const tree = panel({ problems: [ { node: "a", problem: "unreachable" } ] })
+
+  assert.ok(classesOn(tree, "data-problem").includes("text-amber-700"))
+})

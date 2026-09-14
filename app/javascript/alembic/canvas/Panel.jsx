@@ -30,7 +30,7 @@ const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, 
     {problems.length === 0 && !refusal
       ? <p className="text-gray-500 dark:text-gray-400" style={{ fontSize: 12 }}>Nothing wrong with this flow.</p>
       : problems.map((problem) => (
-          <p key={`${problem.node}-${problem.problem}`} style={{ ...item, color: "#b45309" }} data-problem>⚠ {worded(problem)}</p>
+          <p key={`${problem.node}-${problem.problem}`} className="text-amber-700 dark:text-amber-400" style={item} data-problem>⚠ {worded(problem)}</p>
         ))}
 
     <h2 style={heading}>Changes since the last version</h2>
