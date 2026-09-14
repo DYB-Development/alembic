@@ -38,14 +38,13 @@ $ gem install alembic
 Alembic's views are written in Tailwind utility classes, and they render through
 the [`keystone_ui`](https://github.com/tylercschneider/keystone_ui) component
 gem. The gem ships no compiled stylesheet — your application's Tailwind build
-produces the CSS, so it must scan **two** content paths outside your own app:
+produces the CSS, so it must scan the engine's views and React source and the
+`keystone_ui` components, all inside installed gems.
 
-- the engine's views, at `app/views` inside the `alembic` gem
-- the `keystone_ui` components, at `app/components` inside that gem
-
-Neither path can be written as a literal in a committed stylesheet, since both
-resolve to machine-specific gem directories. Each gem generates an entry point
-for you to import instead.
+Those paths resolve to machine-specific gem directories, so none of them can be
+written as a literal in a committed stylesheet. When `keystone_ui` is installed,
+Alembic registers its paths with `keystone_ui` at boot, and `keystone_ui` writes
+every registered path into one file for you to import.
 
 With [`tailwindcss-rails`](https://github.com/rails/tailwindcss-rails) v4,
 install `keystone_ui`'s entry point:
@@ -54,18 +53,24 @@ install `keystone_ui`'s entry point:
 $ bin/rails generate keystone:install
 ```
 
-then import both in `app/assets/tailwind/application.css`:
+then import it in `app/assets/tailwind/application.css`:
 
 ```css
 @import "tailwindcss";
 @import "./keystone_source.css";
-@import "../builds/tailwind/alembic";
 ```
 
-`keystone_source.css` is written at boot and carries the `keystone_ui` component
-path plus its `accent` and `surface` color scales, which Alembic's views rely on.
-`../builds/tailwind/alembic` is written by `bin/rails tailwindcss:build` and
-carries the engine's view path. Both are build artifacts — gitignore them.
+`keystone_source.css` is written at boot. It carries the `keystone_ui` component
+path, its `accent` and `surface` color scales, and Alembic's view and React
+source paths. It is a build artifact — gitignore it.
+
+### Upgrading from an earlier Alembic
+
+Remove `@import "../builds/tailwind/alembic";` from
+`app/assets/tailwind/application.css`, then delete the leftover
+`app/assets/builds/tailwind` folder. `stylesheet_link_tag :app` links every file
+in it, and each one makes the browser request a path inside an installed gem,
+which raises a routing error.
 
 Finally, the engine has to render inside a layout that links your compiled CSS.
 Point `Alembic.layout` (visitor pages) and `Alembic.admin_layout` (the builder)
