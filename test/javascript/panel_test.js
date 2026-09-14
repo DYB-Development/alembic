@@ -164,3 +164,7 @@ test("draws the start label field as a keystone input", () => {
 test("offers publishing as keystone's primary button", () => {
   assert.ok(classesOn(panel({}), "data-publish").includes("ks-button-primary"))
 })
+
+test("offers creating a version as keystone's secondary button", () => {
+  assert.ok(classesOn(panel({}), "data-create-version").includes("ks-button-secondary"))
+})
