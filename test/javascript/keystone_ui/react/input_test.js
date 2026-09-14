@@ -9,3 +9,7 @@ test("is keystone's input", () => {
 test("takes keystone's disabled look when it is disabled", () => {
   assert.equal(Input({ disabled: true }).props.className, "ks-input ks-input-disabled")
 })
+
+test("adds the extra classes it is given after keystone's", () => {
+  assert.equal(Input({ className: "mb-3" }).props.className, "ks-input mb-3")
+})
