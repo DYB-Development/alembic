@@ -122,3 +122,7 @@ test("says a flow with no problems is fine in keystone's muted text color", () =
 test("says nothing has changed in keystone's muted text color", () => {
   assert.ok(withText(panel({}), "Nothing has changed.").props.className?.split(" ").includes("text-gray-500"))
 })
+
+test("colors a refusal red", () => {
+  assert.ok(classesOn(panel({ refusal: "Cannot publish." }), "data-refusal").includes("text-red-800"))
+})
