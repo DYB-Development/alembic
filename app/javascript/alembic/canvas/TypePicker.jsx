@@ -11,7 +11,7 @@ const TypePicker = ({ entries, at, onPick, onConnect, onDismiss }) => (
       </button>
     ))}
     {onConnect && (
-      <button style={{ ...action, textAlign: "center" }} onClick={onConnect}>Connect to a step already here</button>
+      <button className="ks-button ks-button-secondary ks-button-sm w-full mb-1.5" onClick={onConnect}>Connect to a step already here</button>
     )}
     <button style={{ ...action, textAlign: "center", marginBottom: 0 }} onClick={onDismiss}>Cancel</button>
   </div>

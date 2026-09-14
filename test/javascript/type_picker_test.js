@@ -26,3 +26,7 @@ test("offers each step type as keystone's secondary button", () => {
 test("writes each step type's name in the button's own text color, softened", () => {
   assert.deepEqual(classesOf(drawn(), "question"), [ "opacity-75" ])
 })
+
+test("offers connecting to an existing step as keystone's secondary button", () => {
+  assert.ok(classesOf(drawn(), "Connect to a step already here").includes("ks-button-secondary"))
+})
