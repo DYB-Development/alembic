@@ -33,7 +33,7 @@ const Control = ({ type, value, choices, onChange, onSettle }) => {
   }
 
   if (type === "integer" || type === "float") {
-    return <input style={control} type="number" step={type === "integer" ? "1" : "any"} value={value ?? ""}
+    return <input className="ks-input mb-3" type="number" step={type === "integer" ? "1" : "any"} value={value ?? ""}
                   onChange={(e) => onChange(e.target.value)} onBlur={(e) => onSettle(e.target.value)} />
   }
 
