@@ -483,6 +483,13 @@ module Alembic
       assert_select "a[href=?]", alembic.manage_flow_preview_path(diagnostic)
     end
 
+    test "the flow editor's props carry the flow it starts with" do
+      get alembic.manage_flow_path(diagnostic)
+      element = css_select("[data-react-ui]").first
+
+      assert_equal JSON.parse(element["data-flow"]), JSON.parse(element["data-props"])["initial"]
+    end
+
     test "the flow editor's props carry the token it sends with each edit" do
       get alembic.manage_flow_path(diagnostic)
 
