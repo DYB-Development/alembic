@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import { plus } from "./styles"
 
+const round = { width: 24, height: 24, padding: 0, fontSize: 15, lineHeight: "15px" }
+
 const Connector = ({ link, onInsert, onRemove, onDrop, dragging }) => {
   const [ over, setOver ] = useState(false)
   const showing = over || dragging
@@ -15,7 +17,7 @@ const Connector = ({ link, onInsert, onRemove, onDrop, dragging }) => {
       <div style={{ display: "flex", gap: 4, justifyContent: "center", alignItems: "center", height: "100%",
                     opacity: showing ? 1 : 0, transition: "opacity .12s" }}>
         <button title={dragging ? "Move the step here" : "Insert a step here"} onClick={onInsert}
-                style={{ ...plus, borderColor: dragging && over ? "#2563eb" : "#d1d5db" }}>+</button>
+                className="ks-button ks-button-secondary rounded-full" style={round}>+</button>
         {!dragging && (
           <button title="Remove this connection" onClick={onRemove}
                   style={{ ...plus, color: "#dc2626", borderColor: "#e5b4b4" }}>×</button>
