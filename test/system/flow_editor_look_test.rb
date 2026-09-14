@@ -21,7 +21,28 @@ module Alembic
       assert_equal "rgb(1, 2, 3)", background_of(find("[data-publish]"))
     end
 
+    test "choosing dark mode sets the flow panel on keystone's dark panel color" do
+      canvas_for(flow)
+      find("[data-open-panel]").click
+      page.execute_script(%(document.documentElement.dataset.theme = "dark"))
+
+      assert_equal color_of_variable("--color-zinc-900"), background_of(find("[data-builder-panel]"))
+    end
+
     private
+
+    def color_of_variable(name)
+      page.evaluate_script(<<~JS)
+        (() => {
+          const probe = document.createElement("div")
+          probe.style.backgroundColor = "var(#{name})"
+          document.body.appendChild(probe)
+          const color = getComputedStyle(probe).backgroundColor
+          probe.remove()
+          return color
+        })()
+      JS
+    end
 
     def background_of(element)
       page.evaluate_script("getComputedStyle(arguments[0]).backgroundColor", element)
