@@ -6,6 +6,7 @@ module Alembic
       layout -> { Alembic.admin_layout }
 
       helper KeystoneUiHelper
+      helper KeystoneUi::React::MountHelper
     end
   end
 end

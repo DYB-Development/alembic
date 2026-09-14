@@ -25,9 +25,7 @@
     })
   </script>
 
-  <div class="min-h-0 flex-1"
-       data-flow-canvas
-       data-base="<%= alembic.manage_flow_canvas_path(@diagnostic) %>"
-       data-csrf-token="<%= form_authenticity_token %>"
-       data-flow="<%= @canvas.to_json %>"></div>
+  <%= react_ui("alembic/flow-editor", { base: alembic.manage_flow_canvas_path(@diagnostic), token: form_authenticity_token, initial: @canvas },
+               class: "min-h-0 flex-1",
+               data: { flow_canvas: true }) %>
 </div>
