@@ -13,3 +13,7 @@ test("takes keystone's look for the variant it is given", () => {
 test("takes keystone's look for the size it is given", () => {
   assert.equal(Button({ size: "sm", children: "Add" }).props.className, "ks-button ks-button-primary ks-button-sm")
 })
+
+test("adds the extra classes it is given after keystone's", () => {
+  assert.equal(Button({ className: "w-full", children: "Publish" }).props.className, "ks-button ks-button-primary ks-button-md w-full")
+})
