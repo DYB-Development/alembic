@@ -148,3 +148,7 @@ test("labels the summary field with keystone's label", () => {
 test("labels the start label field with keystone's label", () => {
   assert.equal(withText(panel({}), "Start label").props.className, "ks-label")
 })
+
+test("draws the title field as a keystone input", () => {
+  assert.ok(classesOn(panel({}), "data-flow-title").includes("ks-input"))
+})
