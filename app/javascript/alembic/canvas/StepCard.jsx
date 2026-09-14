@@ -2,7 +2,7 @@ import React from "react"
 import Port from "./Port"
 import { CARD } from "./styles"
 
-const card = { width: CARD, boxSizing: "border-box", background: "#fff", borderRadius: 8 }
+const card = { width: CARD, boxSizing: "border-box", borderRadius: 8 }
 
 const bookendCard = { padding: "8px 14px", textAlign: "center", fontWeight: 600, color: "#6b7280" }
 
@@ -20,6 +20,7 @@ const StepCard = ({ node, selected, armed, connecting, onSelect, onArm, onDragEn
          onDragStart={(event) => { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/plain", node.id); onDragStart() }}
          onDragEnd={onDragEnd}
          onClick={onSelect}
+         className="bg-white dark:bg-zinc-900"
          style={{
            ...card,
            padding: bookend ? 0 : "12px 14px",
