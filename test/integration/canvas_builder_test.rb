@@ -39,6 +39,12 @@ module Alembic
       assert_select "[data-flow-canvas][data-react-ui=?]", "alembic/flow-editor"
     end
 
+    test "the flow editor's props point it at its edit endpoints" do
+      get alembic.manage_flow_path(diagnostic)
+
+      assert_equal canvas_path, JSON.parse(css_select("[data-react-ui]").first["data-props"])["base"]
+    end
+
     test "the diagnostic page points the canvas at its edit endpoints" do
       get alembic.manage_flow_path(diagnostic)
 
