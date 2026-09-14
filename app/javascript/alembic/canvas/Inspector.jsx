@@ -18,8 +18,8 @@ const Inspector = ({ node, fields, holds, labels, recordLabels, choices, onSave,
     <aside className="ks-panel" style={panel} data-inspector>
       <div style={{ display: "flex", alignItems: "start", justifyContent: "space-between", gap: 8 }}>
         <h2 style={{ fontWeight: 600, marginBottom: 2 }}>{node.label}</h2>
-        <button title="Close" onClick={onClose}
-                style={{ border: "none", background: "none", cursor: "pointer", fontSize: 18, lineHeight: 1, color: "#6b7280" }}>×</button>
+        <button title="Close" onClick={onClose} className="text-gray-500 dark:text-gray-400"
+                style={{ border: "none", background: "none", cursor: "pointer", fontSize: 18, lineHeight: 1 }}>×</button>
       </div>
       <p className="text-gray-500 dark:text-gray-400" style={{ fontSize: 11, marginBottom: 16 }}>{node.id} · {node.type}</p>
       {Object.entries(fields).map(([ name, type ]) => (
