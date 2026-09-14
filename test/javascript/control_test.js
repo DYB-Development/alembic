@@ -22,3 +22,7 @@ test("draws free text as a keystone input", () => {
 test("draws a number as a keystone input", () => {
   assert.ok(control({ type: "integer", value: 1 }).props.className?.split(" ").includes("ks-input"))
 })
+
+test("draws a choice as a keystone input", () => {
+  assert.ok(control({}).props.className?.split(" ").includes("ks-input"))
+})
