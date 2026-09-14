@@ -24,7 +24,7 @@ const Inspector = ({ node, fields, holds, labels, recordLabels, choices, onSave,
       <p className="text-gray-500 dark:text-gray-400" style={{ fontSize: 11, marginBottom: 16 }}>{node.id} · {node.type}</p>
       {Object.entries(fields).map(([ name, type ]) => (
         <label key={name} style={{ display: "block" }}>
-          <span style={{ display: "block", marginBottom: 3, color: "#374151" }}>{labels[name] || name}</span>
+          <span className="ks-label" style={{ marginBottom: 3 }}>{labels[name] || name}</span>
           {type === "list"
             ? <Records holds={holds[name] || {}} labels={recordLabels[name] || {}} rows={draft[name]}
                        onChange={(next) => setDraft({ ...draft, [name]: next })}

@@ -23,3 +23,7 @@ test("writes the step's id and type in keystone's muted text color", () => {
 test("colors the close button with keystone's muted text color", () => {
   assert.ok(classesOf(drawn(), "×").includes("text-gray-500"))
 })
+
+test("labels each field with keystone's label", () => {
+  assert.deepEqual(classesOf(drawn(), "Step"), [ "ks-label" ])
+})
