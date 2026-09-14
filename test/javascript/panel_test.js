@@ -140,3 +140,7 @@ test("colors a problem amber", () => {
 test("labels the title field with keystone's label", () => {
   assert.equal(withText(panel({}), "Title").props.className, "ks-label")
 })
+
+test("labels the summary field with keystone's label", () => {
+  assert.equal(withText(panel({}), "Summary").props.className, "ks-label")
+})
