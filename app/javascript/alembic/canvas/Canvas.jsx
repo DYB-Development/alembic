@@ -12,7 +12,7 @@ import useConnectors from "./useConnectors"
 import { CARD, GAP_X, GAP_Y } from "./styles"
 import { nextId } from "./ids"
 
-const page = { display: "flex", height: "100%", minHeight: 0, fontSize: 13, color: "#111827" }
+const page = { display: "flex", height: "100%", minHeight: 0, fontSize: 13 }
 const scroll = { flex: 1, overflow: "auto", position: "relative", background: "#fafafa" }
 const waiting = { position: "absolute", top: 56, left: 16, zIndex: 5, width: CARD + 24, padding: 12,
                   background: "#f9fafb", border: "1px dashed #d1d5db", borderRadius: 8 }
@@ -76,7 +76,7 @@ const Canvas = ({ base, token, initial }) => {
   const entryFor = flow.palette.find((entry) => entry.type === selectedNode?.type)
 
   return (
-    <div style={page} onMouseUp={() => setDragging(null)}
+    <div className="text-gray-900 dark:text-gray-100" style={page} onMouseUp={() => setDragging(null)}
          onKeyDown={(event) => { if (event.key === "Escape") { setSelected(null); setArmed(null); setAdding(null) } }}
          tabIndex={-1}>
       <div ref={surface} style={scroll}
