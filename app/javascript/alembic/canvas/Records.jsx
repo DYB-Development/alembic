@@ -13,7 +13,7 @@ const Records = ({ holds, labels, rows, onChange, onSettle }) => {
   return (
     <div style={{ marginBottom: 12 }}>
       {kept.map((row, index) => (
-        <div key={index} style={{ border: "1px solid #e5e7eb", borderRadius: 6, padding: "8px 8px 2px", marginBottom: 6 }}>
+        <div key={index} className="rounded-md border border-gray-200 dark:border-zinc-700" style={{ padding: "8px 8px 2px", marginBottom: 6 }}>
           {Object.entries(holds).map(([ name, type ]) => (
             <label key={name} style={{ display: "block" }}>
               <span style={{ display: "block", marginBottom: 2, color: "#6b7280", fontSize: 11 }}>{(labels || {})[name] || name}</span>
