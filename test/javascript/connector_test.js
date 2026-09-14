@@ -14,3 +14,7 @@ const classesWith = (html, attribute) => (html.match(new RegExp(`<[^<>]*${attrib
 test("offers inserting a step as a round keystone button", () => {
   assert.ok(classesWith(drawn(), 'title="Insert a step here"').includes("rounded-full"))
 })
+
+test("rings the insert button in the accent color while a step is dragged over it", () => {
+  assert.ok(classesWith(drawn(), 'title="Insert a step here"').includes("data-[over=true]:ring-accent-600"))
+})

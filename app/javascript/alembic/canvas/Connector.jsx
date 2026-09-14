@@ -17,7 +17,8 @@ const Connector = ({ link, onInsert, onRemove, onDrop, dragging }) => {
       <div style={{ display: "flex", gap: 4, justifyContent: "center", alignItems: "center", height: "100%",
                     opacity: showing ? 1 : 0, transition: "opacity .12s" }}>
         <button title={dragging ? "Move the step here" : "Insert a step here"} onClick={onInsert}
-                className="ks-button ks-button-secondary rounded-full" style={round}>+</button>
+                className="ks-button ks-button-secondary rounded-full data-[over=true]:ring-2 data-[over=true]:ring-accent-600"
+                data-over={Boolean(dragging && over)} style={round}>+</button>
         {!dragging && (
           <button title="Remove this connection" onClick={onRemove}
                   style={{ ...plus, color: "#dc2626", borderColor: "#e5b4b4" }}>×</button>
