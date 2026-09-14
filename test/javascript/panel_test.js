@@ -92,3 +92,91 @@ test("saves nothing when a field is left as it was stored", () => {
 
   assert.deepEqual(saved, [])
 })
+
+const classesOn = (tree, marker) => (shown(tree, marker)[0]?.props.className || "").split(" ")
+
+test("is drawn as a keystone panel", () => {
+  assert.ok(classesOn(panel({}), "data-builder-panel").includes("ks-panel"))
+})
+
+test("colors the history link with the accent color", () => {
+  assert.ok(classesOn(panel({}), "data-history").includes("text-accent-600"))
+})
+
+const withText = (tree, text) => {
+  const found = []
+  const walk = (node) => {
+    if (!node || typeof node !== "object") return
+    if (Array.isArray(node)) return node.forEach(walk)
+    if (node.props?.children === text) found.push(node)
+    walk(node.props?.children)
+  }
+  walk(tree)
+  return found[0]
+}
+
+test("says a flow with no problems is fine in keystone's muted text color", () => {
+  assert.ok(withText(panel({}), "Nothing wrong with this flow.").props.className?.split(" ").includes("text-gray-500"))
+})
+
+test("says nothing has changed in keystone's muted text color", () => {
+  assert.ok(withText(panel({}), "Nothing has changed.").props.className?.split(" ").includes("text-gray-500"))
+})
+
+test("colors a refusal red", () => {
+  assert.ok(classesOn(panel({ refusal: "Cannot publish." }), "data-refusal").includes("text-red-800"))
+})
+
+test("colors a notice green", () => {
+  assert.ok(classesOn(panel({ notice: "Created version 2." }), "data-notice").includes("text-emerald-800"))
+})
+
+test("colors a problem amber", () => {
+  const tree = panel({ problems: [ { node: "a", problem: "unreachable" } ] })
+
+  assert.ok(classesOn(tree, "data-problem").includes("text-amber-700"))
+})
+
+test("labels the title field with keystone's label", () => {
+  assert.equal(withText(panel({}), "Title").props.className, "ks-label")
+})
+
+test("labels the summary field with keystone's label", () => {
+  assert.equal(withText(panel({}), "Summary").props.className, "ks-label")
+})
+
+test("labels the start label field with keystone's label", () => {
+  assert.equal(withText(panel({}), "Start label").props.className, "ks-label")
+})
+
+test("draws the title field as a keystone input", () => {
+  assert.ok(classesOn(panel({}), "data-flow-title").includes("ks-input"))
+})
+
+test("draws the summary field as a keystone input", () => {
+  assert.ok(classesOn(panel({}), "data-flow-summary").includes("ks-input"))
+})
+
+test("draws the start label field as a keystone input", () => {
+  assert.ok(classesOn(panel({}), "data-flow-start-label").includes("ks-input"))
+})
+
+test("offers publishing as keystone's primary button", () => {
+  assert.ok(classesOn(panel({}), "data-publish").includes("ks-button-primary"))
+})
+
+test("offers creating a version as keystone's secondary button", () => {
+  assert.ok(classesOn(panel({}), "data-create-version").includes("ks-button-secondary"))
+})
+
+test("links to the definition as keystone's secondary button", () => {
+  assert.ok(classesOn(panel({}), "data-definition").includes("ks-button-secondary"))
+})
+
+test("links to editing the details as keystone's secondary button", () => {
+  assert.ok(classesOn(panel({}), "data-details").includes("ks-button-secondary"))
+})
+
+test("colors the close button with keystone's muted text color", () => {
+  assert.ok(withText(panel({}), "×").props.className?.split(" ").includes("text-gray-500"))
+})

@@ -1,5 +1,4 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
 @import "./keystone_source.css";
 @import "../builds/tailwind/alembic";

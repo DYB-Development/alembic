@@ -1,16 +1,16 @@
 import React from "react"
-import { action, plus } from "./styles"
 
-const stepper = { ...action, width: "auto", marginBottom: 0, padding: "5px 12px" }
+const round = { width: 24, height: 24, padding: 0, fontSize: 15, lineHeight: "15px" }
 
 const Stepper = ({ label, title, idle, enabled, onUse }) => (
   <button title={enabled ? title : idle} disabled={!enabled} onClick={onUse}
-          style={{ ...stepper, opacity: enabled ? 1 : 0.4, cursor: enabled ? "pointer" : "default" }}>{label}</button>
+          className="ks-button ks-button-secondary ks-button-sm"
+          style={{ opacity: enabled ? 1 : 0.4, cursor: enabled ? "pointer" : "default" }}>{label}</button>
 )
 
 const Toolbar = ({ undoable, redoable, onAdd, onUndo, onRedo }) => (
   <div style={{ position: "absolute", top: 16, left: 16, zIndex: 5, display: "flex", gap: 8 }}>
-    <button style={plus} title="Add a step" onClick={onAdd}>+</button>
+    <button className="ks-button ks-button-secondary rounded-full" style={round} title="Add a step" onClick={onAdd}>+</button>
     <Stepper label="↶ Undo" title="Undo the last change" idle="Nothing to undo" enabled={undoable} onUse={onUndo} />
     <Stepper label="↷ Redo" title="Redo the change you undid" idle="Nothing to redo" enabled={redoable} onUse={onRedo} />
   </div>

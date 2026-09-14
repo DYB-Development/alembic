@@ -12,13 +12,18 @@ import useConnectors from "./useConnectors"
 import { CARD, GAP_X, GAP_Y } from "./styles"
 import { nextId } from "./ids"
 
-const page = { display: "flex", height: "100%", minHeight: 0, fontSize: 13, color: "#111827" }
-const scroll = { flex: 1, overflow: "auto", position: "relative", background: "#fafafa" }
-const waiting = { position: "absolute", top: 56, left: 16, zIndex: 5, width: CARD + 24, padding: 12,
-                  background: "#f9fafb", border: "1px dashed #d1d5db", borderRadius: 8 }
+const page = { display: "flex", height: "100%", minHeight: 0, fontSize: 13 }
+const scroll = { flex: 1, overflow: "auto", position: "relative" }
+const waiting = { position: "absolute", top: 56, left: 16, zIndex: 5, width: CARD + 24, padding: 12, borderRadius: 8 }
 
 const grid = { display: "grid", rowGap: GAP_Y, columnGap: 0, padding: 40, justifyContent: "center", position: "relative" }
 const notice = { position: "sticky", zIndex: 8, top: 8, margin: "8px auto 0", width: "fit-content", padding: "6px 12px", borderRadius: 6, fontSize: 12 }
+
+export const Choosing = ({ port, onCancel }) => (
+  <div className="bg-accent-100 text-accent-800 dark:bg-accent-900 dark:text-accent-100" style={notice}>
+    Choose the step “{port || "next"}” should lead to — <button onClick={onCancel} className="text-accent-800 underline dark:text-accent-100" style={{ border: "none", background: "none", cursor: "pointer", fontSize: 12, padding: 0 }}>cancel</button>
+  </div>
+)
 
 const Canvas = ({ base, token, initial }) => {
   const { flow, error, notice, send } = useFlow(base, token, initial)
@@ -76,15 +81,13 @@ const Canvas = ({ base, token, initial }) => {
   const entryFor = flow.palette.find((entry) => entry.type === selectedNode?.type)
 
   return (
-    <div style={page} onMouseUp={() => setDragging(null)}
+    <div className="text-gray-900 dark:text-gray-100" style={page} onMouseUp={() => setDragging(null)}
          onKeyDown={(event) => { if (event.key === "Escape") { setSelected(null); setArmed(null); setAdding(null) } }}
          tabIndex={-1}>
-      <div ref={surface} style={scroll}
+      <div ref={surface} className="bg-surface-50 dark:bg-surface-950" style={scroll}
            onClick={(event) => { if (event.target === surface.current) { setSelected(null); setArmed(null); setShowing(false) } }}>
         {armed && (
-          <div style={{ ...notice, background: "#dbeafe", color: "#1e40af" }}>
-            Choose the step “{armed[1] || "next"}” should lead to — <button onClick={() => setArmed(null)} style={{ border: "none", background: "none", color: "#1e40af", textDecoration: "underline", cursor: "pointer", fontSize: 12, padding: 0 }}>cancel</button>
-          </div>
+          <Choosing port={armed[1]} onCancel={() => setArmed(null)} />
         )}
         <Toolbar undoable={flow.undoable} redoable={flow.redoable}
                  onAdd={() => setAdding({ at: { x: 16, y: 52 } })}
@@ -97,8 +100,8 @@ const Canvas = ({ base, token, initial }) => {
                         onDrop={(link) => { const held = dragging; setDragging(null); send("/steps/" + held + "/move", "PATCH", { from: link.source, to: link.target }) }} />
 
         {loose.length > 0 && (
-          <div data-loose style={waiting}>
-            <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 6 }}>Not in the flow yet — drag one onto a connection</div>
+          <div data-loose className="border border-dashed border-gray-300 bg-gray-50 dark:border-zinc-700 dark:bg-zinc-900" style={waiting}>
+            <div className="text-gray-500 dark:text-gray-400" style={{ fontSize: 11, marginBottom: 6 }}>Not in the flow yet — drag one onto a connection</div>
             {loose.map((node) => (
               <div key={node.id} style={{ marginBottom: 8 }}>
                 <StepCard

@@ -1,1 +1,2 @@
 @source "../../../views/**/*.erb";
+@source "../../../javascript/**/*.{js,jsx}";

@@ -14,3 +14,26 @@ test("offers a step that comes before as a choice rather than free text", () => 
 test("offers an answer drawn from another step as a choice rather than free text", () => {
   assert.equal(control({ type: "from_step", choices: [ { value: "high", label: "Over $1k" } ] }).type, "select")
 })
+
+test("draws free text as a keystone input", () => {
+  assert.ok(control({ type: "string", value: "" }).props.className?.split(" ").includes("ks-input"))
+})
+
+test("draws a number as a keystone input", () => {
+  assert.ok(control({ type: "integer", value: 1 }).props.className?.split(" ").includes("ks-input"))
+})
+
+test("draws a choice as a keystone input", () => {
+  assert.ok(control({}).props.className?.split(" ").includes("ks-input"))
+})
+
+test("draws a yes or no setting as a keystone checkbox", () => {
+  assert.equal(control({ type: "boolean", value: true }).props.className, "ks-checkbox")
+})
+
+test("draws each option of a pick-several setting as a keystone checkbox", () => {
+  const options = control({ type: "multi_select", value: [], choices: [ "red" ] })
+  const checkbox = options.props.children[0].props.children[0]
+
+  assert.equal(checkbox.props.className, "ks-checkbox")
+})
