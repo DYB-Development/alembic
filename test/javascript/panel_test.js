@@ -156,3 +156,7 @@ test("draws the title field as a keystone input", () => {
 test("draws the summary field as a keystone input", () => {
   assert.ok(classesOn(panel({}), "data-flow-summary").includes("ks-input"))
 })
+
+test("draws the start label field as a keystone input", () => {
+  assert.ok(classesOn(panel({}), "data-flow-start-label").includes("ks-input"))
+})

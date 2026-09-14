@@ -1,6 +1,5 @@
 import React from "react"
 import { action } from "./styles"
-import { control } from "./Control"
 import { worded } from "./changes"
 import { standing } from "./flow"
 
@@ -50,7 +49,7 @@ const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, 
 
     <label style={field}>
       <span className="ks-label" style={{ marginBottom: 3 }}>Start label</span>
-      <input style={control} defaultValue={flow.start_label ?? ""} onBlur={settling(flow, "start_label", onSaveDetails)} data-flow-start-label />
+      <input className="ks-input mb-3" defaultValue={flow.start_label ?? ""} onBlur={settling(flow, "start_label", onSaveDetails)} data-flow-start-label />
     </label>
 
     <div style={{ marginTop: 16 }}>
