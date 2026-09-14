@@ -27,3 +27,7 @@ test("colors the close button with keystone's muted text color", () => {
 test("labels each field with keystone's label", () => {
   assert.deepEqual(classesOf(drawn(), "Step"), [ "ks-label" ])
 })
+
+test("offers deleting the step as keystone's danger button", () => {
+  assert.ok(classesOf(drawn(), "Delete step").includes("ks-button-danger"))
+})

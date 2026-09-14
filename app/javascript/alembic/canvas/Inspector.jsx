@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import Control from "./Control"
 import Records from "./Records"
-import { action } from "./styles"
 
 const panel = { width: 280, padding: 20, overflowY: "auto" }
 
@@ -34,7 +33,7 @@ const Inspector = ({ node, fields, holds, labels, recordLabels, choices, onSave,
                        onSettle={(next) => settle({ ...draft, [name]: next })} />}
         </label>
       ))}
-      <button style={{ ...action, textAlign: "center", color: "#dc2626" }} onClick={onDelete}>Delete step</button>
+      <button className="ks-button ks-button-danger ks-button-sm w-full" onClick={onDelete}>Delete step</button>
     </aside>
   )
 }
