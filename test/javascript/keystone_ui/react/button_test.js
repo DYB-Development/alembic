@@ -17,3 +17,9 @@ test("takes keystone's look for the size it is given", () => {
 test("adds the extra classes it is given after keystone's", () => {
   assert.equal(Button({ className: "w-full", children: "Publish" }).props.className, "ks-button ks-button-primary ks-button-md w-full")
 })
+
+test("passes other props through to the button", () => {
+  const onClick = () => {}
+
+  assert.equal(Button({ onClick, "data-publish": true, children: "Publish" }).props.onClick, onClick)
+})
