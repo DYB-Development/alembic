@@ -1,12 +1,10 @@
 import React from "react"
-import { action } from "./styles"
 import { worded } from "./changes"
 import { standing } from "./flow"
 
 const sheet = { width: 280, padding: 20, overflowY: "auto" }
 const heading = { fontWeight: 600, marginBottom: 6, marginTop: 14 }
 const item = { fontSize: 12, marginBottom: 4, lineHeight: 1.4 }
-const link = { ...action, textAlign: "center", textDecoration: "none", color: "#111827" }
 const field = { display: "block" }
 
 const settling = (flow, name, onSaveDetails) => (event) => {
@@ -56,7 +54,7 @@ const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, 
       <button className="ks-button ks-button-secondary ks-button-sm w-full mb-1.5" onClick={onCreate} data-create-version>Create version</button>
       <button className="ks-button ks-button-primary ks-button-sm w-full mb-1.5" onClick={onPublish} data-publish>Publish</button>
       <a className="ks-button ks-button-secondary ks-button-sm w-full mb-1.5" href={flow.definition_url} data-definition>Definition</a>
-      <a style={link} href={flow.details_url} data-details>Edit details</a>
+      <a className="ks-button ks-button-secondary ks-button-sm w-full mb-1.5" href={flow.details_url} data-details>Edit details</a>
     </div>
   </aside>
 )

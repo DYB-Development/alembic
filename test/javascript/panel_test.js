@@ -172,3 +172,7 @@ test("offers creating a version as keystone's secondary button", () => {
 test("links to the definition as keystone's secondary button", () => {
   assert.ok(classesOn(panel({}), "data-definition").includes("ks-button-secondary"))
 })
+
+test("links to editing the details as keystone's secondary button", () => {
+  assert.ok(classesOn(panel({}), "data-details").includes("ks-button-secondary"))
+})
