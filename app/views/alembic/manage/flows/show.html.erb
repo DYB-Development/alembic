@@ -25,7 +25,7 @@
     })
   </script>
 
-  <%= react_ui("alembic/flow-editor", { base: alembic.manage_flow_canvas_path(@diagnostic) },
+  <%= react_ui("alembic/flow-editor", { base: alembic.manage_flow_canvas_path(@diagnostic), token: form_authenticity_token },
                class: "min-h-0 flex-1",
                data: { flow_canvas: true,
                        base: alembic.manage_flow_canvas_path(@diagnostic),

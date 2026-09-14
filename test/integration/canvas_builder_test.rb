@@ -482,5 +482,11 @@ module Alembic
 
       assert_select "a[href=?]", alembic.manage_flow_preview_path(diagnostic)
     end
+
+    test "the flow editor's props carry the token it sends with each edit" do
+      get alembic.manage_flow_path(diagnostic)
+
+      assert_predicate JSON.parse(css_select("[data-react-ui]").first["data-props"])["token"], :present?
+    end
   end
 end
