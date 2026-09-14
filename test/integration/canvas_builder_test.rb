@@ -33,6 +33,12 @@ module Alembic
       assert_select "[data-flow-canvas]"
     end
 
+    test "the diagnostic page renders the flow editor through the React UI helper" do
+      get alembic.manage_flow_path(diagnostic)
+
+      assert_select "[data-flow-canvas][data-react-ui=?]", "alembic/flow-editor"
+    end
+
     test "the diagnostic page points the canvas at its edit endpoints" do
       get alembic.manage_flow_path(diagnostic)
 
