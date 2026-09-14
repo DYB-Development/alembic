@@ -13,3 +13,7 @@ test("takes keystone's disabled look when it is disabled", () => {
 test("adds the extra classes it is given after keystone's", () => {
   assert.equal(Input({ className: "mb-3" }).props.className, "ks-input mb-3")
 })
+
+test("passes other props through to the input", () => {
+  assert.equal(Input({ value: "Budget" }).props.value, "Budget")
+})
