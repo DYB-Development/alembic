@@ -45,7 +45,7 @@ const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, 
 
     <label style={field}>
       <span className="ks-label" style={{ marginBottom: 3 }}>Summary</span>
-      <textarea style={control} rows={4} defaultValue={flow.summary ?? ""} onBlur={settling(flow, "summary", onSaveDetails)} data-flow-summary />
+      <textarea className="ks-input mb-3" rows={4} defaultValue={flow.summary ?? ""} onBlur={settling(flow, "summary", onSaveDetails)} data-flow-summary />
     </label>
 
     <label style={field}>
