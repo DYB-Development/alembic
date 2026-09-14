@@ -126,3 +126,7 @@ test("says nothing has changed in keystone's muted text color", () => {
 test("colors a refusal red", () => {
   assert.ok(classesOn(panel({ refusal: "Cannot publish." }), "data-refusal").includes("text-red-800"))
 })
+
+test("colors a notice green", () => {
+  assert.ok(classesOn(panel({ notice: "Created version 2." }), "data-notice").includes("text-emerald-800"))
+})

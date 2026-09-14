@@ -26,7 +26,7 @@ const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, 
 
     <h2 style={heading}>Problems</h2>
     {refusal && <p className="text-red-800 dark:text-red-400" style={{ ...item, fontWeight: 600 }} data-refusal>{refusal}</p>}
-    {notice && !refusal && <p style={{ ...item, color: "#065f46", fontWeight: 600 }} data-notice>{notice}</p>}
+    {notice && !refusal && <p className="text-emerald-800 dark:text-emerald-400" style={{ ...item, fontWeight: 600 }} data-notice>{notice}</p>}
     {problems.length === 0 && !refusal
       ? <p className="text-gray-500 dark:text-gray-400" style={{ fontSize: 12 }}>Nothing wrong with this flow.</p>
       : problems.map((problem) => (
