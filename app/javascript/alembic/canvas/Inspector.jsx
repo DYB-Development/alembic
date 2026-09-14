@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react"
 import Control from "./Control"
 import Records from "./Records"
+import Panel from "../../keystone_ui/react/Panel"
+import Button from "../../keystone_ui/react/Button"
+import { Label } from "../../keystone_ui/react/FieldText"
 
 const panel = { width: 280, padding: 20, overflowY: "auto" }
 
@@ -14,7 +17,7 @@ const Inspector = ({ node, fields, holds, labels, recordLabels, choices, onSave,
   }
 
   return (
-    <aside className="ks-panel" style={panel} data-inspector>
+    <Panel as="aside" style={panel} data-inspector>
       <div style={{ display: "flex", alignItems: "start", justifyContent: "space-between", gap: 8 }}>
         <h2 style={{ fontWeight: 600, marginBottom: 2 }}>{node.label}</h2>
         <button title="Close" onClick={onClose} className="text-gray-500 dark:text-gray-400"
@@ -22,8 +25,8 @@ const Inspector = ({ node, fields, holds, labels, recordLabels, choices, onSave,
       </div>
       <p className="text-gray-500 dark:text-gray-400" style={{ fontSize: 11, marginBottom: 16 }}>{node.id} · {node.type}</p>
       {Object.entries(fields).map(([ name, type ]) => (
-        <label key={name} style={{ display: "block" }}>
-          <span className="ks-label" style={{ marginBottom: 3 }}>{labels[name] || name}</span>
+        <Label key={name}>
+          <span style={{ display: "block", marginBottom: 3 }}>{labels[name] || name}</span>
           {type === "list"
             ? <Records holds={holds[name] || {}} labels={recordLabels[name] || {}} rows={draft[name]}
                        onChange={(next) => setDraft({ ...draft, [name]: next })}
@@ -31,10 +34,10 @@ const Inspector = ({ node, fields, holds, labels, recordLabels, choices, onSave,
             : <Control type={type} value={draft[name]} choices={choices[name]}
                        onChange={(next) => setDraft({ ...draft, [name]: next })}
                        onSettle={(next) => settle({ ...draft, [name]: next })} />}
-        </label>
+        </Label>
       ))}
-      <button className="ks-button ks-button-danger ks-button-sm w-full" onClick={onDelete}>Delete step</button>
-    </aside>
+      <Button variant="danger" size="sm" className="w-full" onClick={onDelete}>Delete step</Button>
+    </Panel>
   )
 }
 

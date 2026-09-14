@@ -1,6 +1,7 @@
 import React from "react"
 import Control from "./Control"
 import { amended } from "./rows"
+import Button from "../../keystone_ui/react/Button"
 
 const Records = ({ holds, labels, rows, onChange, onSettle }) => {
   const kept = Array.isArray(rows) ? rows : []
@@ -21,11 +22,11 @@ const Records = ({ holds, labels, rows, onChange, onSettle }) => {
                        onSettle={(next) => amend(index, name, next, true)} />
             </label>
           ))}
-          <button className="ks-button ks-button-secondary ks-button-sm mb-1.5"
-                  onClick={() => onSettle(kept.filter((_, at) => at !== index))}>Remove</button>
+          <Button variant="secondary" size="sm" className="mb-1.5"
+                  onClick={() => onSettle(kept.filter((_, at) => at !== index))}>Remove</Button>
         </div>
       ))}
-      <button className="ks-button ks-button-secondary ks-button-sm w-full" onClick={() => onSettle([ ...kept, {} ])}>Add</button>
+      <Button variant="secondary" size="sm" className="w-full" onClick={() => onSettle([ ...kept, {} ])}>Add</Button>
     </div>
   )
 }

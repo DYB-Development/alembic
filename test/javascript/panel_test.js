@@ -1,5 +1,7 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
+import React from "react"
+import { renderToStaticMarkup } from "react-dom/server"
 import Panel from "../../app/javascript/alembic/canvas/Panel.jsx"
 
 const shown = (tree, marker) => {
@@ -93,7 +95,9 @@ test("saves nothing when a field is left as it was stored", () => {
   assert.deepEqual(saved, [])
 })
 
-const classesOn = (tree, marker) => (shown(tree, marker)[0]?.props.className || "").split(" ")
+const classesOn = (tree, marker) => (renderToStaticMarkup(tree).match(new RegExp(`<[^<>]*${marker}[^<>]*`))?.[0].match(/class="([^"]*)"/)?.[1] || "").split(" ")
+
+const labelled = (tree, text) => new RegExp(`class="ks-label"[^>]*>(<span[^>]*>)?${text}<`).test(renderToStaticMarkup(tree))
 
 test("is drawn as a keystone panel", () => {
   assert.ok(classesOn(panel({}), "data-builder-panel").includes("ks-panel"))
@@ -138,15 +142,15 @@ test("colors a problem amber", () => {
 })
 
 test("labels the title field with keystone's label", () => {
-  assert.equal(withText(panel({}), "Title").props.className, "ks-label")
+  assert.ok(labelled(panel({}), "Title"))
 })
 
 test("labels the summary field with keystone's label", () => {
-  assert.equal(withText(panel({}), "Summary").props.className, "ks-label")
+  assert.ok(labelled(panel({}), "Summary"))
 })
 
 test("labels the start label field with keystone's label", () => {
-  assert.equal(withText(panel({}), "Start label").props.className, "ks-label")
+  assert.ok(labelled(panel({}), "Start label"))
 })
 
 test("draws the title field as a keystone input", () => {
