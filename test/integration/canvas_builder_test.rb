@@ -45,12 +45,6 @@ module Alembic
       assert_equal canvas_path, JSON.parse(css_select("[data-react-ui]").first["data-props"])["base"]
     end
 
-    test "the diagnostic page points the canvas at its edit endpoints" do
-      get alembic.manage_flow_path(diagnostic)
-
-      assert_select "[data-flow-canvas][data-base=?]", canvas_path
-    end
-
     test "the canvas screen carries the flow as JSON" do
       get "#{canvas_path}.json"
 
@@ -209,7 +203,7 @@ module Alembic
 
       get alembic.manage_flow_path(diagnostic)
 
-      drawn = JSON.parse(css_select("[data-flow-canvas]").first["data-flow"])
+      drawn = JSON.parse(css_select("[data-flow-canvas]").first["data-props"])["initial"]
 
       assert_includes drawn["nodes"].map { |node| node["id"] }, "c"
     end
@@ -485,9 +479,9 @@ module Alembic
 
     test "the flow editor's props carry the flow it starts with" do
       get alembic.manage_flow_path(diagnostic)
-      element = css_select("[data-react-ui]").first
+      initial = JSON.parse(css_select("[data-react-ui]").first["data-props"])["initial"]
 
-      assert_equal JSON.parse(element["data-flow"]), JSON.parse(element["data-props"])["initial"]
+      assert_equal %w[a b end], initial["nodes"].map { |node| node["id"] }.select { |id| %w[a b end].include?(id) }
     end
 
     test "the flow editor's props carry the token it sends with each edit" do
