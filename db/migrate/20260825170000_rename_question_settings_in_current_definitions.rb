@@ -1,12 +1,21 @@
 class RenameQuestionSettingsInCurrentDefinitions < ActiveRecord::Migration[8.1]
   RENAMED = { "text" => "question", "options" => "answers", "tag" => "category" }.freeze
 
-  def up
-    Alembic::Flow::Definition.find_each do |diagnostic|
-      renamed = rename(diagnostic.definition)
-      next if renamed.nil? || renamed == diagnostic.definition
+  class Diagnostic < ActiveRecord::Base
+    self.table_name = "alembic_diagnostics"
+  end
 
-      diagnostic.record_definition(renamed)
+  class DefinitionVersion < ActiveRecord::Base
+    self.table_name = "alembic_definition_versions"
+  end
+
+  def up
+    Diagnostic.find_each do |diagnostic|
+      definition = current_definition(diagnostic)
+      renamed = rename(definition)
+      next if renamed.nil? || renamed == definition
+
+      record_definition(diagnostic, renamed)
     end
   end
 
@@ -16,6 +25,17 @@ class RenameQuestionSettingsInCurrentDefinitions < ActiveRecord::Migration[8.1]
   end
 
   private
+
+  def current_definition(diagnostic)
+    versions = DefinitionVersion.where(diagnostic_id: diagnostic.id)
+    versions.find_by(number: diagnostic.definition_cursor || versions.maximum(:number))&.definition
+  end
+
+  def record_definition(diagnostic, definition)
+    number = (DefinitionVersion.where(diagnostic_id: diagnostic.id).maximum(:number) || 0) + 1
+    DefinitionVersion.create!(diagnostic_id: diagnostic.id, number: number, definition: definition)
+    diagnostic.update!(definition_cursor: number)
+  end
 
   def rename(definition)
     return if definition.blank?
