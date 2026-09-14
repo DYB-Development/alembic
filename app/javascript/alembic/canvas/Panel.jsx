@@ -29,7 +29,7 @@ const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, 
     {refusal && <p style={{ ...item, color: "#991b1b", fontWeight: 600 }} data-refusal>{refusal}</p>}
     {notice && !refusal && <p style={{ ...item, color: "#065f46", fontWeight: 600 }} data-notice>{notice}</p>}
     {problems.length === 0 && !refusal
-      ? <p style={quiet}>Nothing wrong with this flow.</p>
+      ? <p className="text-gray-500 dark:text-gray-400" style={{ fontSize: 12 }}>Nothing wrong with this flow.</p>
       : problems.map((problem) => (
           <p key={`${problem.node}-${problem.problem}`} style={{ ...item, color: "#b45309" }} data-problem>⚠ {worded(problem)}</p>
         ))}

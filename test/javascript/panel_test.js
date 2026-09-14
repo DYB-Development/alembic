@@ -102,3 +102,19 @@ test("is drawn as a keystone panel", () => {
 test("colors the history link with the accent color", () => {
   assert.ok(classesOn(panel({}), "data-history").includes("text-accent-600"))
 })
+
+const withText = (tree, text) => {
+  const found = []
+  const walk = (node) => {
+    if (!node || typeof node !== "object") return
+    if (Array.isArray(node)) return node.forEach(walk)
+    if (node.props?.children === text) found.push(node)
+    walk(node.props?.children)
+  }
+  walk(tree)
+  return found[0]
+}
+
+test("says a flow with no problems is fine in keystone's muted text color", () => {
+  assert.ok(withText(panel({}), "Nothing wrong with this flow.").props.className?.split(" ").includes("text-gray-500"))
+})
