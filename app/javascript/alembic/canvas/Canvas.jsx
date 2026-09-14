@@ -21,7 +21,7 @@ const notice = { position: "sticky", zIndex: 8, top: 8, margin: "8px auto 0", wi
 
 export const Choosing = ({ port, onCancel }) => (
   <div className="bg-accent-100 text-accent-800 dark:bg-accent-900 dark:text-accent-100" style={notice}>
-    Choose the step “{port || "next"}” should lead to — <button onClick={onCancel} style={{ border: "none", background: "none", color: "#1e40af", textDecoration: "underline", cursor: "pointer", fontSize: 12, padding: 0 }}>cancel</button>
+    Choose the step “{port || "next"}” should lead to — <button onClick={onCancel} className="text-accent-800 underline dark:text-accent-100" style={{ border: "none", background: "none", cursor: "pointer", fontSize: 12, padding: 0 }}>cancel</button>
   </div>
 )
 

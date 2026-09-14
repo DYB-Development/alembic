@@ -36,3 +36,9 @@ test("shows the choose-a-step notice in the accent colors", () => {
 
   assert.ok(notice.props.className.split(" ").includes("bg-accent-100"))
 })
+
+test("colors the notice's cancel link with the accent color", () => {
+  const notice = renderToStaticMarkup(React.createElement(Choosing, { port: "yes", onCancel: () => {} }))
+
+  assert.ok(classesOf(notice, "cancel").includes("text-accent-800"))
+})
