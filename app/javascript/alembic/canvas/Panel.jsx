@@ -4,7 +4,7 @@ import { control } from "./Control"
 import { worded } from "./changes"
 import { standing } from "./flow"
 
-const sheet = { width: 280, padding: 20, overflowY: "auto", background: "#fff", borderLeft: "1px solid #e5e7eb" }
+const sheet = { width: 280, padding: 20, overflowY: "auto" }
 const heading = { fontWeight: 600, marginBottom: 6, marginTop: 14 }
 const quiet = { color: "#6b7280", fontSize: 12 }
 const item = { fontSize: 12, marginBottom: 4, lineHeight: 1.4 }
@@ -17,7 +17,7 @@ const settling = (flow, name, onSaveDetails) => (event) => {
 }
 
 const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, onSaveDetails, onClose }) => (
-  <aside style={sheet} data-builder-panel>
+  <aside className="ks-panel" style={sheet} data-builder-panel>
     <div style={{ display: "flex", alignItems: "start", justifyContent: "space-between", gap: 8 }}>
       <h2 style={{ fontWeight: 600 }} data-flow-name>{flow.title || flow.slug}</h2>
       <button title="Close" onClick={onClose}

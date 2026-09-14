@@ -92,3 +92,9 @@ test("saves nothing when a field is left as it was stored", () => {
 
   assert.deepEqual(saved, [])
 })
+
+const classesOn = (tree, marker) => (shown(tree, marker)[0]?.props.className || "").split(" ")
+
+test("is drawn as a keystone panel", () => {
+  assert.ok(classesOn(panel({}), "data-builder-panel").includes("ks-panel"))
+})
