@@ -37,7 +37,7 @@ const Control = ({ type, value, choices, onChange, onSettle }) => {
                   onChange={(e) => onChange(e.target.value)} onBlur={(e) => onSettle(e.target.value)} />
   }
 
-  return <input style={control} type="text" value={value ?? ""}
+  return <input className="ks-input mb-3" type="text" value={value ?? ""}
                 onChange={(e) => onChange(e.target.value)} onBlur={(e) => onSettle(e.target.value)} />
 }
 
