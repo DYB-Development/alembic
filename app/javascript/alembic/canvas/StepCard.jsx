@@ -36,7 +36,7 @@ const StepCard = ({ node, selected, armed, connecting, onSelect, onArm, onDragEn
          }}>
       {bookend && <div style={bookendCard}>{node.label}</div>}
       {!bookend && <div style={named}>{node.label}</div>}
-      {!bookend && <div style={{ color: "#6b7280", fontSize: 11, marginTop: 2 }}>{node.type}</div>}
+      {!bookend && <div className="text-gray-500 dark:text-gray-400" style={{ fontSize: 11, marginTop: 2 }}>{node.type}</div>}
       {node.violations.map((violation) => (
         <div key={violation.problem + violation.detail} style={{ color: "#dc2626", fontSize: 11, padding: "0 14px 6px" }}>
           {violation.problem.replace(/_/g, " ")}{violation.detail ? `: ${violation.detail}` : ""}

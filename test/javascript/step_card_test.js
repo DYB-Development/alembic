@@ -29,3 +29,11 @@ test("borders a card with problems in red", () => {
 test("borders a card that can be connected to in the accent color", () => {
   assert.ok(classes(card({}, { connecting: true })).includes("border-accent-600"))
 })
+
+const child = (element, predicate) => [ element.props.children ].flat(Infinity).filter(Boolean).find(predicate)
+
+test("writes the step's type in keystone's muted text color", () => {
+  const type = child(card(), (element) => element.props?.children === "condition")
+
+  assert.ok(classes(type).includes("text-gray-500"))
+})
