@@ -43,3 +43,9 @@ test("writes a start card's label in keystone's muted text color", () => {
 
   assert.ok(classes(label).includes("text-gray-500"))
 })
+
+test("writes each of the step's problems in red", () => {
+  const problem = child(card({ violations: [ { problem: "unreachable", detail: null } ] }), (element) => element.key === "unreachablenull")
+
+  assert.ok(classes(problem).includes("text-red-600"))
+})
