@@ -23,3 +23,7 @@ test("passes other props through to the button", () => {
 
   assert.equal(Button({ onClick, "data-publish": true, children: "Publish" }).props.onClick, onClick)
 })
+
+test("renders as a link when it is given an href", () => {
+  assert.equal(Button({ href: "/flows/1/definition", children: "Definition" }).type, "a")
+})
