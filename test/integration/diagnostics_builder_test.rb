@@ -41,7 +41,7 @@ module Alembic
 
       get alembic.manage_flow_path(diagnostic)
 
-      drawn = JSON.parse(css_select("[data-flow-canvas]").first["data-flow"])
+      drawn = JSON.parse(css_select("[data-flow-canvas]").first["data-props"])["initial"]
 
       assert_equal alembic.edit_manage_flow_path(diagnostic), drawn["flow"]["details_url"]
     end
@@ -83,7 +83,7 @@ module Alembic
 
       get alembic.manage_flow_path(diagnostic)
 
-      drawn = JSON.parse(css_select("[data-flow-canvas]").first["data-flow"])
+      drawn = JSON.parse(css_select("[data-flow-canvas]").first["data-props"])["initial"]
 
       assert_equal alembic.edit_manage_flow_definition_path(diagnostic), drawn["flow"]["definition_url"]
     end
