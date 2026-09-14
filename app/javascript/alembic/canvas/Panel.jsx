@@ -6,7 +6,6 @@ import { standing } from "./flow"
 
 const sheet = { width: 280, padding: 20, overflowY: "auto" }
 const heading = { fontWeight: 600, marginBottom: 6, marginTop: 14 }
-const quiet = { color: "#6b7280", fontSize: 12 }
 const item = { fontSize: 12, marginBottom: 4, lineHeight: 1.4 }
 const link = { ...action, textAlign: "center", textDecoration: "none", color: "#111827" }
 const field = { display: "block" }
@@ -36,7 +35,7 @@ const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, 
 
     <h2 style={heading}>Changes since the last version</h2>
     {changes.length === 0
-      ? <p style={quiet}>Nothing has changed.</p>
+      ? <p className="text-gray-500 dark:text-gray-400" style={{ fontSize: 12 }}>Nothing has changed.</p>
       : changes.map((change, at) => <p key={at} style={item} data-change>{change}</p>)}
 
     <h2 style={heading}>Details</h2>

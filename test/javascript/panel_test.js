@@ -118,3 +118,7 @@ const withText = (tree, text) => {
 test("says a flow with no problems is fine in keystone's muted text color", () => {
   assert.ok(withText(panel({}), "Nothing wrong with this flow.").props.className?.split(" ").includes("text-gray-500"))
 })
+
+test("says nothing has changed in keystone's muted text color", () => {
+  assert.ok(withText(panel({}), "Nothing has changed.").props.className?.split(" ").includes("text-gray-500"))
+})
