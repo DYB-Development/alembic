@@ -8,3 +8,7 @@ const keystoneText = (Tag, keystoneClass) => ({ className, children, ...rest }) 
 export const Label = keystoneText("label", "ks-label")
 export const Hint = keystoneText("p", "ks-hint")
 export const FieldError = keystoneText("p", "ks-error")
+
+const Asterisk = keystoneText("span", "ks-required")
+
+export const Required = (props) => <Asterisk {...props}>*</Asterisk>

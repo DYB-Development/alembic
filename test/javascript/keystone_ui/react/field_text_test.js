@@ -2,7 +2,7 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
-import { Label, Hint, FieldError } from "../../../../app/javascript/keystone_ui/react/FieldText.jsx"
+import { Label, Hint, FieldError, Required } from "../../../../app/javascript/keystone_ui/react/FieldText.jsx"
 
 const drawn = (component, props = {}, text = "Title") => renderToStaticMarkup(React.createElement(component, props, text))
 
@@ -20,4 +20,8 @@ test("a hint is keystone's field hint", () => {
 
 test("an error is keystone's field error", () => {
   assert.equal(drawn(FieldError, {}, "can't be blank"), '<p class="ks-error">can&#x27;t be blank</p>')
+})
+
+test("a required marker is keystone's asterisk", () => {
+  assert.equal(renderToStaticMarkup(React.createElement(Required)), '<span class="ks-required">*</span>')
 })
