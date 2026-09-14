@@ -55,7 +55,7 @@ const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, 
     <div style={{ marginTop: 16 }}>
       <button className="ks-button ks-button-secondary ks-button-sm w-full mb-1.5" onClick={onCreate} data-create-version>Create version</button>
       <button className="ks-button ks-button-primary ks-button-sm w-full mb-1.5" onClick={onPublish} data-publish>Publish</button>
-      <a style={link} href={flow.definition_url} data-definition>Definition</a>
+      <a className="ks-button ks-button-secondary ks-button-sm w-full mb-1.5" href={flow.definition_url} data-definition>Definition</a>
       <a style={link} href={flow.details_url} data-details>Edit details</a>
     </div>
   </aside>
