@@ -30,3 +30,10 @@ test("draws a choice as a keystone input", () => {
 test("draws a yes or no setting as a keystone checkbox", () => {
   assert.equal(control({ type: "boolean", value: true }).props.className, "ks-checkbox")
 })
+
+test("draws each option of a pick-several setting as a keystone checkbox", () => {
+  const options = control({ type: "multi_select", value: [], choices: [ "red" ] })
+  const checkbox = options.props.children[0].props.children[0]
+
+  assert.equal(checkbox.props.className, "ks-checkbox")
+})

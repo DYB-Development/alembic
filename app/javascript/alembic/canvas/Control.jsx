@@ -20,7 +20,7 @@ const Control = ({ type, value, choices, onChange, onSettle }) => {
     return <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
       {(choices || []).map((choice) => (
         <label key={choice} style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-          <input type="checkbox" checked={chosen.includes(choice)} onChange={() => toggle(choice)} />
+          <input className="ks-checkbox" type="checkbox" checked={chosen.includes(choice)} onChange={() => toggle(choice)} />
           <span>{choice}</span>
         </label>
       ))}
