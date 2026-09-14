@@ -5,7 +5,7 @@ const offered = (choices) =>
   (choices || []).map((choice) => (typeof choice === "object" ? choice : { value: choice, label: choice }))
 
 const Control = ({ type, value, choices, onChange, onSettle }) => {
-  if (type === "boolean") return <input type="checkbox" checked={Boolean(value)} onChange={(e) => onSettle(e.target.checked)} />
+  if (type === "boolean") return <input className="ks-checkbox" type="checkbox" checked={Boolean(value)} onChange={(e) => onSettle(e.target.checked)} />
 
   if (type === "select" || type === "previous_step" || type === "from_step") {
     return <select className="ks-input mb-3" value={value ?? ""} onChange={(e) => onSettle(e.target.value)}>

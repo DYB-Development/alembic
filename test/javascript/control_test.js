@@ -26,3 +26,7 @@ test("draws a number as a keystone input", () => {
 test("draws a choice as a keystone input", () => {
   assert.ok(control({}).props.className?.split(" ").includes("ks-input"))
 })
+
+test("draws a yes or no setting as a keystone checkbox", () => {
+  assert.equal(control({ type: "boolean", value: true }).props.className, "ks-checkbox")
+})
