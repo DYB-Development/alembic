@@ -16,7 +16,7 @@ const Records = ({ holds, labels, rows, onChange, onSettle }) => {
         <div key={index} className="rounded-md border border-gray-200 dark:border-zinc-700" style={{ padding: "8px 8px 2px", marginBottom: 6 }}>
           {Object.entries(holds).map(([ name, type ]) => (
             <label key={name} style={{ display: "block" }}>
-              <span style={{ display: "block", marginBottom: 2, color: "#6b7280", fontSize: 11 }}>{(labels || {})[name] || name}</span>
+              <span className="text-gray-500 dark:text-gray-400" style={{ display: "block", marginBottom: 2, fontSize: 11 }}>{(labels || {})[name] || name}</span>
               <Control type={type} value={row[name]}
                        onChange={(next) => amend(index, name, next, false)}
                        onSettle={(next) => amend(index, name, next, true)} />

@@ -12,3 +12,9 @@ const drawn = () => renderToStaticMarkup(React.createElement(Records, {
 test("borders each record with keystone's border colors", () => {
   assert.match(drawn(), /^<div[^>]*><div class="rounded-md border border-gray-200 dark:border-zinc-700"/)
 })
+
+const classesOf = (html, text) => (html.match(new RegExp(`<[^<>]*class="([^"]*)"[^<>]*>${text}<`))?.[1] || "").split(" ")
+
+test("writes each record's field names in keystone's muted text color", () => {
+  assert.ok(classesOf(drawn(), "Value").includes("text-gray-500"))
+})
