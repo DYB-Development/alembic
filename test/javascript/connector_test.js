@@ -18,3 +18,7 @@ test("offers inserting a step as a round keystone button", () => {
 test("rings the insert button in the accent color while a step is dragged over it", () => {
   assert.ok(classesWith(drawn(), 'title="Insert a step here"').includes("data-[over=true]:ring-accent-600"))
 })
+
+test("offers removing the connection as a round keystone danger button", () => {
+  assert.ok(classesWith(drawn(), 'title="Remove this connection"').includes("ks-button-danger"))
+})

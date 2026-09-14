@@ -1,6 +1,4 @@
 import React, { useState } from "react"
-import { plus } from "./styles"
-
 const round = { width: 24, height: 24, padding: 0, fontSize: 15, lineHeight: "15px" }
 
 const Connector = ({ link, onInsert, onRemove, onDrop, dragging }) => {
@@ -21,7 +19,7 @@ const Connector = ({ link, onInsert, onRemove, onDrop, dragging }) => {
                 data-over={Boolean(dragging && over)} style={round}>+</button>
         {!dragging && (
           <button title="Remove this connection" onClick={onRemove}
-                  style={{ ...plus, color: "#dc2626", borderColor: "#e5b4b4" }}>×</button>
+                  className="ks-button ks-button-danger rounded-full" style={round}>×</button>
         )}
       </div>
     </div>
