@@ -21,3 +21,17 @@ test("renders a registered UI into its element with the props the element carrie
 
   assert.deepEqual(rendered.map(({ tree }) => [ tree.type, tree.props ]), [ [ Greeting, { name: "Ada" } ] ])
 })
+
+test("renders every UI on the page into its own element", () => {
+  const Flow = () => null
+  const Builder = () => null
+  register("test/flow", Flow)
+  register("test/builder", Builder)
+  const flow = uiElement("test/flow", {})
+  const builder = uiElement("test/builder", {})
+  const { rendered, createRoot } = recordingRoots()
+
+  mountAll(pageWith(flow, builder), createRoot)
+
+  assert.deepEqual(rendered.map(({ element, tree }) => [ element, tree.type ]), [ [ flow, Flow ], [ builder, Builder ] ])
+})
