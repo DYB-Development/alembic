@@ -2,7 +2,7 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
-import { Label, Hint } from "../../../../app/javascript/keystone_ui/react/FieldText.jsx"
+import { Label, Hint, FieldError } from "../../../../app/javascript/keystone_ui/react/FieldText.jsx"
 
 const drawn = (component, props = {}, text = "Title") => renderToStaticMarkup(React.createElement(component, props, text))
 
@@ -16,4 +16,8 @@ test("a label keeps its extra classes and other props", () => {
 
 test("a hint is keystone's field hint", () => {
   assert.equal(drawn(Hint, {}, "Shown to visitors"), '<p class="ks-hint">Shown to visitors</p>')
+})
+
+test("an error is keystone's field error", () => {
+  assert.equal(drawn(FieldError, {}, "can't be blank"), '<p class="ks-error">can&#x27;t be blank</p>')
 })
