@@ -17,3 +17,7 @@ test("adds the extra classes it is given after keystone's", () => {
 test("passes other props through to the input", () => {
   assert.equal(Input({ value: "Budget" }).props.value, "Budget")
 })
+
+test("stays disabled when it is disabled", () => {
+  assert.equal(Input({ disabled: true }).props.disabled, true)
+})
