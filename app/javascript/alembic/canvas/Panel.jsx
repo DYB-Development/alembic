@@ -9,7 +9,6 @@ const heading = { fontWeight: 600, marginBottom: 6, marginTop: 14 }
 const item = { fontSize: 12, marginBottom: 4, lineHeight: 1.4 }
 const link = { ...action, textAlign: "center", textDecoration: "none", color: "#111827" }
 const field = { display: "block" }
-const caption = { display: "block", marginBottom: 3, color: "#374151" }
 
 const settling = (flow, name, onSaveDetails) => (event) => {
   if (event.target.value !== (flow[name] ?? "")) onSaveDetails({ [name]: event.target.value })
@@ -50,7 +49,7 @@ const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, 
     </label>
 
     <label style={field}>
-      <span style={caption}>Start label</span>
+      <span className="ks-label" style={{ marginBottom: 3 }}>Start label</span>
       <input style={control} defaultValue={flow.start_label ?? ""} onBlur={settling(flow, "start_label", onSaveDetails)} data-flow-start-label />
     </label>
 
