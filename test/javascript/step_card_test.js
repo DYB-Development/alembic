@@ -21,3 +21,7 @@ test("borders an ordinary card in keystone's border color", () => {
 test("borders a selected card in the accent color", () => {
   assert.ok(classes(card({}, { selected: true })).includes("border-accent-600"))
 })
+
+test("borders a card with problems in red", () => {
+  assert.ok(classes(card({ violations: [ { problem: "unreachable", detail: null } ] })).includes("border-red-600"))
+})
