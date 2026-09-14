@@ -3,7 +3,7 @@ import Control from "./Control"
 import Records from "./Records"
 import { action } from "./styles"
 
-const panel = { width: 280, padding: 20, overflowY: "auto", background: "#fff", borderLeft: "1px solid #e5e7eb" }
+const panel = { width: 280, padding: 20, overflowY: "auto" }
 
 const Inspector = ({ node, fields, holds, labels, recordLabels, choices, onSave, onDelete, onClose }) => {
   const [ draft, setDraft ] = useState(node.config)
@@ -15,7 +15,7 @@ const Inspector = ({ node, fields, holds, labels, recordLabels, choices, onSave,
   }
 
   return (
-    <aside style={panel} data-inspector>
+    <aside className="ks-panel" style={panel} data-inspector>
       <div style={{ display: "flex", alignItems: "start", justifyContent: "space-between", gap: 8 }}>
         <h2 style={{ fontWeight: 600, marginBottom: 2 }}>{node.label}</h2>
         <button title="Close" onClick={onClose}
