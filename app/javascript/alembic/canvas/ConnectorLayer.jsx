@@ -7,7 +7,7 @@ const ConnectorLayer = ({ links, extent, dragging, onInsert, onRemove, onDrop })
          style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none", zIndex: 1 }}>
       <defs>
         <marker id="alembic-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-          <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af" />
+          <path d="M 0 0 L 10 5 L 0 10 z" className="fill-gray-400 dark:fill-zinc-500" />
         </marker>
       </defs>
       {links.map((link) => (

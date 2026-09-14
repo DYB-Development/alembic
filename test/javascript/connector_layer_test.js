@@ -15,3 +15,7 @@ const classesWith = (html, attribute) => (html.match(new RegExp(`<[^<>]*${attrib
 test("strokes each connection in keystone's line color", () => {
   assert.ok(classesWith(drawn(), 'data-link="a-b"').includes("stroke-gray-400"))
 })
+
+test("fills each arrow head in keystone's line color", () => {
+  assert.ok(classesWith(drawn(), 'd="M 0 0 L 10 5 L 0 10 z"').includes("fill-gray-400"))
+})
