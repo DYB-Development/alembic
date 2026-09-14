@@ -30,3 +30,7 @@ test("writes each step type's name in the button's own text color, softened", ()
 test("offers connecting to an existing step as keystone's secondary button", () => {
   assert.ok(classesOf(drawn(), "Connect to a step already here").includes("ks-button-secondary"))
 })
+
+test("offers cancelling as keystone's secondary button", () => {
+  assert.ok(classesOf(drawn(), "Cancel").includes("ks-button-secondary"))
+})
