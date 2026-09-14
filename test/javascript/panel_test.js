@@ -98,3 +98,7 @@ const classesOn = (tree, marker) => (shown(tree, marker)[0]?.props.className || 
 test("is drawn as a keystone panel", () => {
   assert.ok(classesOn(panel({}), "data-builder-panel").includes("ks-panel"))
 })
+
+test("colors the history link with the accent color", () => {
+  assert.ok(classesOn(panel({}), "data-history").includes("text-accent-600"))
+})

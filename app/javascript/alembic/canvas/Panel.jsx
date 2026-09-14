@@ -23,7 +23,7 @@ const Panel = ({ flow, changes, problems, refusal, notice, onCreate, onPublish, 
       <button title="Close" onClick={onClose}
               style={{ border: "none", background: "none", cursor: "pointer", fontSize: 18, lineHeight: 1, color: "#6b7280" }}>×</button>
     </div>
-    <a style={{ ...quiet, display: "block", color: "#2563eb" }} href={flow.history_url} data-history>{standing(flow)}</a>
+    <a className="text-accent-600 dark:text-accent-400" style={{ fontSize: 12, display: "block" }} href={flow.history_url} data-history>{standing(flow)}</a>
 
     <h2 style={heading}>Problems</h2>
     {refusal && <p style={{ ...item, color: "#991b1b", fontWeight: 600 }} data-refusal>{refusal}</p>}
