@@ -1,7 +1,6 @@
 import React from "react"
 import Control from "./Control"
 import { amended } from "./rows"
-import { action } from "./styles"
 
 const Records = ({ holds, labels, rows, onChange, onSettle }) => {
   const kept = Array.isArray(rows) ? rows : []
@@ -26,7 +25,7 @@ const Records = ({ holds, labels, rows, onChange, onSettle }) => {
                   onClick={() => onSettle(kept.filter((_, at) => at !== index))}>Remove</button>
         </div>
       ))}
-      <button style={{ ...action, textAlign: "center" }} onClick={() => onSettle([ ...kept, {} ])}>Add</button>
+      <button className="ks-button ks-button-secondary ks-button-sm w-full" onClick={() => onSettle([ ...kept, {} ])}>Add</button>
     </div>
   )
 }

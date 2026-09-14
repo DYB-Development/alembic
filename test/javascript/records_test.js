@@ -22,3 +22,7 @@ test("writes each record's field names in keystone's muted text color", () => {
 test("offers removing a record as keystone's secondary button", () => {
   assert.ok(classesOf(drawn(), "Remove").includes("ks-button-secondary"))
 })
+
+test("offers adding a record as keystone's secondary button", () => {
+  assert.ok(classesOf(drawn(), "Add").includes("ks-button-secondary"))
+})
