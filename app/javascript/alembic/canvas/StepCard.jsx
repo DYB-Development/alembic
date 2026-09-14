@@ -8,13 +8,18 @@ const bookendCard = { padding: "8px 14px", textAlign: "center", fontWeight: 600,
 
 const named = { fontWeight: 600, lineHeight: 1.3 }
 
+const edge = (target, troubled, selected) => {
+  const lift = selected ? "ring-4 ring-accent-600/15" : "shadow-sm"
+  if (target || (selected && !troubled)) return `border-accent-600 ${lift}`
+  if (troubled) return `border-red-600 ${lift}`
+  return "border-gray-300 shadow-sm dark:border-zinc-700"
+}
+
 const StepCard = ({ node, selected, armed, connecting, onSelect, onArm, onDragEnd, onDragStart }) => {
   const bookend = node.begins_here || node.ends_here
   const pinned = node.begins_here
   const ports = node.ends_here ? [] : node.ports
   const target = connecting && !pinned
-  const inline = target
-  const lift = selected ? "ring-4 ring-accent-600/15" : "shadow-sm"
 
   return (
     <div ref={node.ref}
@@ -23,15 +28,11 @@ const StepCard = ({ node, selected, armed, connecting, onSelect, onArm, onDragEn
          onDragStart={(event) => { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/plain", node.id); onDragStart() }}
          onDragEnd={onDragEnd}
          onClick={onSelect}
-         className={`bg-white dark:bg-zinc-900 ${inline ? "" : node.violations.length ? `border-2 border-red-600 ${lift}` : selected ? "border-2 border-accent-600 ring-4 ring-accent-600/15" : "border-2 border-gray-300 shadow-sm dark:border-zinc-700"}`}
+         className={`bg-white border-2 dark:bg-zinc-900 ${edge(target, node.violations.length > 0, selected)}`}
          style={{
            ...card,
            padding: bookend ? 0 : "12px 14px",
-           cursor: pinned ? "default" : connecting ? "crosshair" : "grab",
-           ...(!inline ? {} : {
-             border: "2px solid #2563eb",
-             boxShadow: selected ? "0 0 0 3px rgba(37,99,235,.15)" : "0 1px 2px rgba(0,0,0,.05)"
-           })
+           cursor: pinned ? "default" : connecting ? "crosshair" : "grab"
          }}>
       {bookend && <div style={bookendCard}>{node.label}</div>}
       {!bookend && <div style={named}>{node.label}</div>}

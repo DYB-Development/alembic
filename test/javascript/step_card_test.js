@@ -25,3 +25,7 @@ test("borders a selected card in the accent color", () => {
 test("borders a card with problems in red", () => {
   assert.ok(classes(card({ violations: [ { problem: "unreachable", detail: null } ] })).includes("border-red-600"))
 })
+
+test("borders a card that can be connected to in the accent color", () => {
+  assert.ok(classes(card({}, { connecting: true })).includes("border-accent-600"))
+})
