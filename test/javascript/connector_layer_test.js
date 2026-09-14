@@ -19,3 +19,7 @@ test("strokes each connection in keystone's line color", () => {
 test("fills each arrow head in keystone's line color", () => {
   assert.ok(classesWith(drawn(), 'd="M 0 0 L 10 5 L 0 10 z"').includes("fill-gray-400"))
 })
+
+test("writes each connection label in keystone's muted text color", () => {
+  assert.ok(classesWith(drawn(), 'data-link-label="a-b"').includes("text-gray-500"))
+})
