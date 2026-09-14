@@ -37,3 +37,9 @@ test("writes the step's type in keystone's muted text color", () => {
 
   assert.ok(classes(type).includes("text-gray-500"))
 })
+
+test("writes a start card's label in keystone's muted text color", () => {
+  const label = child(card({ begins_here: true, label: "Start" }), (element) => element.props?.children === "Start")
+
+  assert.ok(classes(label).includes("text-gray-500"))
+})

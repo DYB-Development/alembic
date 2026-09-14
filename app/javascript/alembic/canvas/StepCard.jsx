@@ -4,7 +4,7 @@ import { CARD } from "./styles"
 
 const card = { width: CARD, boxSizing: "border-box", borderRadius: 8 }
 
-const bookendCard = { padding: "8px 14px", textAlign: "center", fontWeight: 600, color: "#6b7280" }
+const bookendCard = { padding: "8px 14px", textAlign: "center", fontWeight: 600 }
 
 const named = { fontWeight: 600, lineHeight: 1.3 }
 
@@ -34,7 +34,7 @@ const StepCard = ({ node, selected, armed, connecting, onSelect, onArm, onDragEn
            padding: bookend ? 0 : "12px 14px",
            cursor: pinned ? "default" : connecting ? "crosshair" : "grab"
          }}>
-      {bookend && <div style={bookendCard}>{node.label}</div>}
+      {bookend && <div className="text-gray-500 dark:text-gray-400" style={bookendCard}>{node.label}</div>}
       {!bookend && <div style={named}>{node.label}</div>}
       {!bookend && <div className="text-gray-500 dark:text-gray-400" style={{ fontSize: 11, marginTop: 2 }}>{node.type}</div>}
       {node.violations.map((violation) => (
