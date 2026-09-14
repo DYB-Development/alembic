@@ -17,3 +17,7 @@ test("sets the card on keystone's panel background", () => {
 test("borders an ordinary card in keystone's border color", () => {
   assert.ok(classes(card()).includes("border-gray-300"))
 })
+
+test("borders a selected card in the accent color", () => {
+  assert.ok(classes(card({}, { selected: true })).includes("border-accent-600"))
+})
