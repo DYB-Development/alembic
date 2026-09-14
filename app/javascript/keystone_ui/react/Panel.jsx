@@ -1,7 +1,7 @@
 import React from "react"
 
-const Panel = ({ children }) => (
-  <div className="ks-panel">{children}</div>
+const Panel = ({ as: Tag = "div", children }) => (
+  <Tag className="ks-panel">{children}</Tag>
 )
 
 export default Panel
