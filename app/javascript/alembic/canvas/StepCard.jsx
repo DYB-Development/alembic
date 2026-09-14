@@ -12,6 +12,8 @@ const StepCard = ({ node, selected, armed, connecting, onSelect, onArm, onDragEn
   const bookend = node.begins_here || node.ends_here
   const pinned = node.begins_here
   const ports = node.ends_here ? [] : node.ports
+  const target = connecting && !pinned
+  const resting = !target && !node.violations.length && !selected
 
   return (
     <div ref={node.ref}
@@ -20,13 +22,15 @@ const StepCard = ({ node, selected, armed, connecting, onSelect, onArm, onDragEn
          onDragStart={(event) => { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/plain", node.id); onDragStart() }}
          onDragEnd={onDragEnd}
          onClick={onSelect}
-         className="bg-white dark:bg-zinc-900"
+         className={`bg-white dark:bg-zinc-900 ${resting ? "border-2 border-gray-300 shadow-sm dark:border-zinc-700" : ""}`}
          style={{
            ...card,
            padding: bookend ? 0 : "12px 14px",
            cursor: pinned ? "default" : connecting ? "crosshair" : "grab",
-           border: `2px solid ${connecting && !pinned ? "#2563eb" : node.violations.length ? "#dc2626" : selected ? "#2563eb" : "#d1d5db"}`,
-           boxShadow: selected ? "0 0 0 3px rgba(37,99,235,.15)" : "0 1px 2px rgba(0,0,0,.05)"
+           ...(resting ? {} : {
+             border: `2px solid ${target ? "#2563eb" : node.violations.length ? "#dc2626" : "#2563eb"}`,
+             boxShadow: selected ? "0 0 0 3px rgba(37,99,235,.15)" : "0 1px 2px rgba(0,0,0,.05)"
+           })
          }}>
       {bookend && <div style={bookendCard}>{node.label}</div>}
       {!bookend && <div style={named}>{node.label}</div>}
