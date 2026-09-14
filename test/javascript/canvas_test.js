@@ -16,3 +16,11 @@ test("writes the editor's text in keystone's text color", () => {
 test("sets the canvas on the palette's surface color", () => {
   assert.match(drawn(), /^<div[^>]*><div class="bg-surface-50 dark:bg-surface-950"/)
 })
+
+const loose = [ { id: "orphan", label: "Orphan", type: "question", loose: true, ports: [], row: 0, column: 0 } ]
+
+const classesWith = (html, attribute) => (html.match(new RegExp(`<[^<>]*${attribute}[^<>]*`))?.[0].match(/class="([^"]*)"/)?.[1] || "").split(" ")
+
+test("borders the steps not in the flow yet in keystone's border color", () => {
+  assert.ok(classesWith(drawn(loose), "data-loose").includes("border-gray-300"))
+})

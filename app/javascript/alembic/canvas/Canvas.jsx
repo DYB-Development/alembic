@@ -14,8 +14,7 @@ import { nextId } from "./ids"
 
 const page = { display: "flex", height: "100%", minHeight: 0, fontSize: 13 }
 const scroll = { flex: 1, overflow: "auto", position: "relative" }
-const waiting = { position: "absolute", top: 56, left: 16, zIndex: 5, width: CARD + 24, padding: 12,
-                  background: "#f9fafb", border: "1px dashed #d1d5db", borderRadius: 8 }
+const waiting = { position: "absolute", top: 56, left: 16, zIndex: 5, width: CARD + 24, padding: 12, borderRadius: 8 }
 
 const grid = { display: "grid", rowGap: GAP_Y, columnGap: 0, padding: 40, justifyContent: "center", position: "relative" }
 const notice = { position: "sticky", zIndex: 8, top: 8, margin: "8px auto 0", width: "fit-content", padding: "6px 12px", borderRadius: 6, fontSize: 12 }
@@ -97,7 +96,7 @@ const Canvas = ({ base, token, initial }) => {
                         onDrop={(link) => { const held = dragging; setDragging(null); send("/steps/" + held + "/move", "PATCH", { from: link.source, to: link.target }) }} />
 
         {loose.length > 0 && (
-          <div data-loose style={waiting}>
+          <div data-loose className="border border-dashed border-gray-300 bg-gray-50 dark:border-zinc-700 dark:bg-zinc-900" style={waiting}>
             <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 6 }}>Not in the flow yet — drag one onto a connection</div>
             {loose.map((node) => (
               <div key={node.id} style={{ marginBottom: 8 }}>
