@@ -22,3 +22,7 @@ test("writes its caption in keystone's muted text color", () => {
 test("offers each step type as keystone's secondary button", () => {
   assert.ok(classesOf(drawn(), "Question").includes("ks-button-secondary"))
 })
+
+test("writes each step type's name in the button's own text color, softened", () => {
+  assert.deepEqual(classesOf(drawn(), "question"), [ "opacity-75" ])
+})

@@ -7,7 +7,7 @@ const TypePicker = ({ entries, at, onPick, onConnect, onDismiss }) => (
     {entries.map((entry) => (
       <button key={entry.type} className="ks-button ks-button-secondary ks-button-sm w-full mb-1.5 flex-col" onClick={() => onPick(entry)}>
         {entry.label}
-        <span style={{ display: "block", color: "#6b7280", fontSize: 11 }}>{entry.type}</span>
+        <span className="opacity-75" style={{ display: "block", fontSize: 11 }}>{entry.type}</span>
       </button>
     ))}
     {onConnect && (
