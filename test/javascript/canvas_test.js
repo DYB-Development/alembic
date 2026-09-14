@@ -12,3 +12,7 @@ const drawn = (nodes = []) => renderToStaticMarkup(React.createElement(Canvas, {
 test("writes the editor's text in keystone's text color", () => {
   assert.match(drawn(), /^<div class="text-gray-900 dark:text-gray-100"/)
 })
+
+test("sets the canvas on the palette's surface color", () => {
+  assert.match(drawn(), /^<div[^>]*><div class="bg-surface-50 dark:bg-surface-950"/)
+})
