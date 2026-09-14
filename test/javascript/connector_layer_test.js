@@ -23,3 +23,7 @@ test("fills each arrow head in keystone's line color", () => {
 test("writes each connection label in keystone's muted text color", () => {
   assert.ok(classesWith(drawn(), 'data-link-label="a-b"').includes("text-gray-500"))
 })
+
+test("sets each connection label on the canvas's surface color", () => {
+  assert.ok(classesWith(drawn(), 'data-link-label="a-b"').includes("bg-surface-50"))
+})
