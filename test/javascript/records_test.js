@@ -18,3 +18,7 @@ const classesOf = (html, text) => (html.match(new RegExp(`<[^<>]*class="([^"]*)"
 test("writes each record's field names in keystone's muted text color", () => {
   assert.ok(classesOf(drawn(), "Value").includes("text-gray-500"))
 })
+
+test("offers removing a record as keystone's secondary button", () => {
+  assert.ok(classesOf(drawn(), "Remove").includes("ks-button-secondary"))
+})

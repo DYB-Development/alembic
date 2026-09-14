@@ -22,7 +22,7 @@ const Records = ({ holds, labels, rows, onChange, onSettle }) => {
                        onSettle={(next) => amend(index, name, next, true)} />
             </label>
           ))}
-          <button style={{ ...action, textAlign: "center", fontSize: 11, padding: "3px 8px" }}
+          <button className="ks-button ks-button-secondary ks-button-sm mb-1.5"
                   onClick={() => onSettle(kept.filter((_, at) => at !== index))}>Remove</button>
         </div>
       ))}
