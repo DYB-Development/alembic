@@ -13,3 +13,9 @@ const drawn = (given = {}) => renderToStaticMarkup(React.createElement(Inspector
 test("is drawn as a keystone panel", () => {
   assert.match(drawn(), /^<aside class="ks-panel"/)
 })
+
+const classesOf = (html, text) => (html.match(new RegExp(`<[^<>]*class="([^"]*)"[^<>]*>${text}`))?.[1] || "").split(" ")
+
+test("writes the step's id and type in keystone's muted text color", () => {
+  assert.ok(classesOf(drawn(), "gate · condition").includes("text-gray-500"))
+})

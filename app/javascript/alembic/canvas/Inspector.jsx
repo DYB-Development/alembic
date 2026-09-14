@@ -21,7 +21,7 @@ const Inspector = ({ node, fields, holds, labels, recordLabels, choices, onSave,
         <button title="Close" onClick={onClose}
                 style={{ border: "none", background: "none", cursor: "pointer", fontSize: 18, lineHeight: 1, color: "#6b7280" }}>×</button>
       </div>
-      <p style={{ color: "#6b7280", fontSize: 11, marginBottom: 16 }}>{node.id} · {node.type}</p>
+      <p className="text-gray-500 dark:text-gray-400" style={{ fontSize: 11, marginBottom: 16 }}>{node.id} · {node.type}</p>
       {Object.entries(fields).map(([ name, type ]) => (
         <label key={name} style={{ display: "block" }}>
           <span style={{ display: "block", marginBottom: 3, color: "#374151" }}>{labels[name] || name}</span>
