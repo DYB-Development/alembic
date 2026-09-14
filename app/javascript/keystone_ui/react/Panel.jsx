@@ -1,7 +1,9 @@
 import React from "react"
 
-const Panel = ({ as: Tag = "div", children }) => (
-  <Tag className="ks-panel">{children}</Tag>
+const classes = (...names) => names.filter(Boolean).join(" ")
+
+const Panel = ({ as: Tag = "div", className, children }) => (
+  <Tag className={classes("ks-panel", className)}>{children}</Tag>
 )
 
 export default Panel
