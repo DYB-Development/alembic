@@ -9,3 +9,7 @@ const spot = (dragging) => Placeholder({
 test("colors an empty result spot amber", () => {
   assert.ok(spot(false).props.className?.split(" ").includes("border-amber-500"))
 })
+
+test("colors an empty result spot with the accent color while a step is dragged", () => {
+  assert.ok(spot(true).props.className.split(" ").includes("border-accent-600"))
+})
