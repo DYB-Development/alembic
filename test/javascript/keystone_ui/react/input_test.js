@@ -21,3 +21,7 @@ test("passes other props through to the input", () => {
 test("stays disabled when it is disabled", () => {
   assert.equal(Input({ disabled: true }).props.disabled, true)
 })
+
+test("renders as the form element it is given", () => {
+  assert.equal(Input({ as: "textarea" }).type, "textarea")
+})
