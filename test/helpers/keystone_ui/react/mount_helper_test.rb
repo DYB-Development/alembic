@@ -20,4 +20,10 @@ class KeystoneUi::React::MountHelperTest < ActionView::TestCase
 
     assert_dom "div.flex-1[data-flow-canvas][data-react-ui='test/greeting']"
   end
+
+  test "depends on nothing from alembic" do
+    source = File.read(Alembic::Engine.root.join("app/helpers/keystone_ui/react/mount_helper.rb"))
+
+    assert_no_match(/alembic/i, source)
+  end
 end
