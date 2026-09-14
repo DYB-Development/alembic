@@ -11,3 +11,7 @@ test("colors a result that leads nowhere amber", () => {
 test("colors a connected result with keystone's muted colors", () => {
   assert.ok(classes({ connected: true }).includes("border-gray-300"))
 })
+
+test("fills a result being connected with the accent color", () => {
+  assert.ok(classes({ armed: true }).includes("bg-accent-600"))
+})
