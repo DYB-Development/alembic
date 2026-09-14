@@ -7,6 +7,7 @@ module Alembic
 
       require "keystone_ui"
       KeystoneUi.configuration.tailwind_sources << root.join("app/views/**/*.erb").to_s
+      KeystoneUi.configuration.tailwind_sources << root.join("app/javascript/**/*.{js,jsx}").to_s
     end
 
     initializer "alembic.step_types" do |app|
