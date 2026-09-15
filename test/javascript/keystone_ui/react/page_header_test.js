@@ -17,3 +17,7 @@ test("shows a subtitle under its title when it is given one", () => {
 test("shows its actions in keystone's actions area when it is given some", () => {
   assert.match(render({ actions: React.createElement("a", { href: "/pages" }, "All pages") }), /<\/div><div class="page-header-actions ks-page-header-actions"><a href="\/pages">All pages<\/a><\/div><\/div>$/)
 })
+
+test("adds the extra classes it is given after keystone's", () => {
+  assert.match(render({ className: "mb-2" }), /^<div class="ks-page-header mb-2">/)
+})
