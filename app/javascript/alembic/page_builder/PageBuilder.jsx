@@ -58,7 +58,7 @@ export default function PageBuilder({ base, token, ...initial }) {
         <Panel data-page-panel>
           {blocks.length === 0 && <p>This page has no blocks yet.</p>}
           <div ref={containerRef} data-page-grid style={{ overflow: "hidden", visibility: mounted ? "visible" : "hidden" }}>
-            <GridLayout width={width} layout={layout} gridConfig={{ cols: COLUMNS, rowHeight: ROW_HEIGHT }} dropConfig={dropConfig} onDrop={dropped} onDragStop={(placed) => placeBlocks(send, placed)}>
+            <GridLayout width={width} layout={layout} gridConfig={{ cols: COLUMNS, rowHeight: ROW_HEIGHT }} dropConfig={dropConfig} onDrop={dropped} onDragStop={(placed) => placeBlocks(send, placed)} onResizeStop={(placed) => placeBlocks(send, placed)}>
               {blocks.map((block) => <div key={block.id} data-block={block.id} className="ks-panel p-3">{named(block_types, block.type)}</div>)}
             </GridLayout>
           </div>
