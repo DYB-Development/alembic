@@ -21,3 +21,9 @@ test("links to the page list as its primary button", () => {
 test("shows the page in a keystone panel", () => {
   assert.match(render({}).match(/<div[^>]*data-page-panel[^>]*>/)?.[0] ?? "", /class="[^"]*ks-panel/)
 })
+
+test("lists exactly the block types it is given, by name", () => {
+  const markup = render({ block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 }, { key: "text", name: "Text", width: 6, height: 2 } ] })
+
+  assert.deepEqual([ ...markup.matchAll(/<[^>]*data-block-type[^>]*>([^<]*)</g) ].map((found) => found[1]), [ "Heading", "Text" ])
+})
