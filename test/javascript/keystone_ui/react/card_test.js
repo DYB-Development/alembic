@@ -25,3 +25,7 @@ test("links to its address with Read more by default", () => {
 test("uses the call to action it is given for its link", () => {
   assert.match(render({ cta: "View details" }), /class="ks-card-link">View details<\/a>/)
 })
+
+test("adds the extra classes it is given after keystone's", () => {
+  assert.match(render({ className: "shadow-lg" }), /^<div class="ks-card shadow-lg">/)
+})
