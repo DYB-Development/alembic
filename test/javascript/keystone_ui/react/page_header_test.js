@@ -13,3 +13,7 @@ test("shows its title in keystone's page header", () => {
 test("shows a subtitle under its title when it is given one", () => {
   assert.match(render({ subtitle: "Build your page" }), /<h1 class="ks-page-header-title">Welcome<\/h1><p class="ks-page-header-subtitle">Build your page<\/p>/)
 })
+
+test("shows its actions in keystone's actions area when it is given some", () => {
+  assert.match(render({ actions: React.createElement("a", { href: "/pages" }, "All pages") }), /<\/div><div class="page-header-actions ks-page-header-actions"><a href="\/pages">All pages<\/a><\/div><\/div>$/)
+})
