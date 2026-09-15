@@ -98,3 +98,12 @@ test("spaces each block type's name apart from its Add button", () => {
 
   assert.match(markup.match(/<li[^>]*data-block-type="heading"[^>]*>/)?.[0] ?? "", /class="[^"]*\bjustify-between\b[^"]*\bgap-2\b/)
 })
+
+test("pads each block's label inside its panel", () => {
+  const markup = render({
+    block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ],
+    blocks: [ { id: "b1", type: "heading", x: 0, y: 0, w: 12, h: 1 } ]
+  })
+
+  assert.match(markup.match(/<div[^>]*data-block="b1"[^>]*>/)?.[0] ?? "", /class="[^"]*\bp-3\b/)
+})
