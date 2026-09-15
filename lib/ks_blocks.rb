@@ -6,6 +6,10 @@ module KsBlocks
       registry.register(BlockType.new(key: key, name: name, width: width, height: height))
     end
 
+    def layout_data(blocks)
+      { blocks: blocks }
+    end
+
     def registry
       @registry ||= Registry.new
     end
