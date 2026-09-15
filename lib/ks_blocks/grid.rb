@@ -12,6 +12,11 @@ module KsBlocks
       blocks + [ { "id" => SecureRandom.uuid, "type" => block_type.key.to_s, "x" => x, "y" => y, "w" => block_type.width, "h" => block_type.height } ]
     end
 
+    def place(blocks, positions)
+      placed = positions.index_by { |position| position["id"] }
+      blocks.map { |block| block.merge(placed.fetch(block["id"], {}).slice("x", "y", "w", "h")) }
+    end
+
     def first_open_place(blocks, block_type)
       (0..).each do |y|
         (0..COLUMNS - block_type.width).each do |x|

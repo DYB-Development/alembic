@@ -30,5 +30,13 @@ module KsBlocks
 
       assert_equal [ 0, 1 ], blocks.last.values_at("x", "y")
     end
+
+    test "placing blocks gives each named block its new position and size" do
+      blocks = Grid.add([], TEXT, x: 0, y: 0)
+
+      placed = Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 6, "y" => 3, "w" => 4, "h" => 1 } ])
+
+      assert_equal [ 6, 3, 4, 1 ], placed.first.values_at("x", "y", "w", "h")
+    end
   end
 end
