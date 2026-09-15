@@ -21,3 +21,7 @@ test("announces itself as an alert", () => {
 test("shows its message in keystone's message, inside keystone's body and content", () => {
   assert.match(render({ message: "Saved" }), /<div class="ks-alert-body"><div class="ks-alert-content"><p class="ks-alert-message">Saved<\/p><\/div><\/div>/)
 })
+
+test("shows a title above a titled message when it is given one", () => {
+  assert.match(render({ title: "Error", message: "Could not save" }), /<p class="ks-alert-title">Error<\/p><p class="ks-alert-message-titled">Could not save<\/p>/)
+})
