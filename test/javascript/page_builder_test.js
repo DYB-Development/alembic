@@ -107,3 +107,12 @@ test("pads each block's label inside its panel", () => {
 
   assert.match(markup.match(/<div[^>]*data-block="b1"[^>]*>/)?.[0] ?? "", /class="[^"]*\bp-3\b/)
 })
+
+test("lets each block be resized from its right edge, bottom edge and corner", () => {
+  const markup = render({
+    block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ],
+    blocks: [ { id: "b1", type: "heading", x: 0, y: 0, w: 12, h: 1 } ]
+  })
+
+  assert.deepEqual([ ...markup.matchAll(/react-resizable-handle-(\w+)/g) ].map((found) => found[1]).sort(), [ "e", "s", "se" ])
+})
