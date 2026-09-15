@@ -43,5 +43,14 @@ module KsBlocks
 
       assert_equal host.blocks, host.layout_data[:blocks]
     end
+
+    test "a host record refuses to place blocks against a layout version it no longer has" do
+      host = Host.create!(name: "Dashboard")
+      host.add_block(TEXT, x: 0, y: 0)
+      drawn = host.layout_data[:version]
+      host.add_block(TEXT, x: 6, y: 0)
+
+      assert_raises(InvalidLayout) { host.place_blocks([ { "id" => host.blocks.first["id"], "x" => 0, "y" => 2, "w" => 6, "h" => 2 } ], version: drawn) }
+    end
   end
 end

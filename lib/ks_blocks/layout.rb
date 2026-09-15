@@ -12,7 +12,9 @@ module KsBlocks
           update!(column => Grid.add(public_send(column), block_type, x: x, y: y))
         end
 
-        define_method(:place_blocks) do |positions|
+        define_method(:place_blocks) do |positions, version: nil|
+          raise InvalidLayout, "This layout changed since it was last drawn" if version && version != KsBlocks.version_of(public_send(column))
+
           update!(column => Grid.place(public_send(column), positions))
         end
 
