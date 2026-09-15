@@ -9,5 +9,13 @@ module Alembic
     test "starts with no blocks" do
       assert_equal [], Page.create!(name: "Welcome").blocks
     end
+
+    test "adding a block stores its type and position at the type's starting size" do
+      page = Page.create!(name: "Welcome")
+
+      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 3, y: 1)
+
+      assert_equal({ "type" => "text", "x" => 3, "y" => 1, "w" => 6, "h" => 2 }, page.reload.blocks.first.except("id"))
+    end
   end
 end
