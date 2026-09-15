@@ -48,7 +48,7 @@ export default function PageBuilder({ base, token, ...initial }) {
             ? <p>There are no blocks to add.</p>
             : <ul>
                 {block_types.map((blockType) => (
-                  <li key={blockType.key} data-block-type={blockType.key} draggable="true" onDragStart={startDragging(blockType)}>
+                  <li key={blockType.key} data-block-type={blockType.key} className="flex items-center justify-between gap-2 py-1" draggable="true" onDragStart={startDragging(blockType)}>
                     {blockType.name}
                     <Button variant="secondary" size="sm" type="button" onClick={() => addBlock(send, blockType.key)}>Add</Button>
                   </li>

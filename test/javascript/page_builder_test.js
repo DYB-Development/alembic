@@ -92,3 +92,9 @@ test("keeps blocks inside the grid so the page never scrolls sideways", () => {
 test("keeps the grid hidden until it has measured its container", () => {
   assert.match(render({}).match(/<div[^>]*data-page-grid[^>]*>/)?.[0] ?? "", /visibility:hidden/)
 })
+
+test("spaces each block type's name apart from its Add button", () => {
+  const markup = render({ block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ] })
+
+  assert.match(markup.match(/<li[^>]*data-block-type="heading"[^>]*>/)?.[0] ?? "", /class="[^"]*\bjustify-between\b[^"]*\bgap-2\b/)
+})
