@@ -17,6 +17,10 @@ module KsBlocks
       blocks.map { |block| block.merge(placed.fetch(block["id"], {}).slice("x", "y", "w", "h")) }
     end
 
+    def remove(blocks, id)
+      blocks.reject { |block| block["id"] == id }
+    end
+
     def first_open_place(blocks, block_type)
       (0..).each do |y|
         (0..COLUMNS - block_type.width).each do |x|

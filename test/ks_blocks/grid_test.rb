@@ -38,5 +38,12 @@ module KsBlocks
 
       assert_equal [ 6, 3, 4, 1 ], placed.first.values_at("x", "y", "w", "h")
     end
+
+    test "removing a block takes only that block off the grid" do
+      blocks = Grid.add(Grid.add([], TEXT, x: 0, y: 0), TEXT, x: 6, y: 0)
+      kept, removed = blocks.map { |block| block["id"] }
+
+      assert_equal [ kept ], Grid.remove(blocks, removed).map { |block| block["id"] }
+    end
   end
 end
