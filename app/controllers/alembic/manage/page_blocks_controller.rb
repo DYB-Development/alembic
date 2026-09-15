@@ -10,7 +10,7 @@ module Alembic
       end
 
       def place
-        Page.find(params[:page_id]).place_blocks(params.require(:layout).map { |position| position.permit(:id, :x, :y).to_h })
+        Page.find(params[:page_id]).place_blocks(params.require(:layout).map { |position| position.permit(:id, :x, :y, :w, :h).to_h })
         head :no_content
       end
     end
