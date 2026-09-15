@@ -14,6 +14,10 @@ module KsBlocks
         define_method(:place_blocks) do |positions|
           update!(column => Grid.place(public_send(column), positions))
         end
+
+        define_method(:remove_block) do |id|
+          update!(column => Grid.remove(public_send(column), id))
+        end
       end
     end
   end

@@ -27,5 +27,14 @@ module KsBlocks
 
       assert_equal [ 6, 2, 4, 1 ], host.reload.blocks.first.values_at("x", "y", "w", "h")
     end
+
+    test "a host record saves its layout without a removed block" do
+      host = Host.create!(name: "Dashboard")
+      host.add_block(TEXT, x: 0, y: 0)
+
+      host.remove_block(host.blocks.first["id"])
+
+      assert_empty host.reload.blocks
+    end
   end
 end
