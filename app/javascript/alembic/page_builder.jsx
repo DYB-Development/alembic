@@ -1,4 +1,5 @@
 import { createRoot } from "react-dom/client"
+import "react-grid-layout/css/styles.css"
 import { register, mountAll } from "../keystone_ui/react/registry"
 import PageBuilder from "./page_builder/PageBuilder"
 

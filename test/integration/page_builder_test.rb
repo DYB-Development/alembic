@@ -84,6 +84,46 @@ module Alembic
       assert_includes page_builder_props["block_types"], { "key" => "payload_probe", "name" => "Payload probe", "width" => 6, "height" => 2 }
     end
 
+    test "adding a block puts a block of that type at the given place" do
+      page = Page.create!(name: "Welcome")
+
+      post alembic.manage_page_blocks_path(page), params: { type: "heading", x: 0, y: 2 }, as: :json
+
+      assert_equal [ "heading", 0, 2 ], page.reload.blocks.last.values_at("type", "x", "y")
+    end
+
+    test "the page builder is given the page's blocks with their positions and sizes" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 3, y: 1)
+
+      get alembic.manage_page_path(page)
+
+      assert_equal page.reload.blocks, page_builder_props["blocks"]
+    end
+
+    test "the page's json is what the page builder is mounted with, apart from its token" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 3, y: 1)
+      get alembic.manage_page_path(page)
+      mounted = page_builder_props.except("token")
+
+      get alembic.manage_page_path(page, format: :json)
+
+      assert_equal mounted, response.parsed_body
+    end
+
+    test "the page builder is given a token to send changes with" do
+      get alembic.manage_page_path(Page.create!(name: "Welcome"))
+
+      assert page_builder_props["token"].present?
+    end
+
+    test "the page builder screen links the page builder stylesheet" do
+      get alembic.manage_page_path(Page.create!(name: "Welcome"))
+
+      assert_select "link[rel=stylesheet][href*=?]", "alembic/page_builder"
+    end
+
     private
 
     def page_builder_props

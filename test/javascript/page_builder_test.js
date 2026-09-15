@@ -31,3 +31,33 @@ test("lists exactly the block types it is given, by name", () => {
 test("says there are no blocks to add when it is given no block types", () => {
   assert.match(render({ block_types: [] }), /There are no blocks to add/)
 })
+
+test("draws each block on the grid by its type's name", () => {
+  const markup = render({
+    block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ],
+    blocks: [ { id: "b1", type: "heading", x: 0, y: 0, w: 12, h: 1 } ]
+  })
+
+  assert.match(markup, /<[^>]*data-block="b1"[^>]*>[^<]*Heading/)
+})
+
+test("does not say the page has no blocks once it has one", () => {
+  const markup = render({
+    block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ],
+    blocks: [ { id: "b1", type: "heading", x: 0, y: 0, w: 12, h: 1 } ]
+  })
+
+  assert.doesNotMatch(markup, /This page has no blocks yet/)
+})
+
+test("offers an Add button beside each block type", () => {
+  const markup = render({ block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ] })
+
+  assert.match(markup, /<li[^>]*data-block-type="heading"[^>]*>.*<button[^>]*>Add<\/button>.*<\/li>/)
+})
+
+test("lets each block type be dragged", () => {
+  const markup = render({ block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ] })
+
+  assert.match(markup.match(/<li[^>]*data-block-type="heading"[^>]*>/)?.[0] ?? "", /draggable="true"/)
+})

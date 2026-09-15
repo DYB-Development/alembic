@@ -1,10 +1,6 @@
 <% content_for :head do %>
+  <%= stylesheet_link_tag "alembic/page_builder" %>
   <%= javascript_include_tag "alembic/page_builder", defer: true %>
 <% end %>
 
-<%= react_ui("alembic/page-builder", {
-      base: alembic.manage_page_path(@page),
-      pages: alembic.manage_pages_path,
-      name: @page.name,
-      block_types: Alembic::Pages.registry.block_types.map(&:to_h)
-    }) %>
+<%= react_ui("alembic/page-builder", @payload.merge(token: form_authenticity_token)) %>

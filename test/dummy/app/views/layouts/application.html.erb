@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html <%= keystone_theme_attributes %>>
   <head>
     <title><%= content_for(:title) || "Dummy" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -23,7 +23,7 @@
     <%= stylesheet_link_tag :app %>
   </head>
 
-  <body class="bg-white text-gray-900">
+  <body class="bg-white text-gray-900 dark:bg-surface-950 dark:text-gray-100">
     <%= yield %>
   </body>
 </html>
