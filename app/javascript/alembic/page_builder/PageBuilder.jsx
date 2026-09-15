@@ -2,6 +2,7 @@ import React, { useRef } from "react"
 import GridLayout, { useContainerWidth } from "react-grid-layout"
 import Button from "../../keystone_ui/react/Button"
 import Panel from "../../keystone_ui/react/Panel"
+import Page from "../../keystone_ui/react/Page"
 import PageHeader from "../../keystone_ui/react/PageHeader"
 import usePage from "./usePage"
 import { addBlock, dropBlock } from "./blocks"
@@ -34,7 +35,7 @@ export default function PageBuilder({ base, token, ...initial }) {
   }
 
   return (
-    <div>
+    <Page>
       <div className="sm:hidden mb-4 flex items-center justify-between gap-3">
         <h1 className="ks-page-header-title">{name}</h1>
         <Button href={pages} size="sm">All pages</Button>
@@ -58,6 +59,6 @@ export default function PageBuilder({ base, token, ...initial }) {
           </GridLayout>
         </div>
       </Panel>
-    </div>
+    </Page>
   )
 }
