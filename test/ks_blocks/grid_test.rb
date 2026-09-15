@@ -22,5 +22,13 @@ module KsBlocks
 
       assert_equal [ 6, 0 ], blocks.last.values_at("x", "y")
     end
+
+    test "adding a block with no position places it below when the row has no room" do
+      heading = BlockType.new(key: :heading, name: "Heading", width: 12, height: 1)
+
+      blocks = Grid.add(Grid.add([], heading, x: 0, y: 0), TEXT)
+
+      assert_equal [ 0, 1 ], blocks.last.values_at("x", "y")
+    end
   end
 end
