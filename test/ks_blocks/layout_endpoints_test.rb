@@ -97,5 +97,27 @@ module KsBlocks
 
       assert_equal stored, record.reload.blocks
     end
+
+    test "a host's add endpoint refuses a block type that is not registered" do
+      record = Alembic::Page.create!(name: "Dashboard")
+
+      with_routing do |routes|
+        routes.draw { post "/hosts/:id/blocks", to: "ks_blocks_host#add_block" }
+        post "/hosts/#{record.id}/blocks", params: { type: "retired_widget" }, as: :json
+
+        assert_response :unprocessable_entity
+      end
+    end
+
+    test "a host's add endpoint says which block type it could not find" do
+      record = Alembic::Page.create!(name: "Dashboard")
+
+      with_routing do |routes|
+        routes.draw { post "/hosts/:id/blocks", to: "ks_blocks_host#add_block" }
+        post "/hosts/#{record.id}/blocks", params: { type: "retired_widget" }, as: :json
+
+        assert_equal "No block type is registered as retired_widget", response.parsed_body["error"]
+      end
+    end
   end
 end
