@@ -6,7 +6,7 @@ import Page from "../../keystone_ui/react/Page"
 import PageHeader from "../../keystone_ui/react/PageHeader"
 import Section from "../../keystone_ui/react/Section"
 import usePage from "./usePage"
-import { addBlock, dropBlock, placeBlocks, removeBlock } from "./blocks"
+import { addBlock, dropBlock, placeBlocks, removeBlock } from "../../ks_blocks/blocks"
 
 const COLUMNS = 12
 const ROW_HEIGHT = 60
