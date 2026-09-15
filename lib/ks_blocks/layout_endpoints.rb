@@ -18,6 +18,7 @@ module KsBlocks
 
     def add_block
       block_type = KsBlocks.registry.block_types.find { |registered| registered.key.to_s == params[:type] }
+      raise InvalidLayout unless block_type
 
       block_layout_record.add_block(block_type, x: params[:x], y: params[:y])
       head :no_content
