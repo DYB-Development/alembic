@@ -56,5 +56,14 @@ module KsBlocks
 
       assert_equal "Heading overlaps Text", error.message
     end
+
+    test "placing a block past the grid's last column is refused with a message naming it" do
+      KsBlocks.block(:text, name: "Text", width: 6, height: 2)
+      blocks = Grid.add([], TEXT, x: 0, y: 0)
+
+      error = assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 8, "y" => 0, "w" => 6, "h" => 2 } ]) }
+
+      assert_equal "Text runs past the grid's last column", error.message
+    end
   end
 end

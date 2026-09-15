@@ -17,7 +17,14 @@ module KsBlocks
 
     def place(blocks, positions)
       placed = positions.index_by { |position| position["id"] }
-      blocks.map { |block| block.merge(placed.fetch(block["id"], {}).slice("x", "y", "w", "h")) }.tap { |arranged| refuse_overlaps(arranged, placed.keys) }
+      blocks.map { |block| block.merge(placed.fetch(block["id"], {}).slice("x", "y", "w", "h")) }.tap { |arranged| refuse_unfit(arranged, placed.keys) }
+    end
+
+    def refuse_unfit(blocks, moved_ids)
+      blocks.select { |block| moved_ids.include?(block["id"]) }.each do |moved|
+        raise InvalidLayout, "#{named(moved)} runs past the grid's last column" if moved["x"] + moved["w"] > COLUMNS
+      end
+      refuse_overlaps(blocks, moved_ids)
     end
 
     def refuse_overlaps(blocks, moved_ids)
