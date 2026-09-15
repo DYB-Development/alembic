@@ -16,7 +16,7 @@ const named = (block_types, key) => block_types.find((blockType) => blockType.ke
 export default function PageBuilder({ base, token, ...initial }) {
   const { page, send } = usePage(base, token, initial)
   const { name, pages, block_types = [], blocks = [] } = page
-  const { width, containerRef } = useContainerWidth()
+  const { width, containerRef, mounted } = useContainerWidth({ measureBeforeMount: true })
   const layout = blocks.map(({ id, x, y, w, h }) => ({ i: id, x, y, w, h }))
   const dragged = useRef(null)
 
@@ -57,7 +57,7 @@ export default function PageBuilder({ base, token, ...initial }) {
         </Section>
         <Panel data-page-panel>
           {blocks.length === 0 && <p>This page has no blocks yet.</p>}
-          <div ref={containerRef} data-page-grid style={{ overflow: "hidden" }}>
+          <div ref={containerRef} data-page-grid style={{ overflow: "hidden", visibility: mounted ? "visible" : "hidden" }}>
             <GridLayout width={width} layout={layout} gridConfig={{ cols: COLUMNS, rowHeight: ROW_HEIGHT }} dropConfig={dropConfig} onDrop={dropped}>
               {blocks.map((block) => <div key={block.id} data-block={block.id} className="ks-panel">{named(block_types, block.type)}</div>)}
             </GridLayout>

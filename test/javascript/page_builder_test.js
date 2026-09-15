@@ -88,3 +88,7 @@ test("draws each block on the grid as a keystone panel", () => {
 test("keeps blocks inside the grid so the page never scrolls sideways", () => {
   assert.match(render({}).match(/<div[^>]*data-page-grid[^>]*>/)?.[0] ?? "", /overflow:hidden/)
 })
+
+test("keeps the grid hidden until it has measured its container", () => {
+  assert.match(render({}).match(/<div[^>]*data-page-grid[^>]*>/)?.[0] ?? "", /visibility:hidden/)
+})
