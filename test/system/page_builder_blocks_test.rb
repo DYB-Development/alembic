@@ -36,8 +36,8 @@ module Alembic
 
     test "a block dragged onto the row above it takes that place after a reload" do
       record = Page.create!(name: "Welcome")
-      record.add_block(Pages.registry.block_types.find { |type| type.key == :heading }, x: 0, y: 0)
-      record.add_block(Pages.registry.block_types.find { |type| type.key == :text }, x: 0, y: 1)
+      record.add_block(KsBlocks.registry.block_types.find { |type| type.key == :heading }, x: 0, y: 0)
+      record.add_block(KsBlocks.registry.block_types.find { |type| type.key == :text }, x: 0, y: 1)
       visit alembic.manage_page_path(record)
 
       text, heading = find("[data-block]", text: "Text"), find("[data-block]", text: "Heading")
@@ -50,7 +50,7 @@ module Alembic
 
     test "a block widened by dragging its corner keeps its new size after a reload" do
       record = Page.create!(name: "Welcome")
-      record.add_block(Pages.registry.block_types.find { |type| type.key == :text }, x: 0, y: 0)
+      record.add_block(KsBlocks.registry.block_types.find { |type| type.key == :text }, x: 0, y: 0)
       visit alembic.manage_page_path(record)
       block = find("[data-block]", text: "Text")
       width_before = block.rect.width
@@ -65,7 +65,7 @@ module Alembic
 
     test "a removed block is still gone after a reload" do
       record = Page.create!(name: "Welcome")
-      record.add_block(Pages.registry.block_types.find { |type| type.key == :heading }, x: 0, y: 0)
+      record.add_block(KsBlocks.registry.block_types.find { |type| type.key == :heading }, x: 0, y: 0)
       visit alembic.manage_page_path(record)
 
       within(find("[data-block]", text: "Heading")) { click_on "Remove" }

@@ -77,7 +77,7 @@ module Alembic
     end
 
     test "the page builder is given each registered block type's key, name and starting size" do
-      Pages.block(:payload_probe, name: "Payload probe", width: 6, height: 2)
+      KsBlocks.block(:payload_probe, name: "Payload probe", width: 6, height: 2)
 
       get alembic.manage_page_path(Page.create!(name: "Welcome"))
 
