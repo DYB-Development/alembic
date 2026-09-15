@@ -59,7 +59,7 @@ export default function PageBuilder({ base, token, ...initial }) {
           {blocks.length === 0 && <p>This page has no blocks yet.</p>}
           <div ref={containerRef} data-page-grid>
             <GridLayout width={width} layout={layout} gridConfig={{ cols: COLUMNS, rowHeight: ROW_HEIGHT }} dropConfig={dropConfig} onDrop={dropped}>
-              {blocks.map((block) => <div key={block.id} data-block={block.id}>{named(block_types, block.type)}</div>)}
+              {blocks.map((block) => <div key={block.id} data-block={block.id} className="ks-panel">{named(block_types, block.type)}</div>)}
             </GridLayout>
           </div>
         </Panel>

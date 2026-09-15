@@ -75,3 +75,12 @@ test("lists the block types in their own keystone section titled Blocks", () => 
 
   assert.match(markup, /<h2 class="ks-section-title">Blocks<\/h2><\/div><\/div><ul[^>]*><li[^>]*data-block-type="heading"/)
 })
+
+test("draws each block on the grid as a keystone panel", () => {
+  const markup = render({
+    block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ],
+    blocks: [ { id: "b1", type: "heading", x: 0, y: 0, w: 12, h: 1 } ]
+  })
+
+  assert.match(markup.match(/<div[^>]*data-block="b1"[^>]*>/)?.[0] ?? "", /class="[^"]*ks-panel/)
+})
