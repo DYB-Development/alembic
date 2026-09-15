@@ -16,5 +16,11 @@ module KsBlocks
 
       assert_equal 2, blocks.map { |block| block["id"] }.compact.uniq.size
     end
+
+    test "adding a block with no position places it beside the blocks already on the row" do
+      blocks = Grid.add(Grid.add([], TEXT, x: 0, y: 0), TEXT)
+
+      assert_equal [ 6, 0 ], blocks.last.values_at("x", "y")
+    end
   end
 end
