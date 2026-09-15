@@ -35,5 +35,17 @@ module KsBlocks
 
       assert_equal [ 6, 1, 4, 3 ], record.reload.blocks.first.values_at("x", "y", "w", "h")
     end
+
+    test "a host's remove endpoint takes the block off its record" do
+      record = Alembic::Page.create!(name: "Dashboard")
+      record.add_block(BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+
+      with_routing do |routes|
+        routes.draw { delete "/hosts/:id/blocks/:block_id", to: "ks_blocks_host#remove_block" }
+        delete "/hosts/#{record.id}/blocks/#{record.blocks.first["id"]}", as: :json
+      end
+
+      assert_empty record.reload.blocks
+    end
   end
 end

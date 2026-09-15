@@ -12,6 +12,11 @@ module KsBlocks
       head :no_content
     end
 
+    def remove_block
+      block_layout_record.remove_block(params[:block_id])
+      head :no_content
+    end
+
     def place_blocks
       block_layout_record.place_blocks(params.require(:layout).map { |position| position.permit(:id, :x, :y, :w, :h).to_h })
       head :no_content
