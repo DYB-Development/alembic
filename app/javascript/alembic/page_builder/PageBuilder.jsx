@@ -1,41 +1,10 @@
-import React, { useRef } from "react"
-import GridLayout, { useContainerWidth } from "react-grid-layout"
+import React from "react"
 import Button from "../../keystone_ui/react/Button"
-import Panel from "../../keystone_ui/react/Panel"
 import Page from "../../keystone_ui/react/Page"
 import PageHeader from "../../keystone_ui/react/PageHeader"
-import Section from "../../keystone_ui/react/Section"
-import usePage from "./usePage"
-import { addBlock, dropBlock, placeBlocks, removeBlock } from "../../ks_blocks/blocks"
+import BlockGrid from "../../ks_blocks/BlockGrid"
 
-const COLUMNS = 12
-const ROW_HEIGHT = 60
-const RESIZE_HANDLES = [ "e", "s", "se" ]
-
-const named = (block_types, key) => block_types.find((blockType) => blockType.key === key)?.name
-
-export default function PageBuilder({ base, token, ...initial }) {
-  const { page, send } = usePage(base, token, initial)
-  const { name, pages, block_types = [], blocks = [] } = page
-  const { width, containerRef, mounted } = useContainerWidth({ measureBeforeMount: true })
-  const layout = blocks.map(({ id, x, y, w, h }) => ({ i: id, x, y, w, h }))
-  const dragged = useRef(null)
-
-  const startDragging = (blockType) => (event) => {
-    dragged.current = blockType
-    event.dataTransfer.setData("text/plain", blockType.key)
-  }
-
-  const dropConfig = {
-    enabled: true,
-    onDragOver: () => dragged.current ? { w: dragged.current.width, h: dragged.current.height } : false
-  }
-
-  const dropped = (_layout, item) => {
-    if (dragged.current) dropBlock(send, dragged.current.key, item)
-    dragged.current = null
-  }
-
+export default function PageBuilder({ base, token, name, pages, block_types, blocks }) {
   return (
     <Page>
       <div className="sm:hidden mb-4 flex items-center justify-between gap-3">
@@ -43,33 +12,7 @@ export default function PageBuilder({ base, token, ...initial }) {
         <Button href={pages} size="sm">All pages</Button>
       </div>
       <PageHeader title={name} actions={<Button href={pages} data-all-pages>All pages</Button>} />
-      <div className="lg:grid lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-6">
-        <Section title="Blocks" spacing="sm">
-          {block_types.length === 0
-            ? <p>There are no blocks to add.</p>
-            : <ul>
-                {block_types.map((blockType) => (
-                  <li key={blockType.key} data-block-type={blockType.key} className="flex items-center justify-between gap-2 py-1" draggable="true" onDragStart={startDragging(blockType)}>
-                    {blockType.name}
-                    <Button variant="secondary" size="sm" type="button" onClick={() => addBlock(send, blockType.key)}>Add</Button>
-                  </li>
-                ))}
-              </ul>}
-        </Section>
-        <Panel data-page-panel>
-          {blocks.length === 0 && <p>This page has no blocks yet.</p>}
-          <div ref={containerRef} data-page-grid style={{ overflow: "hidden", visibility: mounted ? "visible" : "hidden" }}>
-            <GridLayout width={width} layout={layout} gridConfig={{ cols: COLUMNS, rowHeight: ROW_HEIGHT }} resizeConfig={{ enabled: true, handles: RESIZE_HANDLES }} dragConfig={{ cancel: "[data-remove-block]" }} dropConfig={dropConfig} onDrop={dropped} onDragStop={(placed) => placeBlocks(send, placed)} onResizeStop={(placed) => placeBlocks(send, placed)}>
-              {blocks.map((block) => (
-                <div key={block.id} data-block={block.id} className="ks-panel p-3 flex items-start justify-between gap-2">
-                  {named(block_types, block.type)}
-                  <Button variant="secondary" size="sm" type="button" data-remove-block onClick={() => removeBlock(send, block.id)}>Remove</Button>
-                </div>
-              ))}
-            </GridLayout>
-          </div>
-        </Panel>
-      </div>
+      <BlockGrid base={base} token={token} block_types={block_types} blocks={blocks} emptyMessage="This page has no blocks yet." />
     </Page>
   )
 }

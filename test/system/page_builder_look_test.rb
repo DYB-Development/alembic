@@ -13,7 +13,7 @@ module Alembic
       visit alembic.manage_page_path(Page.create!(name: "Welcome"))
       page.execute_script(%(document.documentElement.dataset.theme = "dark"))
 
-      assert_equal color_of_variable("--color-zinc-900"), background_of(find("[data-page-panel]"))
+      assert_equal color_of_variable("--color-zinc-900"), background_of(find("[data-block-grid-panel]"))
     end
 
     private
