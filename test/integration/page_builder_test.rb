@@ -142,6 +142,15 @@ module Alembic
       assert_equal [ 9, 4 ], page.reload.blocks.first.values_at("w", "h")
     end
 
+    test "removing a block takes it off the page" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+
+      delete alembic.manage_page_block_path(page, page.blocks.first["id"]), as: :json
+
+      assert_empty page.reload.blocks
+    end
+
     private
 
     def page_builder_props
