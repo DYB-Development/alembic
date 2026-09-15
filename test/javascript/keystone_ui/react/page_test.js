@@ -21,3 +21,7 @@ test("takes keystone's space above for the top offset it is given", () => {
 test("leaves out keystone's page padding when asked for none", () => {
   assert.equal(render({ padding: "none" }), '<div class="">Content</div>')
 })
+
+test("adds the extra classes it is given after keystone's", () => {
+  assert.match(render({ className: "bg-gray-50" }), /^<div class="ks-page bg-gray-50">/)
+})
