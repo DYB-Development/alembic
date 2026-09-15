@@ -7,7 +7,7 @@ const Alert = ({ type = "info", title, message, onDismiss }) => (
         {title && <p className="ks-alert-title">{title}</p>}
         <p className={title ? "ks-alert-message-titled" : "ks-alert-message"}>{message}</p>
       </div>
-      {onDismiss && <button type="button" className="ks-alert-dismiss" aria-label="Dismiss">×</button>}
+      {onDismiss && <button type="button" className="ks-alert-dismiss" aria-label="Dismiss" onClick={onDismiss}>×</button>}
     </div>
   </div>
 )

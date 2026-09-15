@@ -29,3 +29,18 @@ test("shows a title above a titled message when it is given one", () => {
 test("offers keystone's dismiss button when it is given a way to be dismissed", () => {
   assert.match(render({ message: "Saved", onDismiss: () => {} }), /<button type="button" class="ks-alert-dismiss" aria-label="Dismiss">×<\/button>/)
 })
+
+test("dismissing it calls the way it was given to be dismissed", () => {
+  const onDismiss = () => {}
+  const found = []
+  const walk = (node) => {
+    if (!node || typeof node !== "object") return
+    if (Array.isArray(node)) return node.forEach(walk)
+    if (node.props?.["aria-label"] === "Dismiss") found.push(node)
+    walk(node.props?.children)
+  }
+
+  walk(Alert({ message: "Saved", onDismiss }))
+
+  assert.equal(found[0]?.props.onClick, onDismiss)
+})
