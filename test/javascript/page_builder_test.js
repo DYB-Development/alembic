@@ -40,3 +40,12 @@ test("draws each block on the grid by its type's name", () => {
 
   assert.match(markup, /<[^>]*data-block="b1"[^>]*>[^<]*Heading/)
 })
+
+test("does not say the page has no blocks once it has one", () => {
+  const markup = render({
+    block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ],
+    blocks: [ { id: "b1", type: "heading", x: 0, y: 0, w: 12, h: 1 } ]
+  })
+
+  assert.doesNotMatch(markup, /This page has no blocks yet/)
+})

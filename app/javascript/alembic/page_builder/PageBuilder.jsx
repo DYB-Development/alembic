@@ -22,7 +22,7 @@ export default function PageBuilder({ name, pages, block_types = [], blocks = []
             {block_types.map((blockType) => <li key={blockType.key} data-block-type={blockType.key}>{blockType.name}</li>)}
           </ul>}
       <Panel data-page-panel>
-        <p>This page has no blocks yet.</p>
+        {blocks.length === 0 && <p>This page has no blocks yet.</p>}
         <div ref={containerRef}>
           <GridLayout width={width} layout={layout} gridConfig={{ cols: COLUMNS, rowHeight: ROW_HEIGHT }}>
             {blocks.map((block) => <div key={block.id} data-block={block.id}>{named(block_types, block.type)}</div>)}
