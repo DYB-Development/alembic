@@ -21,3 +21,7 @@ test("shows its title and summary in keystone's body", () => {
 test("links to its address with Read more by default", () => {
   assert.match(render({}), /<div class="ks-card-cta"><a href="\/reports" class="ks-card-link">Read more<\/a><\/div>/)
 })
+
+test("uses the call to action it is given for its link", () => {
+  assert.match(render({ cta: "View details" }), /class="ks-card-link">View details<\/a>/)
+})
