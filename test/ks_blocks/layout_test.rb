@@ -18,5 +18,14 @@ module KsBlocks
 
       assert_equal [ [ "text", 0, 1 ] ], host.reload.blocks.map { |block| block.values_at("type", "x", "y") }
     end
+
+    test "a host record saves the positions and sizes its blocks are placed at" do
+      host = Host.create!(name: "Dashboard")
+      host.add_block(TEXT, x: 0, y: 0)
+
+      host.place_blocks([ { "id" => host.blocks.first["id"], "x" => 6, "y" => 2, "w" => 4, "h" => 1 } ])
+
+      assert_equal [ 6, 2, 4, 1 ], host.reload.blocks.first.values_at("x", "y", "w", "h")
+    end
   end
 end
