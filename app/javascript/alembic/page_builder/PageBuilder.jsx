@@ -35,6 +35,9 @@ export default function PageBuilder({ base, token, ...initial }) {
 
   return (
     <div>
+      <div className="sm:hidden mb-4">
+        <h1 className="ks-page-header-title">{name}</h1>
+      </div>
       <PageHeader title={name} actions={<Button href={pages} data-all-pages>All pages</Button>} />
       {block_types.length === 0
         ? <p>There are no blocks to add.</p>
