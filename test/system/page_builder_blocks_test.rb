@@ -75,6 +75,28 @@ module Alembic
       assert_no_selector "[data-block]"
     end
 
+    test "a move made in a tab showing an out-of-date grid is refused rather than applied" do
+      record = Page.create!(name: "Welcome")
+      record.add_block(KsBlocks.registry.block_types.find { |type| type.key == :heading }, x: 0, y: 0)
+      record.add_block(KsBlocks.registry.block_types.find { |type| type.key == :text }, x: 0, y: 1)
+      visit alembic.manage_page_path(record)
+      stale_tab = open_new_window
+      within_window(stale_tab) { visit alembic.manage_page_path(record) }
+
+      text, heading = find("[data-block]", text: "Text"), find("[data-block]", text: "Heading")
+      page.driver.browser.action.click_and_hold(text.native).move_to(heading.native, 0, -20).release.perform
+      wait_until { record.reload.blocks.find { |block| block["type"] == "text" }["y"].zero? }
+      moved = record.reload.blocks
+
+      within_window(stale_tab) do
+        stale_text = find("[data-block]", text: "Text")
+        page.driver.browser.action.click_and_hold(stale_text.native).move_by(600, 0).release.perform
+        find("[role=alert]", text: "changed")
+      end
+
+      assert_equal moved, record.reload.blocks
+    end
+
     private
 
     def wait_until
