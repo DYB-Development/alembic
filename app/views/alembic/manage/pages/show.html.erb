@@ -1,0 +1,5 @@
+<% content_for :head do %>
+  <%= javascript_include_tag "alembic/page_builder", defer: true %>
+<% end %>
+
+<%= react_ui("alembic/page-builder", { base: alembic.manage_page_path(@page), pages: alembic.manage_pages_path, name: @page.name }) %>
