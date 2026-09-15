@@ -25,5 +25,12 @@ module Alembic
 
       assert_selector "[data-block]", text: "Heading"
     end
+
+    test "on a wide screen the block types sit beside the grid" do
+      visit alembic.manage_page_path(Page.create!(name: "Welcome"))
+      list_right = page.evaluate_script("document.querySelector('[data-block-type]').getBoundingClientRect().right")
+
+      assert_operator list_right, :<=, page.evaluate_script("document.querySelector('[data-page-grid]').getBoundingClientRect().left")
+    end
   end
 end

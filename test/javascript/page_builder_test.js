@@ -61,3 +61,49 @@ test("lets each block type be dragged", () => {
 
   assert.match(markup.match(/<li[^>]*data-block-type="heading"[^>]*>/)?.[0] ?? "", /draggable="true"/)
 })
+
+test("shows the page's name and All pages in keystone's page header", () => {
+  assert.match(render({ pages: "/pages" }), /<div class="ks-page-header"><div><h1 class="ks-page-header-title">Welcome<\/h1><\/div><div class="page-header-actions ks-page-header-actions"><a[^>]*>All pages<\/a><\/div><\/div>/)
+})
+
+test("lays the screen out in keystone's page", () => {
+  assert.match(render({}), /^<div class="ks-page">/)
+})
+
+test("lists the block types in their own keystone section titled Blocks", () => {
+  const markup = render({ block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ] })
+
+  assert.match(markup, /<h2 class="ks-section-title">Blocks<\/h2><\/div><\/div><ul[^>]*><li[^>]*data-block-type="heading"/)
+})
+
+test("draws each block on the grid as a keystone panel", () => {
+  const markup = render({
+    block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ],
+    blocks: [ { id: "b1", type: "heading", x: 0, y: 0, w: 12, h: 1 } ]
+  })
+
+  assert.match(markup.match(/<div[^>]*data-block="b1"[^>]*>/)?.[0] ?? "", /class="[^"]*ks-panel/)
+})
+
+test("keeps blocks inside the grid so the page never scrolls sideways", () => {
+  assert.match(render({}).match(/<div[^>]*data-page-grid[^>]*>/)?.[0] ?? "", /overflow:hidden/)
+})
+
+test("keeps the grid hidden until it has measured its container", () => {
+  assert.match(render({}).match(/<div[^>]*data-page-grid[^>]*>/)?.[0] ?? "", /visibility:hidden/)
+})
+
+test("spaces each block type's name apart from its Add button", () => {
+  const markup = render({ block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ] })
+
+  assert.match(markup.match(/<li[^>]*data-block-type="heading"[^>]*>/)?.[0] ?? "", /class="[^"]*\bjustify-between\b[^"]*\bgap-2\b/)
+})
+
+test("pads each block's label inside its panel", () => {
+  const markup = render({
+    block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ],
+    blocks: [ { id: "b1", type: "heading", x: 0, y: 0, w: 12, h: 1 } ]
+  })
+
+  assert.match(markup.match(/<div[^>]*data-block="b1"[^>]*>/)?.[0] ?? "", /class="[^"]*\bp-3\b/)
+})
