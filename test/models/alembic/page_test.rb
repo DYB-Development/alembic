@@ -56,5 +56,14 @@ module Alembic
 
       assert_equal [ 6, 3 ], page.reload.blocks.first.values_at("x", "y")
     end
+
+    test "placing blocks gives each named block its new size" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+
+      page.place_blocks([ { "id" => page.blocks.first["id"], "x" => 0, "y" => 0, "w" => 8, "h" => 3 } ])
+
+      assert_equal [ 8, 3 ], page.reload.blocks.first.values_at("w", "h")
+    end
   end
 end
