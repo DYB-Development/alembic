@@ -54,6 +54,14 @@ module Alembic
       assert_select "script[src*=?]", "alembic/page_builder"
     end
 
+    test "the page builder is given the page list's address" do
+      page = Page.create!(name: "Welcome")
+
+      get alembic.manage_page_path(page)
+
+      assert_equal alembic.manage_pages_path, page_builder_props["pages"]
+    end
+
     private
 
     def page_builder_props
