@@ -27,5 +27,15 @@ module Alembic
 
       assert_equal 2, page.reload.blocks.map { |block| block["id"] }.compact.uniq.size
     end
+
+    test "adding a block with no position places it beside the blocks already on the row" do
+      page = Page.create!(name: "Welcome")
+      text = Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2)
+      page.add_block(text, x: 0, y: 0)
+
+      page.add_block(text)
+
+      assert_equal [ 6, 0 ], page.reload.blocks.last.values_at("x", "y")
+    end
   end
 end
