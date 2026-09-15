@@ -12,7 +12,8 @@ module KsBlocks
 
     def add(blocks, block_type, x: nil, y: nil)
       x, y = first_open_place(blocks, block_type) if x.nil? || y.nil?
-      blocks + [ { "id" => SecureRandom.uuid, "type" => block_type.key.to_s, "x" => x, "y" => y, "w" => block_type.width, "h" => block_type.height } ]
+      added = { "id" => SecureRandom.uuid, "type" => block_type.key.to_s, "x" => x, "y" => y, "w" => block_type.width, "h" => block_type.height }
+      (blocks + [ added ]).tap { |arranged| refuse_unfit(arranged, [ added["id"] ]) }
     end
 
     def place(blocks, positions)

@@ -74,5 +74,13 @@ module KsBlocks
 
       assert_equal "Text must be at least one column wide and one row tall", error.message
     end
+
+    test "adding a block on top of another is refused with a message naming both" do
+      KsBlocks.block(:text, name: "Text", width: 6, height: 2)
+
+      error = assert_raises(InvalidLayout) { Grid.add(Grid.add([], TEXT, x: 0, y: 0), TEXT, x: 3, y: 1) }
+
+      assert_equal "Text overlaps Text", error.message
+    end
   end
 end
