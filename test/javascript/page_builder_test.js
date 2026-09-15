@@ -9,3 +9,7 @@ const render = (props) => renderToStaticMarkup(React.createElement(PageBuilder, 
 test("shows the page's name", () => {
   assert.match(render({}), /Welcome/)
 })
+
+test("says the page has no blocks yet", () => {
+  assert.match(render({}), /This page has no blocks yet/)
+})
