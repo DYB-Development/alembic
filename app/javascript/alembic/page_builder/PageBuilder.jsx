@@ -4,6 +4,7 @@ import Button from "../../keystone_ui/react/Button"
 import Panel from "../../keystone_ui/react/Panel"
 import Page from "../../keystone_ui/react/Page"
 import PageHeader from "../../keystone_ui/react/PageHeader"
+import Section from "../../keystone_ui/react/Section"
 import usePage from "./usePage"
 import { addBlock, dropBlock } from "./blocks"
 
@@ -41,16 +42,18 @@ export default function PageBuilder({ base, token, ...initial }) {
         <Button href={pages} size="sm">All pages</Button>
       </div>
       <PageHeader title={name} actions={<Button href={pages} data-all-pages>All pages</Button>} />
-      {block_types.length === 0
-        ? <p>There are no blocks to add.</p>
-        : <ul>
-            {block_types.map((blockType) => (
-              <li key={blockType.key} data-block-type={blockType.key} draggable="true" onDragStart={startDragging(blockType)}>
-                {blockType.name}
-                <Button variant="secondary" size="sm" type="button" onClick={() => addBlock(send, blockType.key)}>Add</Button>
-              </li>
-            ))}
-          </ul>}
+      <Section title="Blocks" spacing="sm">
+        {block_types.length === 0
+          ? <p>There are no blocks to add.</p>
+          : <ul>
+              {block_types.map((blockType) => (
+                <li key={blockType.key} data-block-type={blockType.key} draggable="true" onDragStart={startDragging(blockType)}>
+                  {blockType.name}
+                  <Button variant="secondary" size="sm" type="button" onClick={() => addBlock(send, blockType.key)}>Add</Button>
+                </li>
+              ))}
+            </ul>}
+      </Section>
       <Panel data-page-panel>
         {blocks.length === 0 && <p>This page has no blocks yet.</p>}
         <div ref={containerRef} data-page-grid>

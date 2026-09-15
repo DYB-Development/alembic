@@ -69,3 +69,9 @@ test("shows the page's name and All pages in keystone's page header", () => {
 test("lays the screen out in keystone's page", () => {
   assert.match(render({}), /^<div class="ks-page">/)
 })
+
+test("lists the block types in their own keystone section titled Blocks", () => {
+  const markup = render({ block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ] })
+
+  assert.match(markup, /<h2 class="ks-section-title">Blocks<\/h2><\/div><\/div><ul[^>]*><li[^>]*data-block-type="heading"/)
+})
