@@ -5,6 +5,10 @@ module KsBlocks
   module LayoutEndpoints
     extend ActiveSupport::Concern
 
+    def layout
+      render json: block_layout_record.layout_data
+    end
+
     def add_block
       block_type = KsBlocks.registry.block_types.find { |registered| registered.key.to_s == params[:type] }
 

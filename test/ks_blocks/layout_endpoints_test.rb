@@ -47,5 +47,17 @@ module KsBlocks
 
       assert_empty record.reload.blocks
     end
+
+    test "a host's layout endpoint answers with its record's layout data" do
+      record = Alembic::Page.create!(name: "Dashboard")
+      record.add_block(BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+
+      with_routing do |routes|
+        routes.draw { get "/hosts/:id/layout", to: "ks_blocks_host#layout" }
+        get "/hosts/#{record.id}/layout", as: :json
+
+        assert_equal record.reload.blocks, response.parsed_body["blocks"]
+      end
+    end
   end
 end
