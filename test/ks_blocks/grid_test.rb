@@ -10,5 +10,11 @@ module KsBlocks
 
       assert_equal({ "type" => "text", "x" => 3, "y" => 1, "w" => 6, "h" => 2 }, blocks.first.except("id"))
     end
+
+    test "gives each added block its own id" do
+      blocks = Grid.add(Grid.add([], TEXT, x: 0, y: 0), TEXT, x: 6, y: 0)
+
+      assert_equal 2, blocks.map { |block| block["id"] }.compact.uniq.size
+    end
   end
 end
