@@ -4,7 +4,7 @@ import Page from "../../keystone_ui/react/Page"
 import PageHeader from "../../keystone_ui/react/PageHeader"
 import BlockGrid from "../../ks_blocks/BlockGrid"
 
-export default function PageBuilder({ base, token, name, pages, block_types, blocks }) {
+export default function PageBuilder({ base, token, name, pages, block_types, blocks, version }) {
   return (
     <Page>
       <div className="sm:hidden mb-4 flex items-center justify-between gap-3">
@@ -12,7 +12,7 @@ export default function PageBuilder({ base, token, name, pages, block_types, blo
         <Button href={pages} size="sm">All pages</Button>
       </div>
       <PageHeader title={name} actions={<Button href={pages} data-all-pages>All pages</Button>} />
-      <BlockGrid base={base} token={token} block_types={block_types} blocks={blocks} emptyMessage="This page has no blocks yet." />
+      <BlockGrid base={base} token={token} block_types={block_types} blocks={blocks} version={version} emptyMessage="This page has no blocks yet." />
     </Page>
   )
 }

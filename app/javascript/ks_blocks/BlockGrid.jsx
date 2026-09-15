@@ -1,5 +1,6 @@
 import React, { useRef } from "react"
 import GridLayout, { useContainerWidth } from "react-grid-layout"
+import Alert from "../keystone_ui/react/Alert"
 import Button from "../keystone_ui/react/Button"
 import Panel from "../keystone_ui/react/Panel"
 import Section from "../keystone_ui/react/Section"
@@ -13,7 +14,7 @@ const RESIZE_HANDLES = [ "e", "s", "se" ]
 const named = (block_types, key) => block_types.find((blockType) => blockType.key === key)?.name ?? `Unknown block type (${key})`
 
 export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
-  const { layout: current, send } = useLayout(base, token, initial)
+  const { layout: current, error, send } = useLayout(base, token, initial)
   const { block_types = [], blocks = [] } = current
   const { width, containerRef, mounted } = useContainerWidth({ measureBeforeMount: true })
   const layout = blocks.map(({ id, x, y, w, h }) => ({ i: id, x, y, w, h }))
@@ -49,6 +50,7 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
             </ul>}
       </Section>
       <Panel data-block-grid-panel>
+        {error && <Alert type="error" message={error} className="mb-3" />}
         {blocks.length === 0 && <p>{emptyMessage}</p>}
         <div ref={containerRef} data-block-grid style={{ overflow: "hidden", visibility: mounted ? "visible" : "hidden" }}>
           <GridLayout width={width} layout={layout} gridConfig={{ cols: COLUMNS, rowHeight: ROW_HEIGHT }} resizeConfig={{ enabled: true, handles: RESIZE_HANDLES }} dragConfig={{ cancel: "[data-remove-block]" }} dropConfig={dropConfig} onDrop={dropped} onDragStop={(placed) => placeBlocks(send, placed)} onResizeStop={(placed) => placeBlocks(send, placed)}>

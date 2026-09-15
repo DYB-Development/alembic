@@ -1,16 +1,16 @@
-import { useCallback, useState } from "react"
+import { useMemo, useState } from "react"
+import { createSender } from "./sender"
 
 const useLayout = (base, token, initial) => {
   const [ layout, setLayout ] = useState(initial)
+  const [ error, setError ] = useState(null)
 
-  const send = useCallback(async (path, method, body) => {
-    await fetch(base + path, {
-      method, headers: { "Content-Type": "application/json", "X-CSRF-Token": token }, body: body && JSON.stringify(body)
-    })
-    setLayout(await (await fetch(base + "/layout", { headers: { Accept: "application/json" } })).json())
-  }, [ base, token ])
+  const send = useMemo(
+    () => createSender({ base, token, fetch: (...request) => window.fetch(...request), version: initial.version, onLayout: setLayout, onError: setError }),
+    [ base, token ]
+  )
 
-  return { layout, send }
+  return { layout, error, send }
 }
 
 export default useLayout

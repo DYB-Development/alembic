@@ -19,4 +19,11 @@ class KsBlocksTest < ActiveSupport::TestCase
 
     assert_includes KsBlocks.layout_data([])[:block_types], { key: :layout_data_probe, name: "Layout probe", width: 3, height: 1 }
   end
+
+  test "layout data's version changes when the blocks change" do
+    before = [ { "id" => "b1", "type" => "text", "x" => 0, "y" => 0, "w" => 6, "h" => 2 } ]
+    after = [ { "id" => "b1", "type" => "text", "x" => 6, "y" => 0, "w" => 6, "h" => 2 } ]
+
+    assert_not_equal KsBlocks.layout_data(before)[:version], KsBlocks.layout_data(after)[:version]
+  end
 end

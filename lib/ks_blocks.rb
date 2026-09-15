@@ -1,3 +1,5 @@
+require "digest"
+require "json"
 require "ks_blocks/registry"
 
 module KsBlocks
@@ -7,7 +9,11 @@ module KsBlocks
     end
 
     def layout_data(blocks)
-      { block_types: registry.block_types.map(&:to_h), blocks: blocks }
+      { block_types: registry.block_types.map(&:to_h), blocks: blocks, version: version_of(blocks) }
+    end
+
+    def version_of(blocks)
+      Digest::SHA256.hexdigest(JSON.generate(blocks))
     end
 
     def registry

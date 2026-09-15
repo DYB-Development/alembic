@@ -30,7 +30,7 @@ module KsBlocks
     end
 
     def place_blocks
-      block_layout_record.place_blocks(params.require(:layout).map { |position| position.permit(:id, :x, :y, :w, :h).to_h })
+      block_layout_record.place_blocks(params.require(:layout).map { |position| position.permit(:id, :x, :y, :w, :h).to_h }, version: params[:version])
       head :no_content
     end
   end
