@@ -63,6 +63,18 @@ module Alembic
       assert_operator find("[data-block]", text: "Text").rect.width, :>, width_before
     end
 
+    test "a removed block is still gone after a reload" do
+      record = Page.create!(name: "Welcome")
+      record.add_block(Pages.registry.block_types.find { |type| type.key == :heading }, x: 0, y: 0)
+      visit alembic.manage_page_path(record)
+
+      within(find("[data-block]", text: "Heading")) { click_on "Remove" }
+      wait_until { record.reload.blocks.empty? }
+      refresh
+
+      assert_no_selector "[data-block]"
+    end
+
     private
 
     def wait_until
