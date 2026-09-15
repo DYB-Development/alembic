@@ -1,5 +1,5 @@
 import React from "react"
 
-const Section = ({ spacing = "md" }) => <div className={`ks-section-${spacing}`} />
+const Section = ({ spacing = "md", children }) => <div className={`ks-section-${spacing}`}>{children}</div>
 
 export default Section

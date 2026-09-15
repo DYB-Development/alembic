@@ -13,3 +13,7 @@ test("takes keystone's medium spacing by default", () => {
 test("takes keystone's spacing for the size it is given", () => {
   assert.match(render({ spacing: "lg" }), /^<div class="ks-section-lg">/)
 })
+
+test("shows its content", () => {
+  assert.match(render({ children: React.createElement("p", null, "Rows") }), /<p>Rows<\/p><\/div>$/)
+})
