@@ -13,3 +13,7 @@ test("takes keystone's look for the variant it is given", () => {
 test("adds the extra classes it is given after keystone's", () => {
   assert.equal(Badge({ className: "ml-2", children: "Paid" }).props.className, "ks-badge ks-badge-neutral ml-2")
 })
+
+test("passes other props through to the badge", () => {
+  assert.equal(Badge({ "data-status": "paid", children: "Paid" }).props["data-status"], "paid")
+})
