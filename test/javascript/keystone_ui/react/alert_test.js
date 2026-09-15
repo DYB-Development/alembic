@@ -13,3 +13,7 @@ test("is keystone's info alert by default", () => {
 test("takes keystone's look for the type it is given", () => {
   assert.match(render({ type: "error", message: "Could not save" }), /^<div[^>]*class="ks-alert ks-alert-error"/)
 })
+
+test("announces itself as an alert", () => {
+  assert.match(render({ message: "Saved" }), /^<div[^>]*role="alert"/)
+})
