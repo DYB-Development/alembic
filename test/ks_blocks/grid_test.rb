@@ -65,5 +65,14 @@ module KsBlocks
 
       assert_equal "Text runs past the grid's last column", error.message
     end
+
+    test "placing a block narrower or shorter than one cell is refused with a message naming it" do
+      KsBlocks.block(:text, name: "Text", width: 6, height: 2)
+      blocks = Grid.add([], TEXT, x: 0, y: 0)
+
+      error = assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 0, "y" => 0, "w" => 6, "h" => 0 } ]) }
+
+      assert_equal "Text must be at least one column wide and one row tall", error.message
+    end
   end
 end

@@ -22,6 +22,7 @@ module KsBlocks
 
     def refuse_unfit(blocks, moved_ids)
       blocks.select { |block| moved_ids.include?(block["id"]) }.each do |moved|
+        raise InvalidLayout, "#{named(moved)} must be at least one column wide and one row tall" if moved["w"] < 1 || moved["h"] < 1
         raise InvalidLayout, "#{named(moved)} runs past the grid's last column" if moved["x"] + moved["w"] > COLUMNS
       end
       refuse_overlaps(blocks, moved_ids)
