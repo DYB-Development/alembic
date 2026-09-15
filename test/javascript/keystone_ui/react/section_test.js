@@ -9,3 +9,7 @@ const render = (props) => renderToStaticMarkup(React.createElement(Section, prop
 test("takes keystone's medium spacing by default", () => {
   assert.match(render({}), /^<div class="ks-section-md">/)
 })
+
+test("takes keystone's spacing for the size it is given", () => {
+  assert.match(render({ spacing: "lg" }), /^<div class="ks-section-lg">/)
+})

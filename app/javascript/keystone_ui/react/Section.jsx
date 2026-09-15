@@ -1,5 +1,5 @@
 import React from "react"
 
-const Section = () => <div className="ks-section-md" />
+const Section = ({ spacing = "md" }) => <div className={`ks-section-${spacing}`} />
 
 export default Section
