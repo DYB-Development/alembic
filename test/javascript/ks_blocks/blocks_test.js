@@ -41,3 +41,11 @@ test("removing a block sends a delete for that block", () => {
 
   assert.deepEqual(sent, [ [ "/blocks/b1", "DELETE" ] ])
 })
+
+test("placing blocks sends the layout version the grid last drew", () => {
+  const sent = []
+
+  placeBlocks((...request) => sent.push(request), [ { i: "b1", x: 0, y: 1, w: 8, h: 3 } ], "v1")
+
+  assert.equal(sent[0][2].version, "v1")
+})
