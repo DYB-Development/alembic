@@ -5,3 +5,7 @@ import Badge from "../../../../app/javascript/keystone_ui/react/Badge.jsx"
 test("is keystone's neutral badge by default", () => {
   assert.equal(Badge({ children: "Active" }).props.className, "ks-badge ks-badge-neutral")
 })
+
+test("takes keystone's look for the variant it is given", () => {
+  assert.equal(Badge({ variant: "success", children: "Paid" }).props.className, "ks-badge ks-badge-success")
+})
