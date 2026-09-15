@@ -13,3 +13,7 @@ test("shows the page's name", () => {
 test("says the page has no blocks yet", () => {
   assert.match(render({}), /This page has no blocks yet/)
 })
+
+test("links to the page list as its primary button", () => {
+  assert.match(render({ pages: "/pages" }), /<a[^>]*href="\/pages"[^>]*class="[^"]*ks-button-primary[^"]*"[^>]*>All pages<\/a>/)
+})
