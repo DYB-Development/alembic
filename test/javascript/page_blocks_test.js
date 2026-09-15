@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { addBlock, dropBlock, placeBlocks } from "../../app/javascript/alembic/page_builder/blocks.js"
+import { addBlock, dropBlock, placeBlocks, removeBlock } from "../../app/javascript/alembic/page_builder/blocks.js"
 
 test("adding a block type sends its key to the page's blocks", () => {
   const sent = []
@@ -32,4 +32,12 @@ test("placing blocks also sends each block's size", () => {
   placeBlocks((...request) => sent.push(request), [ { i: "b1", x: 0, y: 1, w: 8, h: 3 } ])
 
   assert.deepEqual(sent, [ [ "/blocks", "PATCH", { layout: [ { id: "b1", x: 0, y: 1, w: 8, h: 3 } ] } ] ])
+})
+
+test("removing a block sends a delete for that block", () => {
+  const sent = []
+
+  removeBlock((...request) => sent.push(request), "b1")
+
+  assert.deepEqual(sent, [ [ "/blocks/b1", "DELETE" ] ])
 })

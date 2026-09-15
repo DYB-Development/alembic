@@ -65,5 +65,17 @@ module Alembic
 
       assert_equal [ 8, 3 ], page.reload.blocks.first.values_at("w", "h")
     end
+
+    test "removing a block takes only that block off the page" do
+      page = Page.create!(name: "Welcome")
+      text = Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2)
+      page.add_block(text, x: 0, y: 0)
+      page.add_block(text, x: 6, y: 0)
+      kept, removed = page.blocks.map { |block| block["id"] }
+
+      page.remove_block(removed)
+
+      assert_equal [ kept ], page.reload.blocks.map { |block| block["id"] }
+    end
   end
 end

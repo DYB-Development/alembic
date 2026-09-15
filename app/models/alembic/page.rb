@@ -17,6 +17,10 @@ module Alembic
       update!(blocks: blocks.map { |block| block.merge(placed.fetch(block["id"], {}).slice("x", "y", "w", "h")) })
     end
 
+    def remove_block(id)
+      update!(blocks: blocks.reject { |block| block["id"] == id })
+    end
+
     private
 
     def first_open_place(block_type)

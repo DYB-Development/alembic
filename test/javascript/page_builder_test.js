@@ -116,3 +116,12 @@ test("lets each block be resized from its right edge, bottom edge and corner", (
 
   assert.deepEqual([ ...markup.matchAll(/react-resizable-handle-(\w+)/g) ].map((found) => found[1]).sort(), [ "e", "s", "se" ])
 })
+
+test("offers a Remove button on each block", () => {
+  const markup = render({
+    block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ],
+    blocks: [ { id: "b1", type: "heading", x: 0, y: 0, w: 12, h: 1 } ]
+  })
+
+  assert.match(markup, /<div[^>]*data-block="b1"[^>]*>.*<button[^>]*>Remove<\/button>/)
+})

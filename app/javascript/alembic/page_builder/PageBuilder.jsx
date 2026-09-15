@@ -6,7 +6,7 @@ import Page from "../../keystone_ui/react/Page"
 import PageHeader from "../../keystone_ui/react/PageHeader"
 import Section from "../../keystone_ui/react/Section"
 import usePage from "./usePage"
-import { addBlock, dropBlock, placeBlocks } from "./blocks"
+import { addBlock, dropBlock, placeBlocks, removeBlock } from "./blocks"
 
 const COLUMNS = 12
 const ROW_HEIGHT = 60
@@ -59,8 +59,13 @@ export default function PageBuilder({ base, token, ...initial }) {
         <Panel data-page-panel>
           {blocks.length === 0 && <p>This page has no blocks yet.</p>}
           <div ref={containerRef} data-page-grid style={{ overflow: "hidden", visibility: mounted ? "visible" : "hidden" }}>
-            <GridLayout width={width} layout={layout} gridConfig={{ cols: COLUMNS, rowHeight: ROW_HEIGHT }} resizeConfig={{ enabled: true, handles: RESIZE_HANDLES }} dropConfig={dropConfig} onDrop={dropped} onDragStop={(placed) => placeBlocks(send, placed)} onResizeStop={(placed) => placeBlocks(send, placed)}>
-              {blocks.map((block) => <div key={block.id} data-block={block.id} className="ks-panel p-3">{named(block_types, block.type)}</div>)}
+            <GridLayout width={width} layout={layout} gridConfig={{ cols: COLUMNS, rowHeight: ROW_HEIGHT }} resizeConfig={{ enabled: true, handles: RESIZE_HANDLES }} dragConfig={{ cancel: "[data-remove-block]" }} dropConfig={dropConfig} onDrop={dropped} onDragStop={(placed) => placeBlocks(send, placed)} onResizeStop={(placed) => placeBlocks(send, placed)}>
+              {blocks.map((block) => (
+                <div key={block.id} data-block={block.id} className="ks-panel p-3 flex items-start justify-between gap-2">
+                  {named(block_types, block.type)}
+                  <Button variant="secondary" size="sm" type="button" data-remove-block onClick={() => removeBlock(send, block.id)}>Remove</Button>
+                </div>
+              ))}
             </GridLayout>
           </div>
         </Panel>
