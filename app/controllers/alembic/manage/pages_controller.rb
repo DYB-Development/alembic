@@ -6,7 +6,12 @@ module Alembic
       end
 
       def show
-        @page = Page.find(params[:id])
+        @payload = payload(Page.find(params[:id]))
+
+        respond_to do |format|
+          format.html
+          format.json { render json: @payload }
+        end
       end
 
       def create
@@ -15,6 +20,16 @@ module Alembic
       end
 
       private
+
+      def payload(page)
+        {
+          base: manage_page_path(page),
+          pages: manage_pages_path,
+          name: page.name,
+          block_types: Pages.registry.block_types.map(&:to_h),
+          blocks: page.blocks
+        }
+      end
 
       def page_params
         params.require(:page).permit(:name)

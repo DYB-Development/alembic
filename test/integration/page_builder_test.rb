@@ -101,6 +101,17 @@ module Alembic
       assert_equal page.reload.blocks, page_builder_props["blocks"]
     end
 
+    test "the page's json is what the page builder is mounted with" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 3, y: 1)
+      get alembic.manage_page_path(page)
+      mounted = page_builder_props
+
+      get alembic.manage_page_path(page, format: :json)
+
+      assert_equal mounted, response.parsed_body
+    end
+
     private
 
     def page_builder_props
