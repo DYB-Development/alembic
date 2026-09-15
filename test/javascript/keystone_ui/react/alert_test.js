@@ -44,3 +44,7 @@ test("dismissing it calls the way it was given to be dismissed", () => {
 
   assert.equal(found[0]?.props.onClick, onDismiss)
 })
+
+test("adds the extra classes it is given after keystone's", () => {
+  assert.match(render({ message: "Saved", className: "mb-4" }), /^<div[^>]*class="ks-alert ks-alert-info mb-4"/)
+})
