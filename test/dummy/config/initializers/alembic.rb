@@ -5,4 +5,7 @@ Alembic.visitor_authorization_method = :alembic_visitor_permitted?
 Rails.application.config.to_prepare do
   Steps::Notify.register
   Steps::Deliver.register
+
+  Alembic::Pages.block(:heading, name: "Heading", width: 12, height: 1)
+  Alembic::Pages.block(:text, name: "Text", width: 6, height: 2)
 end
