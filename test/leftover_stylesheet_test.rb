@@ -14,4 +14,12 @@ class LeftoverStylesheetTest < ActiveSupport::TestCase
       assert_not leftover.exist?
     end
   end
+
+  test "does nothing when the host has no leftover stylesheet" do
+    Dir.mktmpdir do |root|
+      Alembic::LeftoverStylesheet.new(root).remove
+
+      assert_not Pathname.new(root).join("app/assets/builds/tailwind/alembic.css").exist?
+    end
+  end
 end

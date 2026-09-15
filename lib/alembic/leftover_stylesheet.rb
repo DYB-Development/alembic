@@ -7,7 +7,8 @@ module Alembic
     end
 
     def remove
-      @root.join("app/assets/builds/tailwind/alembic.css").delete
+      leftover = @root.join("app/assets/builds/tailwind/alembic.css")
+      leftover.delete if leftover.exist?
     end
   end
 end
