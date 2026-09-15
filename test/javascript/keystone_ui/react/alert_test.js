@@ -25,3 +25,7 @@ test("shows its message in keystone's message, inside keystone's body and conten
 test("shows a title above a titled message when it is given one", () => {
   assert.match(render({ title: "Error", message: "Could not save" }), /<p class="ks-alert-title">Error<\/p><p class="ks-alert-message-titled">Could not save<\/p>/)
 })
+
+test("offers keystone's dismiss button when it is given a way to be dismissed", () => {
+  assert.match(render({ message: "Saved", onDismiss: () => {} }), /<button type="button" class="ks-alert-dismiss" aria-label="Dismiss">×<\/button>/)
+})
