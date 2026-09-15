@@ -1,1 +1,1 @@
-<%= react_ui("alembic/page-builder", { name: @page.name }) %>
+<%= react_ui("alembic/page-builder", { base: alembic.manage_page_path(@page), name: @page.name }) %>

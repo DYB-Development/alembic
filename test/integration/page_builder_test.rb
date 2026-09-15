@@ -38,6 +38,14 @@ module Alembic
       assert_equal "Welcome", page_builder_props["name"]
     end
 
+    test "the page builder is given the address of its page's endpoints" do
+      page = Page.create!(name: "Welcome")
+
+      get alembic.manage_page_path(page)
+
+      assert_equal alembic.manage_page_path(page), page_builder_props["base"]
+    end
+
     private
 
     def page_builder_props
