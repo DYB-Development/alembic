@@ -1,8 +1,9 @@
 Alembic::Engine.routes.draw do
   namespace :manage do
     resources :pages, only: [ :index, :create, :show ] do
-      resources :blocks, only: [ :create, :destroy ], controller: "page_blocks"
-      patch "blocks", to: "page_blocks#place"
+      post "blocks", to: "page_blocks#add_block", as: :blocks
+      patch "blocks", to: "page_blocks#place_blocks"
+      delete "blocks/:block_id", to: "page_blocks#remove_block", as: :block
     end
 
     resources :flows, only: [ :index, :create, :show, :edit, :update, :destroy ] do

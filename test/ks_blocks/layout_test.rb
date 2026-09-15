@@ -36,5 +36,12 @@ module KsBlocks
 
       assert_empty host.reload.blocks
     end
+
+    test "a host record's layout data carries its own blocks" do
+      host = Host.create!(name: "Dashboard")
+      host.add_block(TEXT, x: 0, y: 0)
+
+      assert_equal host.blocks, host.layout_data[:blocks]
+    end
   end
 end

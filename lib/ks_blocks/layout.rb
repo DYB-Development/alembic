@@ -1,4 +1,5 @@
 require "active_support/concern"
+require "ks_blocks"
 require "ks_blocks/grid"
 
 module KsBlocks
@@ -17,6 +18,10 @@ module KsBlocks
 
         define_method(:remove_block) do |id|
           update!(column => Grid.remove(public_send(column), id))
+        end
+
+        define_method(:layout_data) do
+          KsBlocks.layout_data(public_send(column))
         end
       end
     end
