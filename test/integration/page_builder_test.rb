@@ -46,6 +46,14 @@ module Alembic
       assert_equal alembic.manage_page_path(page), page_builder_props["base"]
     end
 
+    test "the page builder screen loads the page builder script" do
+      page = Page.create!(name: "Welcome")
+
+      get alembic.manage_page_path(page)
+
+      assert_select "script[src*=?]", "alembic/page_builder"
+    end
+
     private
 
     def page_builder_props
