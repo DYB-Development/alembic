@@ -1,0 +1,11 @@
+import { test } from "node:test"
+import assert from "node:assert/strict"
+import React from "react"
+import { renderToStaticMarkup } from "react-dom/server"
+import Page from "../../../../app/javascript/keystone_ui/react/Page.jsx"
+
+const render = (props) => renderToStaticMarkup(React.createElement(Page, { children: "Content", ...props }))
+
+test("wraps its content in keystone's page padding by default", () => {
+  assert.equal(render({}), '<div class="ks-page">Content</div>')
+})
