@@ -60,7 +60,7 @@ module KsBlocks
       end
     end
 
-    test "a host's place endpoint refuses a layout that does not fit and says why" do
+    test "a host's place endpoint refuses a layout that does not fit" do
       record = Alembic::Page.create!(name: "Dashboard")
       record.add_block(BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
 
@@ -68,7 +68,20 @@ module KsBlocks
         routes.draw { patch "/hosts/:id/blocks", to: "ks_blocks_host#place_blocks" }
         patch "/hosts/#{record.id}/blocks", params: { layout: [ { id: record.blocks.first["id"], x: 9, y: 0, w: 6, h: 2 } ] }, as: :json
 
-        assert_equal [ 422, "Text runs past the grid's last column" ], [ response.status, response.parsed_body["error"] ]
+        assert_response :unprocessable_entity
+      end
+    end
+
+    test "a host's place endpoint says why it refused a layout" do
+      KsBlocks.block(:text, name: "Text", width: 6, height: 2)
+      record = Alembic::Page.create!(name: "Dashboard")
+      record.add_block(BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+
+      with_routing do |routes|
+        routes.draw { patch "/hosts/:id/blocks", to: "ks_blocks_host#place_blocks" }
+        patch "/hosts/#{record.id}/blocks", params: { layout: [ { id: record.blocks.first["id"], x: 9, y: 0, w: 6, h: 2 } ] }, as: :json
+
+        assert_equal "Text runs past the grid's last column", response.parsed_body["error"]
       end
     end
 
