@@ -17,3 +17,7 @@ test("takes keystone's spacing for the size it is given", () => {
 test("shows its content", () => {
   assert.match(render({ children: React.createElement("p", null, "Rows") }), /<p>Rows<\/p><\/div>$/)
 })
+
+test("shows its title in keystone's header when it is given one", () => {
+  assert.match(render({ title: "Blocks" }), /^<div class="ks-section-md"><div class="ks-section-header"><div><h2 class="ks-section-title">Blocks<\/h2><\/div><\/div>/)
+})
