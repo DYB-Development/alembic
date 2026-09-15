@@ -17,3 +17,7 @@ test("says the page has no blocks yet", () => {
 test("links to the page list as its primary button", () => {
   assert.match(render({ pages: "/pages" }), /<a[^>]*href="\/pages"[^>]*class="[^"]*ks-button-primary[^"]*"[^>]*>All pages<\/a>/)
 })
+
+test("shows the page in a keystone panel", () => {
+  assert.match(render({}).match(/<div[^>]*data-page-panel[^>]*>/)?.[0] ?? "", /class="[^"]*ks-panel/)
+})
