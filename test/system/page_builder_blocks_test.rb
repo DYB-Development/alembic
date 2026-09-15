@@ -22,7 +22,7 @@ module Alembic
     test "a block type dragged from the block list onto the grid is added to the page" do
       visit alembic.manage_page_path(Page.create!(name: "Welcome"))
 
-      find("[data-block-type='heading']").drag_to(find("[data-page-grid] .react-grid-layout"))
+      find("[data-block-type='heading']").drag_to(find("[data-block-grid] .react-grid-layout"))
 
       assert_selector "[data-block]", text: "Heading"
     end
@@ -31,7 +31,7 @@ module Alembic
       visit alembic.manage_page_path(Page.create!(name: "Welcome"))
       list_right = page.evaluate_script("document.querySelector('[data-block-type]').getBoundingClientRect().right")
 
-      assert_operator list_right, :<=, page.evaluate_script("document.querySelector('[data-page-grid]').getBoundingClientRect().left")
+      assert_operator list_right, :<=, page.evaluate_script("document.querySelector('[data-block-grid]').getBoundingClientRect().left")
     end
 
     test "a block dragged onto the row above it takes that place after a reload" do

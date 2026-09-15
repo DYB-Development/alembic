@@ -1,0 +1,75 @@
+import { test } from "node:test"
+import assert from "node:assert/strict"
+import React from "react"
+import { renderToStaticMarkup } from "react-dom/server"
+import BlockGrid from "../../../app/javascript/ks_blocks/BlockGrid.jsx"
+
+const HEADING = { key: "heading", name: "Heading", width: 12, height: 1 }
+const BLOCK = { id: "b1", type: "heading", x: 0, y: 0, w: 12, h: 1 }
+
+const render = (props) => renderToStaticMarkup(React.createElement(BlockGrid, { base: "/pages/1", block_types: [], blocks: [], ...props }))
+const opening = (markup, attribute) => markup.match(new RegExp(`<[^>]*${attribute}[^>]*>`))?.[0] ?? ""
+
+test("lists the block types in their own keystone section titled Blocks", () => {
+  assert.match(render({ block_types: [ HEADING ] }), /<h2 class="ks-section-title">Blocks<\/h2><\/div><\/div><ul[^>]*><li[^>]*data-block-type="heading"/)
+})
+
+test("lists exactly the block types it is given, by name", () => {
+  const markup = render({ block_types: [ HEADING, { key: "text", name: "Text", width: 6, height: 2 } ] })
+
+  assert.deepEqual([ ...markup.matchAll(/<[^>]*data-block-type[^>]*>([^<]*)</g) ].map((found) => found[1]), [ "Heading", "Text" ])
+})
+
+test("says there are no blocks to add when it is given no block types", () => {
+  assert.match(render({}), /There are no blocks to add/)
+})
+
+test("offers an Add button beside each block type", () => {
+  assert.match(render({ block_types: [ HEADING ] }), /<li[^>]*data-block-type="heading"[^>]*>.*<button[^>]*>Add<\/button>.*<\/li>/)
+})
+
+test("spaces each block type's name apart from its Add button", () => {
+  assert.match(opening(render({ block_types: [ HEADING ] }), 'data-block-type="heading"'), /class="[^"]*\bjustify-between\b[^"]*\bgap-2\b/)
+})
+
+test("lets each block type be dragged", () => {
+  assert.match(opening(render({ block_types: [ HEADING ] }), 'data-block-type="heading"'), /draggable="true"/)
+})
+
+test("shows the message it is given while there are no blocks", () => {
+  assert.match(render({ emptyMessage: "Nothing arranged yet." }), /Nothing arranged yet\./)
+})
+
+test("does not show its empty message once there is a block", () => {
+  assert.doesNotMatch(render({ emptyMessage: "Nothing arranged yet.", block_types: [ HEADING ], blocks: [ BLOCK ] }), /Nothing arranged yet/)
+})
+
+test("sets the grid in a keystone panel", () => {
+  assert.match(opening(render({}), "data-block-grid-panel"), /class="[^"]*ks-panel/)
+})
+
+test("draws each block on the grid by its type's name", () => {
+  assert.match(render({ block_types: [ HEADING ], blocks: [ BLOCK ] }), /<[^>]*data-block="b1"[^>]*>[^<]*Heading/)
+})
+
+test("draws each block on the grid as a padded keystone panel", () => {
+  assert.match(opening(render({ block_types: [ HEADING ], blocks: [ BLOCK ] }), 'data-block="b1"'), /class="[^"]*ks-panel p-3/)
+})
+
+test("keeps blocks inside the grid so the page never scrolls sideways", () => {
+  assert.match(opening(render({}), "data-block-grid(?!-)"), /overflow:hidden/)
+})
+
+test("keeps the grid hidden until it has measured its container", () => {
+  assert.match(opening(render({}), "data-block-grid(?!-)"), /visibility:hidden/)
+})
+
+test("lets each block be resized from its right edge, bottom edge and corner", () => {
+  const markup = render({ block_types: [ HEADING ], blocks: [ BLOCK ] })
+
+  assert.deepEqual([ ...markup.matchAll(/react-resizable-handle-(\w+)/g) ].map((found) => found[1]).sort(), [ "e", "s", "se" ])
+})
+
+test("offers a Remove button on each block", () => {
+  assert.match(render({ block_types: [ HEADING ], blocks: [ BLOCK ] }), /<div[^>]*data-block="b1"[^>]*>.*<button[^>]*>Remove<\/button>/)
+})
