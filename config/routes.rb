@@ -1,6 +1,6 @@
 Alembic::Engine.routes.draw do
   namespace :manage do
-    resources :pages, only: :index
+    resources :pages, only: [ :index, :create ]
 
     resources :flows, only: [ :index, :create, :show, :edit, :update, :destroy ] do
       resource :definition, only: [ :edit, :update ]

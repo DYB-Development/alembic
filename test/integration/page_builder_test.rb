@@ -9,5 +9,11 @@ module Alembic
 
       assert_includes response.body, "Welcome"
     end
+
+    test "creating a page saves it by name" do
+      post alembic.manage_pages_path, params: { page: { name: "Welcome" } }
+
+      assert Page.exists?(name: "Welcome")
+    end
   end
 end
