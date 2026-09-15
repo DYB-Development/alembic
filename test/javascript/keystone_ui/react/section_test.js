@@ -25,3 +25,7 @@ test("shows its title in keystone's header when it is given one", () => {
 test("shows a subtitle under its title when it is given one", () => {
   assert.match(render({ title: "Blocks", subtitle: "Drag one onto the page" }), /<h2 class="ks-section-title">Blocks<\/h2><p class="ks-section-subtitle">Drag one onto the page<\/p>/)
 })
+
+test("links its action beside the title when it is given one", () => {
+  assert.match(render({ title: "Blocks", action: { label: "View all", href: "/blocks" } }), /<\/div><a href="\/blocks" class="ks-section-action">View all<\/a><\/div>/)
+})
