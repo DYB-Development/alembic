@@ -29,5 +29,19 @@ module Alembic
 
       assert_select "[data-react-ui=?]", "alembic/page-builder"
     end
+
+    test "the page builder is given the page's name" do
+      page = Page.create!(name: "Welcome")
+
+      get alembic.manage_page_path(page)
+
+      assert_equal "Welcome", page_builder_props["name"]
+    end
+
+    private
+
+    def page_builder_props
+      JSON.parse(css_select("[data-react-ui='alembic/page-builder']").first["data-props"])
+    end
   end
 end
