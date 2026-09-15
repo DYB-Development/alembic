@@ -13,3 +13,7 @@ test("is keystone's card by default", () => {
 test("runs edge to edge on small screens when asked", () => {
   assert.match(render({ edgeToEdge: true }), /^<div class="ks-card-edge">/)
 })
+
+test("shows its title and summary in keystone's body", () => {
+  assert.match(render({}), /<div class="ks-card-body"><h3 class="ks-card-title">Revenue<\/h3><p class="ks-card-summary">\$42k<\/p><\/div>/)
+})
