@@ -49,3 +49,9 @@ test("does not say the page has no blocks once it has one", () => {
 
   assert.doesNotMatch(markup, /This page has no blocks yet/)
 })
+
+test("offers an Add button beside each block type", () => {
+  const markup = render({ block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ] })
+
+  assert.match(markup, /<li[^>]*data-block-type="heading"[^>]*>.*<button[^>]*>Add<\/button>.*<\/li>/)
+})
