@@ -124,6 +124,15 @@ module Alembic
       assert_select "link[rel=stylesheet][href*=?]", "alembic/page_builder"
     end
 
+    test "placing blocks stores the positions they were moved to" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+
+      patch alembic.manage_page_blocks_path(page), params: { layout: [ { id: page.blocks.first["id"], x: 6, y: 2 } ] }, as: :json
+
+      assert_equal [ 6, 2 ], page.reload.blocks.first.values_at("x", "y")
+    end
+
     private
 
     def page_builder_props

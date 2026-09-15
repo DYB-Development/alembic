@@ -46,5 +46,15 @@ module Alembic
 
       assert_equal [ 0, 1 ], page.reload.blocks.last.values_at("x", "y")
     end
+
+    test "placing blocks moves each named block to its new position" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+      id = page.blocks.first["id"]
+
+      page.place_blocks([ { "id" => id, "x" => 6, "y" => 3 } ])
+
+      assert_equal [ 6, 3 ], page.reload.blocks.first.values_at("x", "y")
+    end
   end
 end

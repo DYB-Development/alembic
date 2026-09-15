@@ -1,4 +1,5 @@
 require "application_system_test_case"
+require "timeout"
 
 module Alembic
   class PageBuilderBlocksTest < ApplicationSystemTestCase
@@ -31,6 +32,26 @@ module Alembic
       list_right = page.evaluate_script("document.querySelector('[data-block-type]').getBoundingClientRect().right")
 
       assert_operator list_right, :<=, page.evaluate_script("document.querySelector('[data-page-grid]').getBoundingClientRect().left")
+    end
+
+    test "a block dragged onto the row above it takes that place after a reload" do
+      record = Page.create!(name: "Welcome")
+      record.add_block(Pages.registry.block_types.find { |type| type.key == :heading }, x: 0, y: 0)
+      record.add_block(Pages.registry.block_types.find { |type| type.key == :text }, x: 0, y: 1)
+      visit alembic.manage_page_path(record)
+
+      text, heading = find("[data-block]", text: "Text"), find("[data-block]", text: "Heading")
+      page.driver.browser.action.click_and_hold(text.native).move_to(heading.native, 0, -20).release.perform
+      wait_until { record.reload.blocks.find { |block| block["type"] == "text" }["y"].zero? }
+      refresh
+
+      assert_operator find("[data-block]", text: "Text").rect.y, :<, find("[data-block]", text: "Heading").rect.y
+    end
+
+    private
+
+    def wait_until
+      Timeout.timeout(Capybara.default_max_wait_time) { sleep 0.05 until yield }
     end
   end
 end
