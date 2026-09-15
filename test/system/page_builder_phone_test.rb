@@ -15,5 +15,11 @@ module Alembic
 
       assert_selector "h1", text: "Welcome"
     end
+
+    test "a phone offers the way back to all pages" do
+      visit alembic.manage_page_path(Page.create!(name: "Welcome"))
+
+      assert_link "All pages", href: alembic.manage_pages_path
+    end
   end
 end

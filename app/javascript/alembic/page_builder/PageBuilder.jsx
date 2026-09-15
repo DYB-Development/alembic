@@ -35,8 +35,9 @@ export default function PageBuilder({ base, token, ...initial }) {
 
   return (
     <div>
-      <div className="sm:hidden mb-4">
+      <div className="sm:hidden mb-4 flex items-center justify-between gap-3">
         <h1 className="ks-page-header-title">{name}</h1>
+        <Button href={pages} size="sm">All pages</Button>
       </div>
       <PageHeader title={name} actions={<Button href={pages} data-all-pages>All pages</Button>} />
       {block_types.length === 0
