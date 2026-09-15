@@ -27,3 +27,7 @@ test("lists exactly the block types it is given, by name", () => {
 
   assert.deepEqual([ ...markup.matchAll(/<[^>]*data-block-type[^>]*>([^<]*)</g) ].map((found) => found[1]), [ "Heading", "Text" ])
 })
+
+test("says there are no blocks to add when it is given no block types", () => {
+  assert.match(render({ block_types: [] }), /There are no blocks to add/)
+})

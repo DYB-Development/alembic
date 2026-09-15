@@ -7,9 +7,11 @@ export default function PageBuilder({ name, pages, block_types = [] }) {
     <div>
       <h1>{name}</h1>
       <Button href={pages} data-all-pages>All pages</Button>
-      <ul>
-        {block_types.map((blockType) => <li key={blockType.key} data-block-type={blockType.key}>{blockType.name}</li>)}
-      </ul>
+      {block_types.length === 0
+        ? <p>There are no blocks to add.</p>
+        : <ul>
+            {block_types.map((blockType) => <li key={blockType.key} data-block-type={blockType.key}>{blockType.name}</li>)}
+          </ul>}
       <Panel data-page-panel>
         <p>This page has no blocks yet.</p>
       </Panel>
