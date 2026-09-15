@@ -1,6 +1,12 @@
+require "alembic/leftover_stylesheet"
+
 module Alembic
   class Engine < ::Rails::Engine
     isolate_namespace Alembic
+
+    initializer "alembic.remove_leftover_stylesheet" do |app|
+      Alembic::LeftoverStylesheet.new(app.root).remove
+    end
 
     initializer "alembic.tailwind" do
       next unless Gem.loaded_specs.key?("keystone_ui")
