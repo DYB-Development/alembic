@@ -151,6 +151,15 @@ module Alembic
       assert_empty page.reload.blocks
     end
 
+    test "a page's layout endpoint answers with its block types and blocks" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(KsBlocks::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+
+      get alembic.manage_page_layout_path(page), as: :json
+
+      assert_equal page.reload.blocks, response.parsed_body["blocks"]
+    end
+
     private
 
     def page_builder_props
