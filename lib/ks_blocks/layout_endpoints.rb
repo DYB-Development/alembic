@@ -11,5 +11,10 @@ module KsBlocks
       block_layout_record.add_block(block_type, x: params[:x], y: params[:y])
       head :no_content
     end
+
+    def place_blocks
+      block_layout_record.place_blocks(params.require(:layout).map { |position| position.permit(:id, :x, :y, :w, :h).to_h })
+      head :no_content
+    end
   end
 end

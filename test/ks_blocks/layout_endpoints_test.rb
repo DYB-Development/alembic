@@ -23,5 +23,17 @@ module KsBlocks
 
       assert_equal [ [ "heading", 0, 2 ] ], record.reload.blocks.map { |block| block.values_at("type", "x", "y") }
     end
+
+    test "a host's place endpoint stores the positions and sizes it is sent" do
+      record = Alembic::Page.create!(name: "Dashboard")
+      record.add_block(BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+
+      with_routing do |routes|
+        routes.draw { patch "/hosts/:id/blocks", to: "ks_blocks_host#place_blocks" }
+        patch "/hosts/#{record.id}/blocks", params: { layout: [ { id: record.blocks.first["id"], x: 6, y: 1, w: 4, h: 3 } ] }, as: :json
+      end
+
+      assert_equal [ 6, 1, 4, 3 ], record.reload.blocks.first.values_at("x", "y", "w", "h")
+    end
   end
 end
