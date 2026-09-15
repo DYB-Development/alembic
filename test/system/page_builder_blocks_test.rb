@@ -48,6 +48,21 @@ module Alembic
       assert_operator find("[data-block]", text: "Text").rect.y, :<, find("[data-block]", text: "Heading").rect.y
     end
 
+    test "a block widened by dragging its corner keeps its new size after a reload" do
+      record = Page.create!(name: "Welcome")
+      record.add_block(Pages.registry.block_types.find { |type| type.key == :text }, x: 0, y: 0)
+      visit alembic.manage_page_path(record)
+      block = find("[data-block]", text: "Text")
+      width_before = block.rect.width
+
+      handle = block.find(".react-resizable-handle-se", visible: :all)
+      page.driver.browser.action.move_to(block.native).move_to(handle.native).pointer_down(:left).move_by(20, 0).move_by(100, 0).move_by(180, 0).pointer_up(:left).perform
+      wait_until { record.reload.blocks.first["w"] > 6 }
+      refresh
+
+      assert_operator find("[data-block]", text: "Text").rect.width, :>, width_before
+    end
+
     private
 
     def wait_until

@@ -14,7 +14,7 @@ module Alembic
 
     def place_blocks(positions)
       placed = positions.index_by { |position| position["id"] }
-      update!(blocks: blocks.map { |block| block.merge(placed.fetch(block["id"], {}).slice("x", "y")) })
+      update!(blocks: blocks.map { |block| block.merge(placed.fetch(block["id"], {}).slice("x", "y", "w", "h")) })
     end
 
     private

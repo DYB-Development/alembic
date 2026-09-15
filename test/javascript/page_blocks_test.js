@@ -23,5 +23,13 @@ test("placing blocks sends each block's id and grid position", () => {
 
   placeBlocks((...request) => sent.push(request), [ { i: "b1", x: 0, y: 1, w: 12, h: 1 }, { i: "b2", x: 6, y: 0, w: 6, h: 2 } ])
 
-  assert.deepEqual(sent, [ [ "/blocks", "PATCH", { layout: [ { id: "b1", x: 0, y: 1 }, { id: "b2", x: 6, y: 0 } ] } ] ])
+  assert.deepEqual(sent, [ [ "/blocks", "PATCH", { layout: [ { id: "b1", x: 0, y: 1, w: 12, h: 1 }, { id: "b2", x: 6, y: 0, w: 6, h: 2 } ] } ] ])
+})
+
+test("placing blocks also sends each block's size", () => {
+  const sent = []
+
+  placeBlocks((...request) => sent.push(request), [ { i: "b1", x: 0, y: 1, w: 8, h: 3 } ])
+
+  assert.deepEqual(sent, [ [ "/blocks", "PATCH", { layout: [ { id: "b1", x: 0, y: 1, w: 8, h: 3 } ] } ] ])
 })
