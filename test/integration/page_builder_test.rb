@@ -118,6 +118,12 @@ module Alembic
       assert page_builder_props["token"].present?
     end
 
+    test "the page builder screen links the page builder stylesheet" do
+      get alembic.manage_page_path(Page.create!(name: "Welcome"))
+
+      assert_select "link[rel=stylesheet][href*=?]", "alembic/page_builder"
+    end
+
     private
 
     def page_builder_props
