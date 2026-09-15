@@ -119,5 +119,19 @@ module KsBlocks
         assert_equal "No block type is registered as retired_widget", response.parsed_body["error"]
       end
     end
+
+    test "a host's place endpoint refuses positions sent against a layout version it no longer has" do
+      record = Alembic::Page.create!(name: "Dashboard")
+      record.add_block(BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+      drawn = record.layout_data[:version]
+      record.add_block(BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 6, y: 0)
+
+      with_routing do |routes|
+        routes.draw { patch "/hosts/:id/blocks", to: "ks_blocks_host#place_blocks" }
+        patch "/hosts/#{record.id}/blocks", params: { version: drawn, layout: [ { id: record.blocks.first["id"], x: 0, y: 2, w: 6, h: 2 } ] }, as: :json
+
+        assert_response :unprocessable_entity
+      end
+    end
   end
 end
