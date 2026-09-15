@@ -17,3 +17,7 @@ test("takes keystone's centered width for the maximum width it is given", () => 
 test("takes keystone's space above for the top offset it is given", () => {
   assert.match(render({ topOffset: "sm" }), /^<div class="ks-page ks-page-offset-sm">/)
 })
+
+test("leaves out keystone's page padding when asked for none", () => {
+  assert.equal(render({ padding: "none" }), '<div class="">Content</div>')
+})
