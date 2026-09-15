@@ -62,6 +62,14 @@ module Alembic
       assert_equal alembic.manage_pages_path, page_builder_props["pages"]
     end
 
+    test "the page list links each page to its page builder" do
+      page = Page.create!(name: "Welcome")
+
+      get alembic.manage_pages_path
+
+      assert_select "a[href=?]", alembic.manage_page_path(page)
+    end
+
     private
 
     def page_builder_props
