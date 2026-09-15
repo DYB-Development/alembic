@@ -9,3 +9,7 @@ const render = (props) => renderToStaticMarkup(React.createElement(Card, { title
 test("is keystone's card by default", () => {
   assert.match(render({}), /^<div class="ks-card">/)
 })
+
+test("runs edge to edge on small screens when asked", () => {
+  assert.match(render({ edgeToEdge: true }), /^<div class="ks-card-edge">/)
+})

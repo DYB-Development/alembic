@@ -1,5 +1,5 @@
 import React from "react"
 
-const Card = () => <div className="ks-card" />
+const Card = ({ edgeToEdge = false }) => <div className={edgeToEdge ? "ks-card-edge" : "ks-card"} />
 
 export default Card
