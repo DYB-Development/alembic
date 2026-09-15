@@ -6,4 +6,13 @@
     columns: [ { name: "Name" } ],
     empty_message: "No pages yet."
   ) %>
+
+  <%= ui_section(title: "Create a page") do %>
+    <%= ui_form(action: alembic.manage_pages_path, method: :post) do %>
+      <label class="block text-sm font-medium mb-1">Name</label>
+      <%= ui_input(name: "page[name]", placeholder: "e.g. Welcome") %>
+
+      <%= ui_button(label: "Create", type: :submit, variant: :secondary) %>
+    <% end %>
+  <% end %>
 <% end %>

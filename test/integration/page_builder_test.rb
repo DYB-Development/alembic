@@ -15,5 +15,11 @@ module Alembic
 
       assert Page.exists?(name: "Welcome")
     end
+
+    test "the page list offers a form to create a page by name" do
+      get alembic.manage_pages_path
+
+      assert_select "form[action=?] input[name=?]", alembic.manage_pages_path, "page[name]"
+    end
   end
 end
