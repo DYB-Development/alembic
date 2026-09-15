@@ -1,9 +1,16 @@
 require "active_support/concern"
 require "ks_blocks"
+require "ks_blocks/grid"
 
 module KsBlocks
   module LayoutEndpoints
     extend ActiveSupport::Concern
+
+    included do
+      rescue_from KsBlocks::InvalidLayout do |refusal|
+        render json: { error: refusal.message }, status: :unprocessable_entity
+      end
+    end
 
     def layout
       render json: block_layout_record.layout_data
