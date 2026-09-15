@@ -5,6 +5,10 @@ module Alembic
         @pages = Page.order(:name)
       end
 
+      def show
+        @page = Page.find(params[:id])
+      end
+
       def create
         Page.create!(page_params)
         redirect_to manage_pages_path

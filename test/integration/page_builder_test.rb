@@ -21,5 +21,13 @@ module Alembic
 
       assert_select "form[action=?] input[name=?]", alembic.manage_pages_path, "page[name]"
     end
+
+    test "opening a page mounts the page builder" do
+      page = Page.create!(name: "Welcome")
+
+      get alembic.manage_page_path(page)
+
+      assert_select "[data-react-ui=?]", "alembic/page-builder"
+    end
   end
 end
