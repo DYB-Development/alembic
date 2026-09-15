@@ -9,3 +9,7 @@ test("is keystone's neutral badge by default", () => {
 test("takes keystone's look for the variant it is given", () => {
   assert.equal(Badge({ variant: "success", children: "Paid" }).props.className, "ks-badge ks-badge-success")
 })
+
+test("adds the extra classes it is given after keystone's", () => {
+  assert.equal(Badge({ className: "ml-2", children: "Paid" }).props.className, "ks-badge ks-badge-neutral ml-2")
+})
