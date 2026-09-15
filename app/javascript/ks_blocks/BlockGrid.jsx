@@ -10,7 +10,7 @@ const COLUMNS = 12
 const ROW_HEIGHT = 60
 const RESIZE_HANDLES = [ "e", "s", "se" ]
 
-const named = (block_types, key) => block_types.find((blockType) => blockType.key === key)?.name
+const named = (block_types, key) => block_types.find((blockType) => blockType.key === key)?.name ?? `Unknown block type (${key})`
 
 export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
   const { layout: current, send } = useLayout(base, token, initial)

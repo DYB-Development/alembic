@@ -73,3 +73,9 @@ test("lets each block be resized from its right edge, bottom edge and corner", (
 test("offers a Remove button on each block", () => {
   assert.match(render({ block_types: [ HEADING ], blocks: [ BLOCK ] }), /<div[^>]*data-block="b1"[^>]*>.*<button[^>]*>Remove<\/button>/)
 })
+
+test("marks a block whose type is no longer registered as an unknown type", () => {
+  const markup = render({ block_types: [ HEADING ], blocks: [ { id: "b9", type: "retired_widget", x: 0, y: 0, w: 6, h: 2 } ] })
+
+  assert.match(markup, /<div[^>]*data-block="b9"[^>]*>Unknown block type \(retired_widget\)/)
+})
