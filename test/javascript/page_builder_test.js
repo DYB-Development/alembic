@@ -31,3 +31,12 @@ test("lists exactly the block types it is given, by name", () => {
 test("says there are no blocks to add when it is given no block types", () => {
   assert.match(render({ block_types: [] }), /There are no blocks to add/)
 })
+
+test("draws each block on the grid by its type's name", () => {
+  const markup = render({
+    block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ],
+    blocks: [ { id: "b1", type: "heading", x: 0, y: 0, w: 12, h: 1 } ]
+  })
+
+  assert.match(markup, /<[^>]*data-block="b1"[^>]*>[^<]*Heading/)
+})
