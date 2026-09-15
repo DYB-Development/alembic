@@ -13,4 +13,10 @@ class KsBlocksTest < ActiveSupport::TestCase
 
     assert_equal blocks, KsBlocks.layout_data(blocks)[:blocks]
   end
+
+  test "layout data lists each registered block type's key, name and starting size" do
+    KsBlocks.block(:layout_data_probe, name: "Layout probe", width: 3, height: 1)
+
+    assert_includes KsBlocks.layout_data([])[:block_types], { key: :layout_data_probe, name: "Layout probe", width: 3, height: 1 }
+  end
 end

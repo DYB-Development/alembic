@@ -7,7 +7,7 @@ module KsBlocks
     end
 
     def layout_data(blocks)
-      { blocks: blocks }
+      { block_types: registry.block_types.map(&:to_h), blocks: blocks }
     end
 
     def registry
