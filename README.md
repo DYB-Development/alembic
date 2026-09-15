@@ -67,10 +67,8 @@ source paths. It is a build artifact — gitignore it.
 ### Upgrading from an earlier Alembic
 
 Remove `@import "../builds/tailwind/alembic";` from
-`app/assets/tailwind/application.css`, then delete the leftover
-`app/assets/builds/tailwind` folder. `stylesheet_link_tag :app` links every file
-in it, and each one makes the browser request a path inside an installed gem,
-which raises a routing error.
+`app/assets/tailwind/application.css`. Alembic deletes the leftover
+`app/assets/builds/tailwind/alembic.css` when your app boots.
 
 Finally, the engine has to render inside a layout that links your compiled CSS.
 Point `Alembic.layout` (visitor pages) and `Alembic.admin_layout` (the builder)

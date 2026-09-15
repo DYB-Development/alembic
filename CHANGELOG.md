@@ -9,4 +9,4 @@ All notable changes to this project will be documented in this file.
 
 ### Upgrading
 - Remove `@import "../builds/tailwind/alembic";` from `app/assets/tailwind/application.css`.
-- Delete the leftover `app/assets/builds/tailwind` folder.
+- Alembic deletes the leftover `app/assets/builds/tailwind/alembic.css` when the host app boots, so there is nothing to delete by hand.
