@@ -61,3 +61,7 @@ test("lets each block type be dragged", () => {
 
   assert.match(markup.match(/<li[^>]*data-block-type="heading"[^>]*>/)?.[0] ?? "", /draggable="true"/)
 })
+
+test("shows the page's name and All pages in keystone's page header", () => {
+  assert.match(render({ pages: "/pages" }), /<div class="ks-page-header"><div><h1 class="ks-page-header-title">Welcome<\/h1><\/div><div class="page-header-actions ks-page-header-actions"><a[^>]*>All pages<\/a><\/div><\/div>/)
+})

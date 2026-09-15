@@ -2,6 +2,7 @@ import React, { useRef } from "react"
 import GridLayout, { useContainerWidth } from "react-grid-layout"
 import Button from "../../keystone_ui/react/Button"
 import Panel from "../../keystone_ui/react/Panel"
+import PageHeader from "../../keystone_ui/react/PageHeader"
 import usePage from "./usePage"
 import { addBlock, dropBlock } from "./blocks"
 
@@ -34,8 +35,7 @@ export default function PageBuilder({ base, token, ...initial }) {
 
   return (
     <div>
-      <h1>{name}</h1>
-      <Button href={pages} data-all-pages>All pages</Button>
+      <PageHeader title={name} actions={<Button href={pages} data-all-pages>All pages</Button>} />
       {block_types.length === 0
         ? <p>There are no blocks to add.</p>
         : <ul>
