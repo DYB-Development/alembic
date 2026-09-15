@@ -84,3 +84,7 @@ test("draws each block on the grid as a keystone panel", () => {
 
   assert.match(markup.match(/<div[^>]*data-block="b1"[^>]*>/)?.[0] ?? "", /class="[^"]*ks-panel/)
 })
+
+test("keeps blocks inside the grid so the page never scrolls sideways", () => {
+  assert.match(render({}).match(/<div[^>]*data-page-grid[^>]*>/)?.[0] ?? "", /overflow:hidden/)
+})
