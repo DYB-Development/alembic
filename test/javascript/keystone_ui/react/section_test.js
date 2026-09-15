@@ -29,3 +29,7 @@ test("shows a subtitle under its title when it is given one", () => {
 test("links its action beside the title when it is given one", () => {
   assert.match(render({ title: "Blocks", action: { label: "View all", href: "/blocks" } }), /<\/div><a href="\/blocks" class="ks-section-action">View all<\/a><\/div>/)
 })
+
+test("adds the extra classes it is given after keystone's", () => {
+  assert.match(render({ className: "px-2" }), /^<div class="ks-section-md px-2">/)
+})
