@@ -84,6 +84,14 @@ module Alembic
       assert_includes page_builder_props["block_types"], { "key" => "payload_probe", "name" => "Payload probe", "width" => 6, "height" => 2 }
     end
 
+    test "adding a block puts a block of that type at the given place" do
+      page = Page.create!(name: "Welcome")
+
+      post alembic.manage_page_blocks_path(page), params: { type: "heading", x: 0, y: 2 }, as: :json
+
+      assert_equal [ "heading", 0, 2 ], page.reload.blocks.last.values_at("type", "x", "y")
+    end
+
     private
 
     def page_builder_props
