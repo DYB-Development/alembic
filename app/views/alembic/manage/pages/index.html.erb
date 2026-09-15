@@ -1,0 +1,9 @@
+<%= ui_page(max_width: :xl) do %>
+  <%= ui_page_header(title: "Pages", subtitle: "Build and edit your pages") %>
+
+  <%= ui_data_table(
+    items: @pages,
+    columns: [ { name: "Name" } ],
+    empty_message: "No pages yet."
+  ) %>
+<% end %>
