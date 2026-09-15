@@ -17,5 +17,13 @@ module Alembic
 
       assert_selector "[data-block]", text: "Heading"
     end
+
+    test "a block type dragged from the block list onto the grid is added to the page" do
+      visit alembic.manage_page_path(Page.create!(name: "Welcome"))
+
+      find("[data-block-type='heading']").drag_to(find("[data-page-grid] .react-grid-layout"))
+
+      assert_selector "[data-block]", text: "Heading"
+    end
   end
 end

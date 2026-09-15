@@ -1,9 +1,9 @@
-import React from "react"
+import React, { useRef } from "react"
 import GridLayout, { useContainerWidth } from "react-grid-layout"
 import Button from "../../keystone_ui/react/Button"
 import Panel from "../../keystone_ui/react/Panel"
 import usePage from "./usePage"
-import { addBlock } from "./blocks"
+import { addBlock, dropBlock } from "./blocks"
 
 const COLUMNS = 12
 const ROW_HEIGHT = 60
@@ -15,6 +15,22 @@ export default function PageBuilder({ base, token, ...initial }) {
   const { name, pages, block_types = [], blocks = [] } = page
   const { width, containerRef } = useContainerWidth()
   const layout = blocks.map(({ id, x, y, w, h }) => ({ i: id, x, y, w, h }))
+  const dragged = useRef(null)
+
+  const startDragging = (blockType) => (event) => {
+    dragged.current = blockType
+    event.dataTransfer.setData("text/plain", blockType.key)
+  }
+
+  const dropConfig = {
+    enabled: true,
+    onDragOver: () => dragged.current ? { w: dragged.current.width, h: dragged.current.height } : false
+  }
+
+  const dropped = (_layout, item) => {
+    if (dragged.current) dropBlock(send, dragged.current.key, item)
+    dragged.current = null
+  }
 
   return (
     <div>
@@ -24,7 +40,7 @@ export default function PageBuilder({ base, token, ...initial }) {
         ? <p>There are no blocks to add.</p>
         : <ul>
             {block_types.map((blockType) => (
-              <li key={blockType.key} data-block-type={blockType.key}>
+              <li key={blockType.key} data-block-type={blockType.key} draggable="true" onDragStart={startDragging(blockType)}>
                 {blockType.name}
                 <Button variant="secondary" size="sm" type="button" onClick={() => addBlock(send, blockType.key)}>Add</Button>
               </li>
@@ -32,8 +48,8 @@ export default function PageBuilder({ base, token, ...initial }) {
           </ul>}
       <Panel data-page-panel>
         {blocks.length === 0 && <p>This page has no blocks yet.</p>}
-        <div ref={containerRef}>
-          <GridLayout width={width} layout={layout} gridConfig={{ cols: COLUMNS, rowHeight: ROW_HEIGHT }}>
+        <div ref={containerRef} data-page-grid>
+          <GridLayout width={width} layout={layout} gridConfig={{ cols: COLUMNS, rowHeight: ROW_HEIGHT }} dropConfig={dropConfig} onDrop={dropped}>
             {blocks.map((block) => <div key={block.id} data-block={block.id}>{named(block_types, block.type)}</div>)}
           </GridLayout>
         </div>

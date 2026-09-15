@@ -55,3 +55,9 @@ test("offers an Add button beside each block type", () => {
 
   assert.match(markup, /<li[^>]*data-block-type="heading"[^>]*>.*<button[^>]*>Add<\/button>.*<\/li>/)
 })
+
+test("lets each block type be dragged", () => {
+  const markup = render({ block_types: [ { key: "heading", name: "Heading", width: 12, height: 1 } ] })
+
+  assert.match(markup.match(/<li[^>]*data-block-type="heading"[^>]*>/)?.[0] ?? "", /draggable="true"/)
+})
