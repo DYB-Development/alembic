@@ -2,4 +2,4 @@
   <%= javascript_include_tag "alembic/page_builder", defer: true %>
 <% end %>
 
-<%= react_ui("alembic/page-builder", @payload) %>
+<%= react_ui("alembic/page-builder", @payload.merge(token: form_authenticity_token)) %>

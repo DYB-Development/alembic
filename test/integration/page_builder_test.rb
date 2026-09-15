@@ -101,15 +101,21 @@ module Alembic
       assert_equal page.reload.blocks, page_builder_props["blocks"]
     end
 
-    test "the page's json is what the page builder is mounted with" do
+    test "the page's json is what the page builder is mounted with, apart from its token" do
       page = Page.create!(name: "Welcome")
       page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 3, y: 1)
       get alembic.manage_page_path(page)
-      mounted = page_builder_props
+      mounted = page_builder_props.except("token")
 
       get alembic.manage_page_path(page, format: :json)
 
       assert_equal mounted, response.parsed_body
+    end
+
+    test "the page builder is given a token to send changes with" do
+      get alembic.manage_page_path(Page.create!(name: "Welcome"))
+
+      assert page_builder_props["token"].present?
     end
 
     private
