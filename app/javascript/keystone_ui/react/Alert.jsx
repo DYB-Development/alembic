@@ -1,5 +1,5 @@
 import React from "react"
 
-const Alert = () => <div className="ks-alert ks-alert-info" />
+const Alert = ({ type = "info" }) => <div className={`ks-alert ks-alert-${type}`} />
 
 export default Alert
