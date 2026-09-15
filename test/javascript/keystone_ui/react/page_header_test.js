@@ -9,3 +9,7 @@ const render = (props) => renderToStaticMarkup(React.createElement(PageHeader, {
 test("shows its title in keystone's page header", () => {
   assert.equal(render({}), '<div class="ks-page-header"><div><h1 class="ks-page-header-title">Welcome</h1></div></div>')
 })
+
+test("shows a subtitle under its title when it is given one", () => {
+  assert.match(render({ subtitle: "Build your page" }), /<h1 class="ks-page-header-title">Welcome<\/h1><p class="ks-page-header-subtitle">Build your page<\/p>/)
+})
