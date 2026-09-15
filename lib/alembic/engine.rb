@@ -1,4 +1,5 @@
 require "alembic/leftover_stylesheet"
+require "ks_blocks"
 
 module Alembic
   class Engine < ::Rails::Engine

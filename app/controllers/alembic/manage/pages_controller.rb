@@ -26,7 +26,7 @@ module Alembic
           base: manage_page_path(page),
           pages: manage_pages_path,
           name: page.name,
-          block_types: Pages.registry.block_types.map(&:to_h),
+          block_types: KsBlocks.registry.block_types.map(&:to_h),
           blocks: page.blocks
         }
       end

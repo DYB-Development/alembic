@@ -77,7 +77,7 @@ module Alembic
     end
 
     test "the page builder is given each registered block type's key, name and starting size" do
-      Pages.block(:payload_probe, name: "Payload probe", width: 6, height: 2)
+      KsBlocks.block(:payload_probe, name: "Payload probe", width: 6, height: 2)
 
       get alembic.manage_page_path(Page.create!(name: "Welcome"))
 
@@ -94,7 +94,7 @@ module Alembic
 
     test "the page builder is given the page's blocks with their positions and sizes" do
       page = Page.create!(name: "Welcome")
-      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 3, y: 1)
+      page.add_block(KsBlocks::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 3, y: 1)
 
       get alembic.manage_page_path(page)
 
@@ -103,7 +103,7 @@ module Alembic
 
     test "the page's json is what the page builder is mounted with, apart from its token" do
       page = Page.create!(name: "Welcome")
-      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 3, y: 1)
+      page.add_block(KsBlocks::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 3, y: 1)
       get alembic.manage_page_path(page)
       mounted = page_builder_props.except("token")
 
@@ -126,7 +126,7 @@ module Alembic
 
     test "placing blocks stores the positions they were moved to" do
       page = Page.create!(name: "Welcome")
-      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+      page.add_block(KsBlocks::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
 
       patch alembic.manage_page_blocks_path(page), params: { layout: [ { id: page.blocks.first["id"], x: 6, y: 2 } ] }, as: :json
 
@@ -135,7 +135,7 @@ module Alembic
 
     test "placing blocks stores the sizes they were given" do
       page = Page.create!(name: "Welcome")
-      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+      page.add_block(KsBlocks::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
 
       patch alembic.manage_page_blocks_path(page), params: { layout: [ { id: page.blocks.first["id"], x: 0, y: 0, w: 9, h: 4 } ] }, as: :json
 
@@ -144,7 +144,7 @@ module Alembic
 
     test "removing a block takes it off the page" do
       page = Page.create!(name: "Welcome")
-      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+      page.add_block(KsBlocks::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
 
       delete alembic.manage_page_block_path(page, page.blocks.first["id"]), as: :json
 
