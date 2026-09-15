@@ -17,3 +17,7 @@ test("takes keystone's look for the type it is given", () => {
 test("announces itself as an alert", () => {
   assert.match(render({ message: "Saved" }), /^<div[^>]*role="alert"/)
 })
+
+test("shows its message in keystone's message, inside keystone's body and content", () => {
+  assert.match(render({ message: "Saved" }), /<div class="ks-alert-body"><div class="ks-alert-content"><p class="ks-alert-message">Saved<\/p><\/div><\/div>/)
+})
