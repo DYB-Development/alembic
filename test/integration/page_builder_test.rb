@@ -92,6 +92,15 @@ module Alembic
       assert_equal [ "heading", 0, 2 ], page.reload.blocks.last.values_at("type", "x", "y")
     end
 
+    test "the page builder is given the page's blocks with their positions and sizes" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(Pages::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 3, y: 1)
+
+      get alembic.manage_page_path(page)
+
+      assert_equal page.reload.blocks, page_builder_props["blocks"]
+    end
+
     private
 
     def page_builder_props

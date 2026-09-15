@@ -6,5 +6,6 @@
       base: alembic.manage_page_path(@page),
       pages: alembic.manage_pages_path,
       name: @page.name,
-      block_types: Alembic::Pages.registry.block_types.map(&:to_h)
+      block_types: Alembic::Pages.registry.block_types.map(&:to_h),
+      blocks: @page.blocks
     }) %>
