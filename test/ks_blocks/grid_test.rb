@@ -4,6 +4,7 @@ require "ks_blocks/grid"
 module KsBlocks
   class GridTest < ActiveSupport::TestCase
     TEXT = BlockType.new(key: :text, name: "Text", width: 6, height: 2)
+    HEADING = BlockType.new(key: :heading, name: "Heading", width: 12, height: 1)
 
     test "adding a block puts it at the given position at its type's starting size" do
       blocks = Grid.add([], TEXT, x: 3, y: 1)
@@ -46,41 +47,63 @@ module KsBlocks
       assert_equal [ kept ], Grid.remove(blocks, removed).map { |block| block["id"] }
     end
 
-    test "placing blocks so they overlap is refused with a message naming both" do
+    test "placing blocks so they overlap is refused" do
+      blocks = Grid.add(Grid.add([], TEXT, x: 0, y: 0), HEADING, x: 0, y: 2)
+
+      assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => blocks.last["id"], "x" => 0, "y" => 1, "w" => 12, "h" => 1 } ]) }
+    end
+
+    test "placing blocks so they overlap names both blocks in the refusal" do
       KsBlocks.block(:text, name: "Text", width: 6, height: 2)
       KsBlocks.block(:heading, name: "Heading", width: 12, height: 1)
-      blocks = Grid.add(Grid.add([], TEXT, x: 0, y: 0), BlockType.new(key: :heading, name: "Heading", width: 12, height: 1), x: 0, y: 2)
-      heading = blocks.last["id"]
+      blocks = Grid.add(Grid.add([], TEXT, x: 0, y: 0), HEADING, x: 0, y: 2)
 
-      error = assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => heading, "x" => 0, "y" => 1, "w" => 12, "h" => 1 } ]) }
-
-      assert_equal "Heading overlaps Text", error.message
+      assert_equal "Heading overlaps Text", refusal { Grid.place(blocks, [ { "id" => blocks.last["id"], "x" => 0, "y" => 1, "w" => 12, "h" => 1 } ]) }
     end
 
-    test "placing a block past the grid's last column is refused with a message naming it" do
+    test "placing a block past the grid's last column is refused" do
+      blocks = Grid.add([], TEXT, x: 0, y: 0)
+
+      assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 8, "y" => 0, "w" => 6, "h" => 2 } ]) }
+    end
+
+    test "placing a block past the grid's last column names the block in the refusal" do
       KsBlocks.block(:text, name: "Text", width: 6, height: 2)
       blocks = Grid.add([], TEXT, x: 0, y: 0)
 
-      error = assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 8, "y" => 0, "w" => 6, "h" => 2 } ]) }
-
-      assert_equal "Text runs past the grid's last column", error.message
+      assert_equal "Text runs past the grid's last column", refusal { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 8, "y" => 0, "w" => 6, "h" => 2 } ]) }
     end
 
-    test "placing a block narrower or shorter than one cell is refused with a message naming it" do
+    test "placing a block narrower or shorter than one cell is refused" do
+      blocks = Grid.add([], TEXT, x: 0, y: 0)
+
+      assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 0, "y" => 0, "w" => 6, "h" => 0 } ]) }
+    end
+
+    test "placing a block narrower or shorter than one cell names the block in the refusal" do
       KsBlocks.block(:text, name: "Text", width: 6, height: 2)
       blocks = Grid.add([], TEXT, x: 0, y: 0)
 
-      error = assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 0, "y" => 0, "w" => 6, "h" => 0 } ]) }
-
-      assert_equal "Text must be at least one column wide and one row tall", error.message
+      assert_equal "Text must be at least one column wide and one row tall", refusal { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 0, "y" => 0, "w" => 6, "h" => 0 } ]) }
     end
 
-    test "adding a block on top of another is refused with a message naming both" do
+    test "adding a block on top of another is refused" do
+      assert_raises(InvalidLayout) { Grid.add(Grid.add([], TEXT, x: 0, y: 0), TEXT, x: 3, y: 1) }
+    end
+
+    test "adding a block on top of another names both blocks in the refusal" do
       KsBlocks.block(:text, name: "Text", width: 6, height: 2)
 
-      error = assert_raises(InvalidLayout) { Grid.add(Grid.add([], TEXT, x: 0, y: 0), TEXT, x: 3, y: 1) }
+      assert_equal "Text overlaps Text", refusal { Grid.add(Grid.add([], TEXT, x: 0, y: 0), TEXT, x: 3, y: 1) }
+    end
 
-      assert_equal "Text overlaps Text", error.message
+    private
+
+    def refusal
+      yield
+      nil
+    rescue InvalidLayout => error
+      error.message
     end
   end
 end
