@@ -10,8 +10,8 @@ module Alembic
       end
 
       def create
-        Page.create!(page_params)
-        redirect_to manage_pages_path
+        page = Page.create!(page_params)
+        redirect_to manage_page_path(page)
       end
 
       private

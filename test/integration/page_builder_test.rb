@@ -70,6 +70,12 @@ module Alembic
       assert_select "a[href=?]", alembic.manage_page_path(page)
     end
 
+    test "creating a page opens it in the page builder" do
+      post alembic.manage_pages_path, params: { page: { name: "Welcome" } }
+
+      assert_redirected_to alembic.manage_page_path(Page.find_by!(name: "Welcome"))
+    end
+
     private
 
     def page_builder_props
