@@ -6,7 +6,7 @@ const useLayout = (base, token, initial) => {
   const [ error, setError ] = useState(null)
 
   const send = useMemo(
-    () => createSender({ base, token, fetch: (...request) => window.fetch(...request), version: initial.version, onLayout: setLayout, onError: setError }),
+    () => createSender({ base, token, fetch: (...request) => window.fetch(...request), layout: initial, onLayout: setLayout, onError: setError }),
     [ base, token ]
   )
 

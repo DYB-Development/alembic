@@ -31,3 +31,14 @@ test("a change that cannot reach the server says it was not saved", async () => 
 
   assert.deepEqual(errors, [ "Your change was not saved because the server could not be reached." ])
 })
+
+test("a change that cannot reach the server puts the grid back to the last stored layout", async () => {
+  const stored = { blocks: [ { id: "b1", type: "text", x: 0, y: 0, w: 6, h: 2 } ], version: "v1" }
+  const drawn = []
+  const unreachable = async () => { throw new TypeError("Failed to fetch") }
+  const send = createSender({ base: "/pages/1", token: "t", fetch: unreachable, layout: stored, onLayout: (layout) => drawn.push(layout), onError: () => {} })
+
+  await send("/blocks", "PATCH", { layout: [] }).catch(() => {})
+
+  assert.deepEqual(drawn, [ stored ])
+})
