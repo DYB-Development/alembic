@@ -45,5 +45,16 @@ module KsBlocks
 
       assert_equal [ kept ], Grid.remove(blocks, removed).map { |block| block["id"] }
     end
+
+    test "placing blocks so they overlap is refused with a message naming both" do
+      KsBlocks.block(:text, name: "Text", width: 6, height: 2)
+      KsBlocks.block(:heading, name: "Heading", width: 12, height: 1)
+      blocks = Grid.add(Grid.add([], TEXT, x: 0, y: 0), BlockType.new(key: :heading, name: "Heading", width: 12, height: 1), x: 0, y: 2)
+      heading = blocks.last["id"]
+
+      error = assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => heading, "x" => 0, "y" => 1, "w" => 12, "h" => 1 } ]) }
+
+      assert_equal "Heading overlaps Text", error.message
+    end
   end
 end
