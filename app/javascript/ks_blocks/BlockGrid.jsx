@@ -10,7 +10,11 @@ import { addBlock, dropBlock, gridItems, placeBlocks, removeBlock } from "./bloc
 const SHAPE = { columns: 12, row_height: 60, gap: 10 }
 const RESIZE_HANDLES = [ "e", "s", "se" ]
 
-const named = (block_types, key) => block_types.find((blockType) => blockType.key === key)?.name ?? `Unknown block type (${key})`
+const typeOf = (block_types, key) => block_types.find((blockType) => blockType.key === key)
+
+const named = (block_types, key) => typeOf(block_types, key)?.name ?? `Unknown block type (${key})`
+
+const usedUp = (blockType, blocks) => blockType.once && blocks.some((block) => block.type === blockType.key)
 
 export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
   const { layout: current, error, send } = useLayout(base, token, initial)
@@ -44,7 +48,7 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
               {block_types.map((blockType) => (
                 <li key={blockType.key} data-block-type={blockType.key} className="flex items-center justify-between gap-2 py-1" draggable="true" onDragStart={startDragging(blockType)}>
                   {blockType.name}
-                  <Button variant="secondary" size="sm" type="button" onClick={() => addBlock(send, blockType.key)}>Add</Button>
+                  <Button variant="secondary" size="sm" type="button" disabled={usedUp(blockType, blocks)} onClick={() => addBlock(send, blockType.key)}>{usedUp(blockType, blocks) ? "Added" : "Add"}</Button>
                 </li>
               ))}
             </ul>}
@@ -57,7 +61,7 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
             {blocks.map((block) => (
               <div key={block.id} data-block={block.id} className="ks-panel p-3 flex items-start justify-between gap-2">
                 {named(block_types, block.type)}
-                <Button variant="secondary" size="sm" type="button" data-remove-block onClick={() => removeBlock(send, block.id)}>Remove</Button>
+                {!typeOf(block_types, block.type)?.fixed && <Button variant="secondary" size="sm" type="button" data-remove-block onClick={() => removeBlock(send, block.id)}>Remove</Button>}
               </div>
             ))}
           </GridLayout>

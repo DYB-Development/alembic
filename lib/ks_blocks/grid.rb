@@ -13,6 +13,7 @@ module KsBlocks
     module_function
 
     def add(blocks, block_type, x: nil, y: nil, columns: COLUMNS)
+      refuse_second_use(blocks, block_type)
       x, y = first_open_place(blocks, block_type, columns) if x.nil? || y.nil?
       added = { "id" => SecureRandom.uuid, "type" => block_type.key.to_s, "x" => x, "y" => y, "w" => block_type.width, "h" => block_type.height }
       (blocks + [ added ]).tap { |arranged| refuse_unfit(arranged, [ added["id"] ], columns, []) }
@@ -28,6 +29,8 @@ module KsBlocks
         block_type = types.find { |registered| registered.key.to_s == moved["type"] }
         refuse_resizing(moved, block_type, blocks_before[moved["id"]])
         refuse_outside_limits(moved, block_type)
+        refuse_narrower_than_the_grid(moved, block_type, columns)
+        refuse_moving(moved, block_type, blocks_before[moved["id"]])
         raise InvalidLayout, "#{named(moved)} must be at least one column wide and one row tall" if moved["w"] < 1 || moved["h"] < 1
         raise InvalidLayout, "#{named(moved)} runs past the grid's last column" if moved["x"] + moved["w"] > columns
       end
@@ -39,6 +42,25 @@ module KsBlocks
         covered = blocks.find { |other| other["id"] != moved["id"] && overlaps?(other, moved["x"], moved["y"], moved["w"], moved["h"]) }
         raise InvalidLayout, "#{named(moved)} overlaps #{named(covered)}" if covered
       end
+    end
+
+    def refuse_moving(block, block_type, before)
+      return if block_type.nil? || !block_type.fixed || before.nil?
+      return if block["x"] == before["x"] && block["y"] == before["y"]
+
+      raise InvalidLayout, "#{named(block)} cannot be moved"
+    end
+
+    def refuse_narrower_than_the_grid(block, block_type, columns)
+      return if block_type.nil? || !block_type.full_width || block["w"] == columns
+
+      raise InvalidLayout, "#{named(block)} must span the full width"
+    end
+
+    def refuse_second_use(blocks, block_type)
+      return unless block_type.once && blocks.any? { |block| block["type"] == block_type.key.to_s }
+
+      raise InvalidLayout, "#{block_type.name} can only be used once"
     end
 
     def refuse_resizing(block, block_type, before)
@@ -61,8 +83,16 @@ module KsBlocks
       KsBlocks.registry.block_types.find { |block_type| block_type.key.to_s == block["type"] }&.name || block["type"]
     end
 
-    def remove(blocks, id)
+    def remove(blocks, id, types: [])
+      refuse_removing(blocks.find { |block| block["id"] == id }, types)
       blocks.reject { |block| block["id"] == id }
+    end
+
+    def refuse_removing(block, types)
+      return if block.nil?
+      return unless types.find { |registered| registered.key.to_s == block["type"] }&.fixed
+
+      raise InvalidLayout, "#{named(block)} cannot be removed"
     end
 
     def first_open_place(blocks, block_type, columns)

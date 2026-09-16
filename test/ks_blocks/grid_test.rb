@@ -117,6 +117,34 @@ module KsBlocks
       assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 0, "y" => 0, "w" => 8, "h" => 2 } ], types: [ fixed ]) }
     end
 
+    test "a block of a fixed type is refused removal" do
+      fixed = KsBlocks.block(:masthead, name: "Masthead", width: 12, height: 1, fixed: true)
+      blocks = Grid.add([], fixed, x: 0, y: 0)
+
+      assert_equal "Masthead cannot be removed", refusal { Grid.remove(blocks, blocks.first["id"], types: [ fixed ]) }
+    end
+
+    test "a block of a fixed type is refused a new position" do
+      fixed = KsBlocks.block(:masthead, name: "Masthead", width: 12, height: 1, fixed: true)
+      blocks = Grid.add([], fixed, x: 0, y: 0)
+
+      assert_equal "Masthead cannot be moved", refusal { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 0, "y" => 3, "w" => 12, "h" => 1 } ], types: [ fixed ]) }
+    end
+
+    test "a block of a type that must span the full width is refused a narrower place" do
+      banner = KsBlocks.block(:banner, name: "Banner", width: 12, height: 1, full_width: true)
+      blocks = Grid.add([], banner, x: 0, y: 0)
+
+      assert_equal "Banner must span the full width", refusal { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 0, "y" => 0, "w" => 8, "h" => 1 } ], types: [ banner ]) }
+    end
+
+    test "adding a second block of a type that may be used once is refused" do
+      once = BlockType.new(key: :text, name: "Text", width: 6, height: 2, once: true)
+      blocks = Grid.add([], once, x: 0, y: 0)
+
+      assert_equal "Text can only be used once", refusal { Grid.add(blocks, once, x: 6, y: 0) }
+    end
+
     private
 
     def refusal

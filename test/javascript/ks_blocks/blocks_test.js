@@ -62,3 +62,10 @@ test("a block of a type that cannot be resized has no resize handles", () => {
 
   assert.equal(gridItems(blocks, types)[0].isResizable, false)
 })
+
+test("a block of a fixed type cannot be dragged", () => {
+  const blocks = [ { id: "b1", type: "masthead", x: 0, y: 0, w: 12, h: 1 } ]
+  const types = [ { key: "masthead", name: "Masthead", width: 12, height: 1, fixed: true } ]
+
+  assert.equal(gridItems(blocks, types)[0].isDraggable, false)
+})

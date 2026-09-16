@@ -11,5 +11,5 @@ export const gridItems = (blocks, block_types) => blocks.map(({ id, x, y, w, h, 
   const named = { minW: limits.min_width, maxW: limits.max_width, minH: limits.min_height, maxH: limits.max_height }
   const set = Object.fromEntries(Object.entries(named).filter(([ , limit ]) => limit != null))
 
-  return { i: id, x, y, w, h, ...set, ...(limits.resizable === false && { isResizable: false }) }
+  return { i: id, x, y, w, h, ...set, ...(limits.resizable === false && { isResizable: false }), ...(limits.fixed && { isDraggable: false }) }
 })
