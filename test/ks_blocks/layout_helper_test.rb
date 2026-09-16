@@ -24,5 +24,17 @@ module KsBlocks
 
       assert_equal %w[left right lower], rendered.scan(/>(\w+)</).flatten
     end
+
+    test "a block whose type is no longer registered is left out" do
+      KsBlocks.block(:still_here, name: "Still here", width: 6, height: 2, kind: :shown_layouts)
+      blocks = [
+        { "id" => "kept", "type" => "still_here", "x" => 0, "y" => 0, "w" => 6, "h" => 2 },
+        { "id" => "gone", "type" => "retired", "x" => 6, "y" => 0, "w" => 6, "h" => 2 }
+      ]
+
+      rendered = block_layout(blocks, columns: 12, kind: :shown_layouts) { |block| block["id"] }
+
+      assert_equal %w[kept], rendered.scan(/>(\w+)</).flatten
+    end
   end
 end
