@@ -17,7 +17,7 @@ test("lists the block types in their own keystone section titled Blocks", () => 
 test("lists exactly the block types it is given, by name", () => {
   const markup = render({ block_types: [ HEADING, { key: "text", name: "Text", width: 6, height: 2 } ] })
 
-  assert.deepEqual([ ...markup.matchAll(/<[^>]*data-block-type[^>]*>([^<]*)</g) ].map((found) => found[1]), [ "Heading", "Text" ])
+  assert.deepEqual([ ...markup.matchAll(/<[^>]*data-block-type[^>]*><span>([^<]*)</g) ].map((found) => found[1]), [ "Heading", "Text" ])
 })
 
 test("says there are no blocks to add when it is given no block types", () => {
@@ -105,4 +105,10 @@ test("refuses another add of a type that may be used once and is on the layout",
   const block = { id: "b1", type: "notice", x: 0, y: 0, w: 12, h: 1 }
 
   assert.match(render({ block_types: [ notice ], blocks: [ block ] }), /<button[^>]*disabled[^>]*>Added<\/button>/)
+})
+
+test("shows the sentence describing a block type with it in the list", () => {
+  const notice = { key: "notice", name: "Notice", width: 12, height: 1, description: "A short message across the top." }
+
+  assert.match(render({ block_types: [ notice ] }), /<li[^>]*data-block-type="notice"[^>]*>.*A short message across the top\./)
 })

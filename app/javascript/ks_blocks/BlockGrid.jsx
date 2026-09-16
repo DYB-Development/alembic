@@ -47,7 +47,10 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
           : <ul>
               {block_types.map((blockType) => (
                 <li key={blockType.key} data-block-type={blockType.key} className="flex items-center justify-between gap-2 py-1" draggable="true" onDragStart={startDragging(blockType)}>
-                  {blockType.name}
+                  <span>
+                    {blockType.name}
+                    {blockType.description && <span className="ks-section-subtitle block">{blockType.description}</span>}
+                  </span>
                   <Button variant="secondary" size="sm" type="button" disabled={usedUp(blockType, blocks)} onClick={() => addBlock(send, blockType.key)}>{usedUp(blockType, blocks) ? "Added" : "Add"}</Button>
                 </li>
               ))}
