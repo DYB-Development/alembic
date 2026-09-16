@@ -85,3 +85,10 @@ test("draws the grid with the shape it is given", () => {
 
   assert.match(opening(markup, `data-block="b1"`), /height:40px/)
 })
+
+test("offers no Remove button on a block of a fixed type", () => {
+  const masthead = { key: "masthead", name: "Masthead", width: 12, height: 1, fixed: true }
+  const block = { id: "b1", type: "masthead", x: 0, y: 0, w: 12, h: 1 }
+
+  assert.doesNotMatch(render({ block_types: [ masthead ], blocks: [ block ] }), /Remove<\/button>/)
+})
