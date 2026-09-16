@@ -99,3 +99,10 @@ test("says a type that may be used once is already added once it is on the layou
 
   assert.match(render({ block_types: [ notice ], blocks: [ block ] }), /<li[^>]*data-block-type="notice"[^>]*>.*Added<\/button>/)
 })
+
+test("refuses another add of a type that may be used once and is on the layout", () => {
+  const notice = { key: "notice", name: "Notice", width: 12, height: 1, once: true }
+  const block = { id: "b1", type: "notice", x: 0, y: 0, w: 12, h: 1 }
+
+  assert.match(render({ block_types: [ notice ], blocks: [ block ] }), /<button[^>]*disabled[^>]*>Added<\/button>/)
+})
