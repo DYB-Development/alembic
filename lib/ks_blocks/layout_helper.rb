@@ -4,7 +4,7 @@ module KsBlocks
   module LayoutHelper
     def block_layout(blocks, columns: Grid::COLUMNS, gap: Grid::GAP, &block)
       tag.div(style: "display: grid; grid-template-columns: repeat(#{columns}, minmax(0, 1fr)); gap: #{gap}px") do
-        safe_join(blocks.map { |placed| block_layout_block(placed, &block) })
+        safe_join(blocks.sort_by { |placed| [ placed["y"], placed["x"] ] }.map { |placed| block_layout_block(placed, &block) })
       end
     end
 
