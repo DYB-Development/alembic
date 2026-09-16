@@ -43,6 +43,14 @@ module KsBlocks
       assert_empty host.reload.blocks
     end
 
+    test "a host record refuses to remove a block of a fixed type" do
+      fixed = KsBlocks.block(:masthead, name: "Masthead", width: 12, height: 1, kind: :dashboards, fixed: true)
+      host = Host.create!(name: "Dashboard")
+      host.add_block(fixed, x: 0, y: 0)
+
+      assert_raises(InvalidLayout) { host.remove_block(host.blocks.first["id"]) }
+    end
+
     test "a host record's layout data carries its own blocks" do
       host = Host.create!(name: "Dashboard")
       host.add_block(TEXT, x: 0, y: 0)

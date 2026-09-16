@@ -19,7 +19,7 @@ module KsBlocks
         end
 
         define_method(:remove_block) do |id|
-          update!(column => Grid.remove(public_send(column), id))
+          update!(column => Grid.remove(public_send(column), id, types: KsBlocks.registry.block_types(kind: kind)))
         end
 
         define_method(:block_layout_kind) { kind }
