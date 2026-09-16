@@ -29,6 +29,7 @@ module KsBlocks
         block_type = types.find { |registered| registered.key.to_s == moved["type"] }
         refuse_resizing(moved, block_type, blocks_before[moved["id"]])
         refuse_outside_limits(moved, block_type)
+        refuse_narrower_than_the_grid(moved, block_type, columns)
         raise InvalidLayout, "#{named(moved)} must be at least one column wide and one row tall" if moved["w"] < 1 || moved["h"] < 1
         raise InvalidLayout, "#{named(moved)} runs past the grid's last column" if moved["x"] + moved["w"] > columns
       end
@@ -40,6 +41,12 @@ module KsBlocks
         covered = blocks.find { |other| other["id"] != moved["id"] && overlaps?(other, moved["x"], moved["y"], moved["w"], moved["h"]) }
         raise InvalidLayout, "#{named(moved)} overlaps #{named(covered)}" if covered
       end
+    end
+
+    def refuse_narrower_than_the_grid(block, block_type, columns)
+      return if block_type.nil? || !block_type.full_width || block["w"] == columns
+
+      raise InvalidLayout, "#{named(block)} must span the full width"
     end
 
     def refuse_second_use(blocks, block_type)
