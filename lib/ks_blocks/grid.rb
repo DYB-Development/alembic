@@ -10,21 +10,21 @@ module KsBlocks
 
     module_function
 
-    def add(blocks, block_type, x: nil, y: nil)
-      x, y = first_open_place(blocks, block_type) if x.nil? || y.nil?
+    def add(blocks, block_type, x: nil, y: nil, columns: COLUMNS)
+      x, y = first_open_place(blocks, block_type, columns) if x.nil? || y.nil?
       added = { "id" => SecureRandom.uuid, "type" => block_type.key.to_s, "x" => x, "y" => y, "w" => block_type.width, "h" => block_type.height }
-      (blocks + [ added ]).tap { |arranged| refuse_unfit(arranged, [ added["id"] ]) }
+      (blocks + [ added ]).tap { |arranged| refuse_unfit(arranged, [ added["id"] ], columns) }
     end
 
-    def place(blocks, positions)
+    def place(blocks, positions, columns: COLUMNS)
       placed = positions.index_by { |position| position["id"] }
-      blocks.map { |block| block.merge(placed.fetch(block["id"], {}).slice("x", "y", "w", "h")) }.tap { |arranged| refuse_unfit(arranged, placed.keys) }
+      blocks.map { |block| block.merge(placed.fetch(block["id"], {}).slice("x", "y", "w", "h")) }.tap { |arranged| refuse_unfit(arranged, placed.keys, columns) }
     end
 
-    def refuse_unfit(blocks, moved_ids)
+    def refuse_unfit(blocks, moved_ids, columns)
       blocks.select { |block| moved_ids.include?(block["id"]) }.each do |moved|
         raise InvalidLayout, "#{named(moved)} must be at least one column wide and one row tall" if moved["w"] < 1 || moved["h"] < 1
-        raise InvalidLayout, "#{named(moved)} runs past the grid's last column" if moved["x"] + moved["w"] > COLUMNS
+        raise InvalidLayout, "#{named(moved)} runs past the grid's last column" if moved["x"] + moved["w"] > columns
       end
       refuse_overlaps(blocks, moved_ids)
     end
@@ -44,9 +44,9 @@ module KsBlocks
       blocks.reject { |block| block["id"] == id }
     end
 
-    def first_open_place(blocks, block_type)
+    def first_open_place(blocks, block_type, columns)
       (0..).each do |y|
-        (0..COLUMNS - block_type.width).each do |x|
+        (0..columns - block_type.width).each do |x|
           return [ x, y ] unless blocks.any? { |block| overlaps?(block, x, y, block_type.width, block_type.height) }
         end
       end
