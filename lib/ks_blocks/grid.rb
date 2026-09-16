@@ -13,6 +13,7 @@ module KsBlocks
     module_function
 
     def add(blocks, block_type, x: nil, y: nil, columns: COLUMNS)
+      refuse_second_use(blocks, block_type)
       x, y = first_open_place(blocks, block_type, columns) if x.nil? || y.nil?
       added = { "id" => SecureRandom.uuid, "type" => block_type.key.to_s, "x" => x, "y" => y, "w" => block_type.width, "h" => block_type.height }
       (blocks + [ added ]).tap { |arranged| refuse_unfit(arranged, [ added["id"] ], columns, []) }
@@ -39,6 +40,12 @@ module KsBlocks
         covered = blocks.find { |other| other["id"] != moved["id"] && overlaps?(other, moved["x"], moved["y"], moved["w"], moved["h"]) }
         raise InvalidLayout, "#{named(moved)} overlaps #{named(covered)}" if covered
       end
+    end
+
+    def refuse_second_use(blocks, block_type)
+      return unless block_type.once && blocks.any? { |block| block["type"] == block_type.key.to_s }
+
+      raise InvalidLayout, "#{block_type.name} can only be used once"
     end
 
     def refuse_resizing(block, block_type, before)

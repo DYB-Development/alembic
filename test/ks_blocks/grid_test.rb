@@ -117,6 +117,13 @@ module KsBlocks
       assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 0, "y" => 0, "w" => 8, "h" => 2 } ], types: [ fixed ]) }
     end
 
+    test "adding a second block of a type that may be used once is refused" do
+      once = BlockType.new(key: :text, name: "Text", width: 6, height: 2, once: true)
+      blocks = Grid.add([], once, x: 0, y: 0)
+
+      assert_equal "Text can only be used once", refusal { Grid.add(blocks, once, x: 6, y: 0) }
+    end
+
     private
 
     def refusal
