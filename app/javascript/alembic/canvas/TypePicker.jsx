@@ -1,6 +1,6 @@
 import React from "react"
-import Panel from "../../keystone_ui/react/Panel"
-import Button from "../../keystone_ui/react/Button"
+import Panel from "keystone_ui-react/src/Panel.jsx"
+import Button from "keystone_ui-react/src/Button.jsx"
 
 const TypePicker = ({ entries, at, onPick, onConnect, onDismiss }) => (
   <Panel className="shadow-lg" style={{ position: "absolute", zIndex: 9, top: at.y, left: at.x, width: 210, padding: 8, borderRadius: 8 }}>

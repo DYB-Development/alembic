@@ -16,6 +16,7 @@ gem "tailwindcss-rails"
 # UI components for every view the engine renders itself. The host app
 # provides this at runtime; here it's for the dummy app and view tests.
 gem "keystone_ui"
+gem "keystone_ui-react", github: "DYB-Development/keystone_ui-react", tag: "v0.1.2"
 
 # Drives the flow canvas in a real browser; the request tests cannot reach it.
 gem "capybara"

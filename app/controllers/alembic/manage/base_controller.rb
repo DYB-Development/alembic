@@ -1,3 +1,4 @@
+require "keystone_ui/react/mount_helper"
 require "ks_blocks/content_helper"
 
 module Alembic

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
 import Control from "./Control"
 import Records from "./Records"
-import Panel from "../../keystone_ui/react/Panel"
-import Button from "../../keystone_ui/react/Button"
-import { Label } from "../../keystone_ui/react/FieldText"
+import Panel from "keystone_ui-react/src/Panel.jsx"
+import Button from "keystone_ui-react/src/Button.jsx"
+import { Label } from "keystone_ui-react/src/FieldText.jsx"
 
 const panel = { width: 280, padding: 20, overflowY: "auto" }
 

@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client"
 import "react-grid-layout/css/styles.css"
 import "../ks_blocks/block_grid.css"
-import { register, mountAll } from "../keystone_ui/react/registry"
+import { register, mountAll } from "keystone_ui-react/src/registry.js"
 import PageBuilder from "./page_builder/PageBuilder"
 
 register("alembic/page-builder", PageBuilder)
