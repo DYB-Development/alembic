@@ -18,6 +18,10 @@ module KsBlocks
           update!(column => Grid.place(public_send(column), positions, columns: columns, types: KsBlocks.registry.block_types(kind: kind)))
         end
 
+        define_method(:fill_block) do |id, content|
+          update!(column => Grid.fill(public_send(column), id, content))
+        end
+
         define_method(:remove_block) do |id|
           update!(column => Grid.remove(public_send(column), id, types: KsBlocks.registry.block_types(kind: kind)))
         end
