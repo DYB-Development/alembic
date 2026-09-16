@@ -6,6 +6,6 @@ class BlockTypesReloadTest < ActiveSupport::TestCase
 
     Rails.application.reloader.prepare!
 
-    assert_includes KsBlocks.registry.block_types.map(&:key), :heading
+    assert_includes KsBlocks.registry.block_types(kind: :pages).map(&:key), :heading
   end
 end

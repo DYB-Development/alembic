@@ -22,6 +22,8 @@ module KsBlocks
           update!(column => Grid.remove(public_send(column), id))
         end
 
+        define_method(:block_layout_kind) { kind }
+
         define_method(:layout_data) do
           KsBlocks.layout_data(public_send(column), kind: kind)
         end
