@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import GridLayout, { useContainerWidth } from "react-grid-layout"
 import Alert from "../keystone_ui/react/Alert"
 import Button from "../keystone_ui/react/Button"
@@ -13,6 +13,24 @@ const RESIZE_HANDLES = [ "e", "s", "se" ]
 const typeOf = (block_types, key) => block_types.find((blockType) => blockType.key === key)
 
 const named = (block_types, key) => typeOf(block_types, key)?.name ?? `Unknown block type (${key})`
+
+const BlockContent = ({ id, name }) => {
+  const slot = useRef(null)
+  const [ adopted, setAdopted ] = useState(false)
+
+  useEffect(() => {
+    const content = document.querySelector(`[data-block-content="${id}"]`)
+    if (content && content.parentElement !== slot.current) slot.current.appendChild(content)
+    setAdopted(Boolean(content))
+  }, [ id ])
+
+  return (
+    <>
+      {adopted ? null : name}
+      <div ref={slot} className="grow" />
+    </>
+  )
+}
 
 const usedUp = (blockType, blocks) => blockType.once && blocks.some((block) => block.type === blockType.key)
 
@@ -60,7 +78,7 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
           <GridLayout width={width} layout={layout} gridConfig={{ cols: columns, rowHeight, margin: [ gap, gap ] }} resizeConfig={{ enabled: true, handles: RESIZE_HANDLES }} dragConfig={{ cancel: "[data-remove-block]" }} dropConfig={dropConfig} onDrop={dropped} onDragStop={(placed) => placeBlocks(send, placed)} onResizeStop={(placed) => placeBlocks(send, placed)}>
             {blocks.map((block) => (
               <div key={block.id} data-block={block.id} className="ks-panel p-3 flex items-start justify-between gap-2">
-                {named(block_types, block.type)}
+                <BlockContent id={block.id} name={named(block_types, block.type)} />
                 {!typeOf(block_types, block.type)?.fixed && <Button variant="secondary" size="sm" type="button" data-remove-block onClick={() => removeBlock(send, block.id)}>Remove</Button>}
               </div>
             ))}

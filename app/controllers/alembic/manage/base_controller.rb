@@ -1,3 +1,5 @@
+require "ks_blocks/content_helper"
+
 module Alembic
   module Manage
     class BaseController < Alembic.base_controller.constantize
@@ -7,6 +9,7 @@ module Alembic
 
       helper KeystoneUiHelper
       helper KeystoneUi::React::MountHelper
+      helper KsBlocks::ContentHelper
     end
   end
 end
