@@ -13,7 +13,8 @@ module KsBlocks
     end
 
     def layout
-      render json: block_layout_record.layout_data
+      data = block_layout_record.layout_data
+      render json: data.merge(contents: block_contents(data[:blocks]))
     end
 
     def add_block
@@ -27,6 +28,14 @@ module KsBlocks
     def remove_block
       block_layout_record.remove_block(params[:block_id])
       head :no_content
+    end
+
+    def block_contents(blocks)
+      blocks.to_h { |block| [ block["id"], block_content(block) ] }.compact
+    end
+
+    def block_content(_block)
+      nil
     end
 
     def place_blocks

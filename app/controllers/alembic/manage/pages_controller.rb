@@ -6,7 +6,8 @@ module Alembic
       end
 
       def show
-        @payload = payload(Page.find(params[:id]))
+        @page = Page.find(params[:id])
+        @payload = payload(@page)
 
         respond_to do |format|
           format.html

@@ -4,3 +4,7 @@
 <% end %>
 
 <%= react_ui("alembic/page-builder", @payload.merge(token: form_authenticity_token)) %>
+
+<%= block_contents(@page.blocks) do |block| %>
+  <%= render "alembic/manage/pages/block_content", block: block %>
+<% end %>
