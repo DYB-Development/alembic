@@ -55,3 +55,10 @@ test("a block's grid item carries no limits its type did not set", () => {
 
   assert.deepEqual(gridItems(blocks, types), [ { i: "b1", x: 0, y: 0, w: 6, h: 2, minW: 1, minH: 1 } ])
 })
+
+test("a block of a type that cannot be resized has no resize handles", () => {
+  const blocks = [ { id: "b1", type: "fixed", x: 0, y: 0, w: 6, h: 2 } ]
+  const types = [ { key: "fixed", name: "Fixed", width: 6, height: 2, resizable: false } ]
+
+  assert.equal(gridItems(blocks, types)[0].isResizable, false)
+})
