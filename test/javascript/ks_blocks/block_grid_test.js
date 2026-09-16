@@ -112,3 +112,9 @@ test("shows the sentence describing a block type with it in the list", () => {
 
   assert.match(render({ block_types: [ notice ] }), /<li[^>]*data-block-type="notice"[^>]*>.*A short message across the top\./)
 })
+
+test("shows block types under the name of the group they were put in", () => {
+  const notice = { key: "notice", name: "Notice", width: 12, height: 1, group: "Layout" }
+
+  assert.match(render({ block_types: [ notice ] }), /Layout<\/h3>.*data-block-type="notice"/)
+})

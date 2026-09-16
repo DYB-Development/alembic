@@ -14,6 +14,14 @@ const typeOf = (block_types, key) => block_types.find((blockType) => blockType.k
 
 const named = (block_types, key) => typeOf(block_types, key)?.name ?? `Unknown block type (${key})`
 
+const grouped = (block_types) => block_types.reduce((groups, blockType) => {
+  const name = blockType.group ?? ""
+  const group = groups.find((found) => found.name === name) ?? groups[groups.push({ name, types: [] }) - 1]
+  group.types.push(blockType)
+
+  return groups
+}, [])
+
 const usedUp = (blockType, blocks) => blockType.once && blocks.some((block) => block.type === blockType.key)
 
 export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
@@ -44,17 +52,22 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
       <Section title="Blocks" spacing="sm">
         {block_types.length === 0
           ? <p>There are no blocks to add.</p>
-          : <ul>
-              {block_types.map((blockType) => (
-                <li key={blockType.key} data-block-type={blockType.key} className="flex items-center justify-between gap-2 py-1" draggable="true" onDragStart={startDragging(blockType)}>
-                  <span>
-                    {blockType.name}
-                    {blockType.description && <span className="ks-section-subtitle block">{blockType.description}</span>}
-                  </span>
-                  <Button variant="secondary" size="sm" type="button" disabled={usedUp(blockType, blocks)} onClick={() => addBlock(send, blockType.key)}>{usedUp(blockType, blocks) ? "Added" : "Add"}</Button>
-                </li>
-              ))}
-            </ul>}
+          : grouped(block_types).map((group) => (
+              <React.Fragment key={group.name}>
+                {group.name && <h3 className="ks-section-title">{group.name}</h3>}
+                <ul>
+                  {group.types.map((blockType) => (
+                    <li key={blockType.key} data-block-type={blockType.key} className="flex items-center justify-between gap-2 py-1" draggable="true" onDragStart={startDragging(blockType)}>
+                      <span>
+                        {blockType.name}
+                        {blockType.description && <span className="ks-section-subtitle block">{blockType.description}</span>}
+                      </span>
+                      <Button variant="secondary" size="sm" type="button" disabled={usedUp(blockType, blocks)} onClick={() => addBlock(send, blockType.key)}>{usedUp(blockType, blocks) ? "Added" : "Add"}</Button>
+                    </li>
+                  ))}
+                </ul>
+              </React.Fragment>
+            ))}
       </Section>
       <Panel data-block-grid-panel>
         {error && <Alert type="error" message={error} className="mb-3" />}
