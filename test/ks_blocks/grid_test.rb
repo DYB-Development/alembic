@@ -117,6 +117,13 @@ module KsBlocks
       assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 0, "y" => 0, "w" => 8, "h" => 2 } ], types: [ fixed ]) }
     end
 
+    test "a block of a fixed type is refused removal" do
+      fixed = KsBlocks.block(:masthead, name: "Masthead", width: 12, height: 1, fixed: true)
+      blocks = Grid.add([], fixed, x: 0, y: 0)
+
+      assert_equal "Masthead cannot be removed", refusal { Grid.remove(blocks, blocks.first["id"], types: [ fixed ]) }
+    end
+
     test "a block of a fixed type is refused a new position" do
       fixed = KsBlocks.block(:masthead, name: "Masthead", width: 12, height: 1, fixed: true)
       blocks = Grid.add([], fixed, x: 0, y: 0)

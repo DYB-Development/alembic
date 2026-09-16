@@ -83,8 +83,16 @@ module KsBlocks
       KsBlocks.registry.block_types.find { |block_type| block_type.key.to_s == block["type"] }&.name || block["type"]
     end
 
-    def remove(blocks, id)
+    def remove(blocks, id, types: [])
+      refuse_removing(blocks.find { |block| block["id"] == id }, types)
       blocks.reject { |block| block["id"] == id }
+    end
+
+    def refuse_removing(block, types)
+      return if block.nil?
+      return unless types.find { |registered| registered.key.to_s == block["type"] }&.fixed
+
+      raise InvalidLayout, "#{named(block)} cannot be removed"
     end
 
     def first_open_place(blocks, block_type, columns)
