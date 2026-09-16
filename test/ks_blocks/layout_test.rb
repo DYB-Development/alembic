@@ -6,7 +6,7 @@ module KsBlocks
     class Host < ActiveRecord::Base
       self.table_name = "alembic_pages"
       include KsBlocks::Layout
-      block_layout :blocks
+      block_layout :blocks, kind: :dashboards
     end
 
     TEXT = BlockType.new(key: :text, name: "Text", width: 6, height: 2)
@@ -51,6 +51,13 @@ module KsBlocks
       host.add_block(TEXT, x: 6, y: 0)
 
       assert_raises(InvalidLayout) { host.place_blocks([ { "id" => host.blocks.first["id"], "x" => 0, "y" => 2, "w" => 6, "h" => 2 } ], version: drawn) }
+    end
+
+    test "a host record's layout data lists only its own kind of block types" do
+      KsBlocks.block(:page_only_probe, name: "Page only", width: 3, height: 1, kind: :pages)
+      host = Host.create!(name: "Dashboard")
+
+      assert_equal [], host.layout_data[:block_types].select { |block_type| block_type[:key] == :page_only_probe }
     end
   end
 end
