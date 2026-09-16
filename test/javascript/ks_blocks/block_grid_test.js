@@ -79,3 +79,9 @@ test("marks a block whose type is no longer registered as an unknown type", () =
 
   assert.match(markup, /<div[^>]*data-block="b9"[^>]*>Unknown block type \(retired_widget\)/)
 })
+
+test("draws the grid with the shape it is given", () => {
+  const markup = render({ grid: { columns: 6, row_height: 40, gap: 4 }, block_types: [ HEADING ], blocks: [ { id: "b1", type: "heading", x: 3, y: 0, w: 3, h: 1 } ] })
+
+  assert.match(opening(markup, `data-block="b1"`), /height:40px/)
+})

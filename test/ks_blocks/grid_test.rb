@@ -97,6 +97,12 @@ module KsBlocks
       assert_equal "Text overlaps Text", refusal { Grid.add(Grid.add([], TEXT, x: 0, y: 0), TEXT, x: 3, y: 1) }
     end
 
+    test "a block is refused when it runs past the last column of a narrower grid" do
+      blocks = Grid.add([], TEXT, x: 0, y: 0)
+
+      assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 2, "y" => 0, "w" => 6, "h" => 2 } ], columns: 6) }
+    end
+
     private
 
     def refusal

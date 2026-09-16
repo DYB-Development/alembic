@@ -8,8 +8,8 @@ module KsBlocks
       registry.register(BlockType.new(key: key, name: name, width: width, height: height), kind: kind)
     end
 
-    def layout_data(blocks, kind: :blocks)
-      { block_types: registry.block_types(kind: kind).map(&:to_h), blocks: blocks, version: version_of(blocks) }
+    def layout_data(blocks, kind: :blocks, grid: {})
+      { block_types: registry.block_types(kind: kind).map(&:to_h), blocks: blocks, version: version_of(blocks), grid: grid }
     end
 
     def version_of(blocks)
