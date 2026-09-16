@@ -30,6 +30,7 @@ module KsBlocks
         refuse_resizing(moved, block_type, blocks_before[moved["id"]])
         refuse_outside_limits(moved, block_type)
         refuse_narrower_than_the_grid(moved, block_type, columns)
+        refuse_moving(moved, block_type, blocks_before[moved["id"]])
         raise InvalidLayout, "#{named(moved)} must be at least one column wide and one row tall" if moved["w"] < 1 || moved["h"] < 1
         raise InvalidLayout, "#{named(moved)} runs past the grid's last column" if moved["x"] + moved["w"] > columns
       end
@@ -41,6 +42,13 @@ module KsBlocks
         covered = blocks.find { |other| other["id"] != moved["id"] && overlaps?(other, moved["x"], moved["y"], moved["w"], moved["h"]) }
         raise InvalidLayout, "#{named(moved)} overlaps #{named(covered)}" if covered
       end
+    end
+
+    def refuse_moving(block, block_type, before)
+      return if block_type.nil? || !block_type.fixed || before.nil?
+      return if block["x"] == before["x"] && block["y"] == before["y"]
+
+      raise InvalidLayout, "#{named(block)} cannot be moved"
     end
 
     def refuse_narrower_than_the_grid(block, block_type, columns)

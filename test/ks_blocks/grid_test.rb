@@ -117,6 +117,13 @@ module KsBlocks
       assert_raises(InvalidLayout) { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 0, "y" => 0, "w" => 8, "h" => 2 } ], types: [ fixed ]) }
     end
 
+    test "a block of a fixed type is refused a new position" do
+      fixed = KsBlocks.block(:masthead, name: "Masthead", width: 12, height: 1, fixed: true)
+      blocks = Grid.add([], fixed, x: 0, y: 0)
+
+      assert_equal "Masthead cannot be moved", refusal { Grid.place(blocks, [ { "id" => blocks.first["id"], "x" => 0, "y" => 3, "w" => 12, "h" => 1 } ], types: [ fixed ]) }
+    end
+
     test "a block of a type that must span the full width is refused a narrower place" do
       banner = KsBlocks.block(:banner, name: "Banner", width: 12, height: 1, full_width: true)
       blocks = Grid.add([], banner, x: 0, y: 0)
