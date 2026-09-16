@@ -9,6 +9,12 @@ module KsBlocks
       block_layout :blocks, kind: :dashboards
     end
 
+    class NarrowHost < ActiveRecord::Base
+      self.table_name = "alembic_pages"
+      include KsBlocks::Layout
+      block_layout :blocks, columns: 6
+    end
+
     TEXT = BlockType.new(key: :text, name: "Text", width: 6, height: 2)
 
     test "a host record saves a block added to its layout column" do
@@ -58,6 +64,13 @@ module KsBlocks
       host = Host.create!(name: "Dashboard")
 
       assert_equal [], host.layout_data[:block_types].select { |block_type| block_type[:key] == :page_only_probe }
+    end
+
+    test "a host record with a narrower grid refuses a block that runs past its last column" do
+      host = NarrowHost.create!(name: "Narrow")
+      host.add_block(TEXT, x: 0, y: 0)
+
+      assert_raises(InvalidLayout) { host.place_blocks([ { "id" => host.blocks.first["id"], "x" => 2, "y" => 0, "w" => 6, "h" => 2 } ]) }
     end
   end
 end

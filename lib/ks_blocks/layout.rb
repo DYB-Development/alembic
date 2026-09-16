@@ -7,15 +7,15 @@ module KsBlocks
     extend ActiveSupport::Concern
 
     class_methods do
-      def block_layout(column, kind: :blocks)
+      def block_layout(column, kind: :blocks, columns: Grid::COLUMNS)
         define_method(:add_block) do |block_type, x: nil, y: nil|
-          update!(column => Grid.add(public_send(column), block_type, x: x, y: y))
+          update!(column => Grid.add(public_send(column), block_type, x: x, y: y, columns: columns))
         end
 
         define_method(:place_blocks) do |positions, version: nil|
           raise InvalidLayout, "This layout changed since it was last drawn" if version && version != KsBlocks.version_of(public_send(column))
 
-          update!(column => Grid.place(public_send(column), positions))
+          update!(column => Grid.place(public_send(column), positions, columns: columns))
         end
 
         define_method(:remove_block) do |id|
