@@ -20,7 +20,7 @@
   "homepage": "https://github.com/tylercschneider/alembic#readme",
   "dependencies": {
     "@xyflow/react": "12.11.3",
-    "keystone_ui-react": "github:DYB-Development/keystone_ui-react#v0.1.2",
+    "keystone_ui-react": "https://github.com/DYB-Development/keystone_ui-react/archive/refs/tags/v0.1.2.tar.gz",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-grid-layout": "2.2.4"
