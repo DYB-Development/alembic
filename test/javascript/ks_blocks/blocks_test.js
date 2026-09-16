@@ -48,3 +48,10 @@ test("a block's grid item carries its type's size limits", () => {
 
   assert.deepEqual(gridItems(blocks, types), [ { i: "b1", x: 0, y: 0, w: 6, h: 2, minW: 4, maxW: 8, minH: 2, maxH: 3 } ])
 })
+
+test("a block's grid item carries no limits its type did not set", () => {
+  const blocks = [ { id: "b1", type: "text", x: 0, y: 0, w: 6, h: 2 } ]
+  const types = [ { key: "text", name: "Text", width: 6, height: 2, min_width: 1, max_width: null, min_height: 1, max_height: null } ]
+
+  assert.deepEqual(gridItems(blocks, types), [ { i: "b1", x: 0, y: 0, w: 6, h: 2, minW: 1, minH: 1 } ])
+})
