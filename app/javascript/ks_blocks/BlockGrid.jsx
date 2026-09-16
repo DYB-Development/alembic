@@ -7,15 +7,15 @@ import Section from "../keystone_ui/react/Section"
 import useLayout from "./useLayout"
 import { addBlock, dropBlock, placeBlocks, removeBlock } from "./blocks"
 
-const COLUMNS = 12
-const ROW_HEIGHT = 60
+const SHAPE = { columns: 12, row_height: 60, gap: 10 }
 const RESIZE_HANDLES = [ "e", "s", "se" ]
 
 const named = (block_types, key) => block_types.find((blockType) => blockType.key === key)?.name ?? `Unknown block type (${key})`
 
 export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
   const { layout: current, error, send } = useLayout(base, token, initial)
-  const { block_types = [], blocks = [] } = current
+  const { block_types = [], blocks = [], grid = {} } = current
+  const { columns, row_height: rowHeight, gap } = { ...SHAPE, ...grid }
   const { width, containerRef, mounted } = useContainerWidth({ measureBeforeMount: true })
   const layout = blocks.map(({ id, x, y, w, h }) => ({ i: id, x, y, w, h }))
   const dragged = useRef(null)
@@ -53,7 +53,7 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
         {error && <Alert type="error" message={error} className="mb-3" />}
         {blocks.length === 0 && <p>{emptyMessage}</p>}
         <div ref={containerRef} data-block-grid style={{ overflow: "hidden", visibility: mounted ? "visible" : "hidden" }}>
-          <GridLayout width={width} layout={layout} gridConfig={{ cols: COLUMNS, rowHeight: ROW_HEIGHT }} resizeConfig={{ enabled: true, handles: RESIZE_HANDLES }} dragConfig={{ cancel: "[data-remove-block]" }} dropConfig={dropConfig} onDrop={dropped} onDragStop={(placed) => placeBlocks(send, placed)} onResizeStop={(placed) => placeBlocks(send, placed)}>
+          <GridLayout width={width} layout={layout} gridConfig={{ cols: columns, rowHeight, margin: [ gap, gap ] }} resizeConfig={{ enabled: true, handles: RESIZE_HANDLES }} dragConfig={{ cancel: "[data-remove-block]" }} dropConfig={dropConfig} onDrop={dropped} onDragStop={(placed) => placeBlocks(send, placed)} onResizeStop={(placed) => placeBlocks(send, placed)}>
             {blocks.map((block) => (
               <div key={block.id} data-block={block.id} className="ks-panel p-3 flex items-start justify-between gap-2">
                 {named(block_types, block.type)}
