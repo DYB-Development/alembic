@@ -1,0 +1,7 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag "ks_blocks" %>
+<% end %>
+
+<%= block_layout(@page.blocks, kind: :pages) do |block| %>
+  <div class="ks-panel p-3"><%= block["type"] %></div>
+<% end %>
