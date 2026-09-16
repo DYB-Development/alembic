@@ -14,6 +14,8 @@ const typeOf = (block_types, key) => block_types.find((blockType) => blockType.k
 
 const named = (block_types, key) => typeOf(block_types, key)?.name ?? `Unknown block type (${key})`
 
+const usedUp = (blockType, blocks) => blockType.once && blocks.some((block) => block.type === blockType.key)
+
 export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
   const { layout: current, error, send } = useLayout(base, token, initial)
   const { block_types = [], blocks = [], grid = {} } = current
@@ -46,7 +48,7 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
               {block_types.map((blockType) => (
                 <li key={blockType.key} data-block-type={blockType.key} className="flex items-center justify-between gap-2 py-1" draggable="true" onDragStart={startDragging(blockType)}>
                   {blockType.name}
-                  <Button variant="secondary" size="sm" type="button" onClick={() => addBlock(send, blockType.key)}>Add</Button>
+                  <Button variant="secondary" size="sm" type="button" onClick={() => addBlock(send, blockType.key)}>{usedUp(blockType, blocks) ? "Added" : "Add"}</Button>
                 </li>
               ))}
             </ul>}
