@@ -7,7 +7,7 @@ import { Label } from "../keystone_ui/react/FieldText"
 import Panel from "../keystone_ui/react/Panel"
 import Section from "../keystone_ui/react/Section"
 import useLayout from "./useLayout"
-import { addBlock, dropBlock, gridItems, placeBlocks, removeBlock } from "./blocks"
+import { addBlock, dropBlock, fillBlock, gridItems, placeBlocks, removeBlock } from "./blocks"
 
 const SHAPE = { columns: 12, row_height: 60, gap: 10 }
 const RESIZE_HANDLES = [ "e", "s", "se" ]
@@ -63,7 +63,8 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
   const dragged = useRef(null)
   const [ search, setSearch ] = useState("")
   const [ selected, setSelected ] = useState(null)
-  const fields = typeOf(block_types, blocks.find((block) => block.id === selected)?.type)?.fields ?? []
+  const filled = blocks.find((block) => block.id === selected)
+  const fields = typeOf(block_types, filled?.type)?.fields ?? []
 
   const startDragging = (blockType) => (event) => {
     dragged.current = blockType
@@ -112,7 +113,7 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
             {fields.map((field) => (
               <div key={field.key} className="mb-2">
                 <Label htmlFor={`ks-block-field-${field.key}`}>{field.label}</Label>
-                <Input id={`ks-block-field-${field.key}`} type="text" />
+                <Input key={`${selected}-${field.key}`} id={`ks-block-field-${field.key}`} type="text" defaultValue={filled.content?.[field.key] ?? ""} onBlur={(event) => fillBlock(send, selected, { ...filled.content, [field.key]: event.target.value })} />
               </div>
             ))}
           </div>
