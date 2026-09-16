@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import Button from "../../keystone_ui/react/Button"
+import Button from "keystone_ui-react/src/Button.jsx"
 const round = { width: 24, height: 24, padding: 0, fontSize: 15, lineHeight: "15px" }
 
 const Connector = ({ link, onInsert, onRemove, onDrop, dragging }) => {

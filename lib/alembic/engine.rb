@@ -1,4 +1,5 @@
 require "alembic/leftover_stylesheet"
+require "keystone_ui-react"
 require "ks_blocks"
 
 module Alembic

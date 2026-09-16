@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "build": "esbuild app/javascript/alembic/canvas.jsx app/javascript/alembic/page_builder.jsx --bundle --minify --format=iife --target=es2020 --define:process.env.NODE_ENV=\\\"production\\\" --outdir=app/assets/builds/alembic",
+    "build": "esbuild app/javascript/alembic/canvas.jsx app/javascript/alembic/page_builder.jsx --bundle --minify --format=iife --target=es2020 --define:process.env.NODE_ENV=\\\"production\\\" --alias:react=keystone_ui-react/src/react_on_page.js --alias:react-dom/client=keystone_ui-react/src/react_dom_on_page.js --alias:react-dom=keystone_ui-react/src/react_dom_on_page.js --alias:react/jsx-runtime=keystone_ui-react/src/jsx_runtime_on_page.js --outdir=app/assets/builds/alembic",
     "test": "node --import ./test/javascript/support/jsx.js --test \"test/javascript/**/*_test.js\""
   },
   "repository": {
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/tylercschneider/alembic#readme",
   "dependencies": {
     "@xyflow/react": "12.11.3",
+    "keystone_ui-react": "https://github.com/DYB-Development/keystone_ui-react/archive/refs/tags/v0.1.2.tar.gz",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-grid-layout": "2.2.4"

@@ -1,8 +1,8 @@
 import React from "react"
 import { toggled } from "./choices"
-import Input from "../../keystone_ui/react/Input"
-import Select from "../../keystone_ui/react/Select"
-import Checkbox from "../../keystone_ui/react/Checkbox"
+import Input from "keystone_ui-react/src/Input.jsx"
+import Select from "keystone_ui-react/src/Select.jsx"
+import Checkbox from "keystone_ui-react/src/Checkbox.jsx"
 
 const offered = (choices) =>
   (choices || []).map((choice) => (typeof choice === "object" ? choice : { value: choice, label: choice }))

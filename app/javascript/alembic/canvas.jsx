@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client"
-import { register, mountAll } from "../keystone_ui/react/registry"
+import { register, mountAll } from "keystone_ui-react/src/registry.js"
 import Canvas from "./canvas/Canvas"
 
 register("alembic/flow-editor", Canvas)

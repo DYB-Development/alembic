@@ -1,7 +1,7 @@
 import React from "react"
 import Control from "./Control"
 import { amended } from "./rows"
-import Button from "../../keystone_ui/react/Button"
+import Button from "keystone_ui-react/src/Button.jsx"
 
 const Records = ({ holds, labels, rows, onChange, onSettle }) => {
   const kept = Array.isArray(rows) ? rows : []
