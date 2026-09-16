@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react"
 import GridLayout, { useContainerWidth } from "react-grid-layout"
 import Alert from "../keystone_ui/react/Alert"
 import Button from "../keystone_ui/react/Button"
+import Input from "../keystone_ui/react/Input"
+import { Label } from "../keystone_ui/react/FieldText"
 import Panel from "../keystone_ui/react/Panel"
 import Section from "../keystone_ui/react/Section"
 import useLayout from "./useLayout"
@@ -13,6 +15,8 @@ const RESIZE_HANDLES = [ "e", "s", "se" ]
 const typeOf = (block_types, key) => block_types.find((blockType) => blockType.key === key)
 
 const named = (block_types, key) => typeOf(block_types, key)?.name ?? `Unknown block type (${key})`
+
+const matching = (block_types, search) => block_types.filter((blockType) => blockType.name.toLowerCase().includes(search.trim().toLowerCase()))
 
 const grouped = (block_types) => block_types.reduce((groups, blockType) => {
   const name = blockType.group ?? ""
@@ -57,6 +61,7 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
   const { width, containerRef, mounted } = useContainerWidth({ measureBeforeMount: true })
   const layout = gridItems(blocks, block_types)
   const dragged = useRef(null)
+  const [ search, setSearch ] = useState("")
 
   const startDragging = (blockType) => (event) => {
     dragged.current = blockType
@@ -76,9 +81,11 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
   return (
     <div className="lg:grid lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-6">
       <Section title="Blocks" spacing="sm">
+        <Label htmlFor="ks-blocks-search">Search blocks</Label>
+        <Input id="ks-blocks-search" type="search" value={search} onChange={(event) => setSearch(event.target.value)} className="mb-2" />
         {block_types.length === 0
           ? <p>There are no blocks to add.</p>
-          : grouped(block_types).map((group) => (
+          : grouped(matching(block_types, search)).map((group) => (
               <React.Fragment key={group.name}>
                 {group.name && <h3 className="ks-section-title">{group.name}</h3>}
                 <ul>

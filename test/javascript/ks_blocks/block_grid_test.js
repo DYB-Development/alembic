@@ -11,7 +11,7 @@ const render = (props) => renderToStaticMarkup(React.createElement(BlockGrid, { 
 const opening = (markup, attribute) => markup.match(new RegExp(`<[^>]*${attribute}[^>]*>`))?.[0] ?? ""
 
 test("lists the block types in their own keystone section titled Blocks", () => {
-  assert.match(render({ block_types: [ HEADING ] }), /<h2 class="ks-section-title">Blocks<\/h2><\/div><\/div><ul[^>]*><li[^>]*data-block-type="heading"/)
+  assert.match(render({ block_types: [ HEADING ] }), /<h2 class="ks-section-title">Blocks<\/h2>.*<ul[^>]*><li[^>]*data-block-type="heading"/)
 })
 
 test("lists exactly the block types it is given, by name", () => {

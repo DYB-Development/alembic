@@ -27,6 +27,14 @@ module Alembic
       assert_selector "[data-block]", text: "Heading"
     end
 
+    test "searching the block list leaves only the types whose names match" do
+      visit alembic.manage_page_path(Page.create!(name: "Welcome"))
+
+      fill_in "Search blocks", with: "Tex"
+
+      assert_equal [ "text" ], all("[data-block-type]").map { |type| type["data-block-type"] }
+    end
+
     test "on a wide screen the block types sit beside the grid" do
       visit alembic.manage_page_path(Page.create!(name: "Welcome"))
       list_right = page.evaluate_script("document.querySelector('[data-block-type]').getBoundingClientRect().right")
