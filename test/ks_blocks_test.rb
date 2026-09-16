@@ -26,4 +26,10 @@ class KsBlocksTest < ActiveSupport::TestCase
 
     assert_not_equal KsBlocks.layout_data(before)[:version], KsBlocks.layout_data(after)[:version]
   end
+
+  test "declaring a block type for a kind of layout offers it only for that kind" do
+    KsBlocks.block(:dashboard_probe, name: "Dashboard probe", width: 3, height: 1, kind: :dashboards)
+
+    assert_equal [], KsBlocks.registry.block_types(kind: :pages).select { |block_type| block_type.key == :dashboard_probe }
+  end
 end
