@@ -1,6 +1,6 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { addBlock, dropBlock, placeBlocks, removeBlock } from "../../../app/javascript/ks_blocks/blocks.js"
+import { addBlock, dropBlock, placeBlocks, removeBlock, gridItems } from "../../../app/javascript/ks_blocks/blocks.js"
 
 test("adding a block type sends its key to the page's blocks", () => {
   const sent = []
@@ -40,4 +40,11 @@ test("removing a block sends a delete for that block", () => {
   removeBlock((...request) => sent.push(request), "b1")
 
   assert.deepEqual(sent, [ [ "/blocks/b1", "DELETE" ] ])
+})
+
+test("a block's grid item carries its type's size limits", () => {
+  const blocks = [ { id: "b1", type: "chart", x: 0, y: 0, w: 6, h: 2 } ]
+  const types = [ { key: "chart", name: "Chart", width: 6, height: 2, min_width: 4, max_width: 8, min_height: 2, max_height: 3 } ]
+
+  assert.deepEqual(gridItems(blocks, types), [ { i: "b1", x: 0, y: 0, w: 6, h: 2, minW: 4, maxW: 8, minH: 2, maxH: 3 } ])
 })
