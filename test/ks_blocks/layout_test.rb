@@ -12,7 +12,7 @@ module KsBlocks
     class NarrowHost < ActiveRecord::Base
       self.table_name = "alembic_pages"
       include KsBlocks::Layout
-      block_layout :blocks, columns: 6
+      block_layout :blocks, columns: 6, row_height: 40, gap: 4
     end
 
     TEXT = BlockType.new(key: :text, name: "Text", width: 6, height: 2)
@@ -71,6 +71,12 @@ module KsBlocks
       host.add_block(TEXT, x: 0, y: 0)
 
       assert_raises(InvalidLayout) { host.place_blocks([ { "id" => host.blocks.first["id"], "x" => 2, "y" => 0, "w" => 6, "h" => 2 } ]) }
+    end
+
+    test "a host record's layout data carries the shape of its grid" do
+      host = NarrowHost.create!(name: "Narrow")
+
+      assert_equal({ columns: 6, row_height: 40, gap: 4 }, host.layout_data[:grid])
     end
   end
 end

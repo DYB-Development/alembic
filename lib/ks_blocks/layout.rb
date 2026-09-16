@@ -7,7 +7,7 @@ module KsBlocks
     extend ActiveSupport::Concern
 
     class_methods do
-      def block_layout(column, kind: :blocks, columns: Grid::COLUMNS)
+      def block_layout(column, kind: :blocks, columns: Grid::COLUMNS, row_height: Grid::ROW_HEIGHT, gap: Grid::GAP)
         define_method(:add_block) do |block_type, x: nil, y: nil|
           update!(column => Grid.add(public_send(column), block_type, x: x, y: y, columns: columns))
         end
@@ -25,7 +25,7 @@ module KsBlocks
         define_method(:block_layout_kind) { kind }
 
         define_method(:layout_data) do
-          KsBlocks.layout_data(public_send(column), kind: kind)
+          KsBlocks.layout_data(public_send(column), kind: kind, grid: { columns: columns, row_height: row_height, gap: gap })
         end
       end
     end

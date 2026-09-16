@@ -7,6 +7,8 @@ module KsBlocks
 
   module Grid
     COLUMNS = 12
+    ROW_HEIGHT = 60
+    GAP = 10
 
     module_function
 
