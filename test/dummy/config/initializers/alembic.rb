@@ -6,6 +6,6 @@ Rails.application.config.to_prepare do
   Steps::Notify.register
   Steps::Deliver.register
 
-  KsBlocks.block(:heading, name: "Heading", width: 12, height: 1, kind: :pages)
+  KsBlocks.block(:heading, name: "Heading", width: 12, height: 1, kind: :pages, fields: [ { key: :title, label: "Title" } ])
   KsBlocks.block(:text, name: "Text", width: 6, height: 2, kind: :pages)
 end

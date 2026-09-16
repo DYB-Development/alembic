@@ -41,6 +41,12 @@ class KsBlocksTest < ActiveSupport::TestCase
     assert_equal [], KsBlocks.layout_data([], kind: :pages)[:block_types].select { |block_type| block_type[:key] == :layout_data_dashboard_probe }
   end
 
+  test "a block type carries the content fields it was registered with" do
+    KsBlocks.block(:fields_probe, name: "Fields", width: 6, height: 2, kind: :fields_probe, fields: [ { key: :title, label: "Title" } ])
+
+    assert_equal [ { key: :title, label: "Title" } ], KsBlocks.registry.block_types(kind: :fields_probe).first.fields
+  end
+
   test "a block type carries the sizes it may be resized between" do
     KsBlocks.block(:limited_probe, name: "Limited", width: 6, height: 2, kind: :limits_probe, min_width: 3, max_width: 9, min_height: 1, max_height: 4)
 

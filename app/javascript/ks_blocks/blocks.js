@@ -4,6 +4,8 @@ export const dropBlock = (send, type, { x, y }) => send("/blocks", "POST", { typ
 
 export const placeBlocks = (send, layout) => send("/blocks", "PATCH", { layout: layout.map(({ i, x, y, w, h }) => ({ id: i, x, y, w, h })) })
 
+export const fillBlock = (send, id, content) => send(`/blocks/${id}`, "PATCH", { content })
+
 export const removeBlock = (send, id) => send(`/blocks/${id}`, "DELETE")
 
 export const gridItems = (blocks, block_types) => blocks.map(({ id, x, y, w, h, type }) => {

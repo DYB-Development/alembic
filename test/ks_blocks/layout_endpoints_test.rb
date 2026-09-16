@@ -36,6 +36,18 @@ module KsBlocks
       assert_equal [ 6, 1, 4, 3 ], record.reload.blocks.first.values_at("x", "y", "w", "h")
     end
 
+    test "a host's fill endpoint stores the content it is sent for a block" do
+      record = Alembic::Page.create!(name: "Dashboard")
+      record.add_block(BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+
+      with_routing do |routes|
+        routes.draw { patch "/hosts/:id/blocks/:block_id", to: "ks_blocks_host#fill_block" }
+        patch "/hosts/#{record.id}/blocks/#{record.blocks.first["id"]}", params: { content: { title: "Welcome" } }, as: :json
+      end
+
+      assert_equal({ "title" => "Welcome" }, record.reload.blocks.first["content"])
+    end
+
     test "a host's remove endpoint takes the block off its record" do
       record = Alembic::Page.create!(name: "Dashboard")
       record.add_block(BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)

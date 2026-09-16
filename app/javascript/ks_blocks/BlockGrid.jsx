@@ -7,7 +7,7 @@ import { Label } from "../keystone_ui/react/FieldText"
 import Panel from "../keystone_ui/react/Panel"
 import Section from "../keystone_ui/react/Section"
 import useLayout from "./useLayout"
-import { addBlock, dropBlock, gridItems, placeBlocks, removeBlock } from "./blocks"
+import { addBlock, dropBlock, fillBlock, gridItems, placeBlocks, removeBlock } from "./blocks"
 
 const SHAPE = { columns: 12, row_height: 60, gap: 10 }
 const RESIZE_HANDLES = [ "e", "s", "se" ]
@@ -62,6 +62,9 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
   const layout = gridItems(blocks, block_types)
   const dragged = useRef(null)
   const [ search, setSearch ] = useState("")
+  const [ selected, setSelected ] = useState(null)
+  const filled = blocks.find((block) => block.id === selected)
+  const fields = typeOf(block_types, filled?.type)?.fields ?? []
 
   const startDragging = (blockType) => (event) => {
     dragged.current = blockType
@@ -105,10 +108,20 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
       <Panel data-block-grid-panel>
         {error && <Alert type="error" message={error} className="mb-3" />}
         {blocks.length === 0 && <p>{emptyMessage}</p>}
+        {fields.length > 0 && (
+          <div data-block-fields className="mb-3">
+            {fields.map((field) => (
+              <div key={field.key} className="mb-2">
+                <Label htmlFor={`ks-block-field-${field.key}`}>{field.label}</Label>
+                <Input key={`${selected}-${field.key}`} id={`ks-block-field-${field.key}`} type="text" defaultValue={filled.content?.[field.key] ?? ""} onBlur={(event) => fillBlock(send, selected, { ...filled.content, [field.key]: event.target.value })} />
+              </div>
+            ))}
+          </div>
+        )}
         <div ref={containerRef} data-block-grid style={{ overflow: "hidden", visibility: mounted ? "visible" : "hidden" }}>
           <GridLayout width={width} layout={layout} gridConfig={{ cols: columns, rowHeight, margin: [ gap, gap ] }} resizeConfig={{ enabled: true, handles: RESIZE_HANDLES }} dragConfig={{ cancel: "[data-remove-block]" }} dropConfig={dropConfig} onDrop={dropped} onDragStop={(placed) => placeBlocks(send, placed)} onResizeStop={(placed) => placeBlocks(send, placed)}>
             {blocks.map((block) => (
-              <div key={block.id} data-block={block.id} className="ks-panel p-3 flex items-start justify-between gap-2">
+              <div key={block.id} data-block={block.id} onClick={() => setSelected(block.id)} className="ks-panel p-3 flex items-start justify-between gap-2">
                 <BlockContent id={block.id} name={named(block_types, block.type)} html={contents[block.id]} />
                 {!typeOf(block_types, block.type)?.fixed && <Button variant="secondary" size="sm" type="button" data-remove-block onClick={() => removeBlock(send, block.id)}>Remove</Button>}
               </div>

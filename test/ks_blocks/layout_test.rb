@@ -51,6 +51,15 @@ module KsBlocks
       assert_raises(InvalidLayout) { host.remove_block(host.blocks.first["id"]) }
     end
 
+    test "a host record saves the content filled into one of its blocks" do
+      host = Host.create!(name: "Dashboard")
+      host.add_block(TEXT, x: 0, y: 0)
+
+      host.fill_block(host.blocks.first["id"], { "title" => "Welcome" })
+
+      assert_equal({ "title" => "Welcome" }, host.reload.blocks.first["content"])
+    end
+
     test "a host record's layout data carries its own blocks" do
       host = Host.create!(name: "Dashboard")
       host.add_block(TEXT, x: 0, y: 0)

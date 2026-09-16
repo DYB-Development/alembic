@@ -25,6 +25,11 @@ module KsBlocks
       head :no_content
     end
 
+    def fill_block
+      block_layout_record.fill_block(params[:block_id], params.require(:content).permit!.to_h)
+      head :no_content
+    end
+
     def remove_block
       block_layout_record.remove_block(params[:block_id])
       head :no_content

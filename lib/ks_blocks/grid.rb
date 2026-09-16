@@ -83,6 +83,10 @@ module KsBlocks
       KsBlocks.registry.block_types.find { |block_type| block_type.key.to_s == block["type"] }&.name || block["type"]
     end
 
+    def fill(blocks, id, content)
+      blocks.map { |block| block["id"] == id ? block.merge("content" => content) : block }
+    end
+
     def remove(blocks, id, types: [])
       refuse_removing(blocks.find { |block| block["id"] == id }, types)
       blocks.reject { |block| block["id"] == id }

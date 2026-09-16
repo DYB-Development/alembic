@@ -4,6 +4,7 @@ Alembic::Engine.routes.draw do
       get "layout", to: "page_blocks#layout", as: :layout
       post "blocks", to: "page_blocks#add_block", as: :blocks
       patch "blocks", to: "page_blocks#place_blocks"
+      patch "blocks/:block_id", to: "page_blocks#fill_block"
       delete "blocks/:block_id", to: "page_blocks#remove_block", as: :block
     end
 
