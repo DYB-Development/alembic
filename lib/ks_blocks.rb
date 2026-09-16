@@ -4,12 +4,12 @@ require "ks_blocks/registry"
 
 module KsBlocks
   class << self
-    def block(key, name:, width:, height:)
-      registry.register(BlockType.new(key: key, name: name, width: width, height: height))
+    def block(key, name:, width:, height:, kind: :blocks)
+      registry.register(BlockType.new(key: key, name: name, width: width, height: height), kind: kind)
     end
 
-    def layout_data(blocks)
-      { block_types: registry.block_types.map(&:to_h), blocks: blocks, version: version_of(blocks) }
+    def layout_data(blocks, kind: :blocks)
+      { block_types: registry.block_types(kind: kind).map(&:to_h), blocks: blocks, version: version_of(blocks) }
     end
 
     def version_of(blocks)
