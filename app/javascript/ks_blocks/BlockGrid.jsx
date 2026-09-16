@@ -14,15 +14,23 @@ const typeOf = (block_types, key) => block_types.find((blockType) => blockType.k
 
 const named = (block_types, key) => typeOf(block_types, key)?.name ?? `Unknown block type (${key})`
 
-const BlockContent = ({ id, name }) => {
+const drawn = (id, html) => {
+  const content = document.createElement("div")
+  content.dataset.blockContent = id
+  content.innerHTML = html
+
+  return content
+}
+
+const BlockContent = ({ id, name, html }) => {
   const slot = useRef(null)
   const [ adopted, setAdopted ] = useState(false)
 
   useEffect(() => {
-    const content = document.querySelector(`[data-block-content="${id}"]`)
+    const content = document.querySelector(`[data-block-content="${id}"]`) ?? (html ? drawn(id, html) : null)
     if (content && content.parentElement !== slot.current) slot.current.appendChild(content)
     setAdopted(Boolean(content))
-  }, [ id ])
+  }, [ id, html ])
 
   return (
     <>
@@ -36,7 +44,7 @@ const usedUp = (blockType, blocks) => blockType.once && blocks.some((block) => b
 
 export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
   const { layout: current, error, send } = useLayout(base, token, initial)
-  const { block_types = [], blocks = [], grid = {} } = current
+  const { block_types = [], blocks = [], grid = {}, contents = {} } = current
   const { columns, row_height: rowHeight, gap } = { ...SHAPE, ...grid }
   const { width, containerRef, mounted } = useContainerWidth({ measureBeforeMount: true })
   const layout = gridItems(blocks, block_types)
@@ -78,7 +86,7 @@ export default function BlockGrid({ base, token, emptyMessage, ...initial }) {
           <GridLayout width={width} layout={layout} gridConfig={{ cols: columns, rowHeight, margin: [ gap, gap ] }} resizeConfig={{ enabled: true, handles: RESIZE_HANDLES }} dragConfig={{ cancel: "[data-remove-block]" }} dropConfig={dropConfig} onDrop={dropped} onDragStop={(placed) => placeBlocks(send, placed)} onResizeStop={(placed) => placeBlocks(send, placed)}>
             {blocks.map((block) => (
               <div key={block.id} data-block={block.id} className="ks-panel p-3 flex items-start justify-between gap-2">
-                <BlockContent id={block.id} name={named(block_types, block.type)} />
+                <BlockContent id={block.id} name={named(block_types, block.type)} html={contents[block.id]} />
                 {!typeOf(block_types, block.type)?.fixed && <Button variant="secondary" size="sm" type="button" data-remove-block onClick={() => removeBlock(send, block.id)}>Remove</Button>}
               </div>
             ))}

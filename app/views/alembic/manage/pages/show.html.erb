@@ -6,5 +6,5 @@
 <%= react_ui("alembic/page-builder", @payload.merge(token: form_authenticity_token)) %>
 
 <%= block_contents(@page.blocks) do |block| %>
-  <%= KsBlocks.registry.block_types(kind: :pages).find { |type| type.key.to_s == block["type"] }&.name %>
+  <%= render "alembic/manage/pages/block_content", block: block %>
 <% end %>
