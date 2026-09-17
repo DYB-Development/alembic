@@ -20,12 +20,6 @@
     </div>
   </header>
 
-  <script>
-    document.addEventListener("alembic:flow-named", (event) => {
-      document.querySelector("[data-flow-heading]").textContent = event.detail
-    })
-  </script>
-
   <%= react_ui("alembic/flow-editor", { base: alembic.manage_flow_canvas_path(@diagnostic), token: form_authenticity_token, initial: @canvas },
                class: "min-h-0 flex-1",
                data: { flow_canvas: true }) %>

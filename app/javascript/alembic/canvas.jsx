@@ -5,4 +5,9 @@ import Canvas from "./canvas/Canvas"
 
 register("alembic/flow-editor", Canvas)
 
+document.addEventListener("alembic:flow-named", (event) => {
+  const heading = document.querySelector("[data-flow-heading]")
+  if (heading) heading.textContent = event.detail
+})
+
 startMounting(document, createRoot)
