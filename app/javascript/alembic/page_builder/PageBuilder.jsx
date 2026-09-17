@@ -2,7 +2,7 @@ import React from "react"
 import Button from "keystone_ui-react/src/Button.jsx"
 import Page from "keystone_ui-react/src/Page.jsx"
 import PageHeader from "keystone_ui-react/src/PageHeader.jsx"
-import BlockGrid from "../../ks_blocks/BlockGrid"
+import BlockGrid from "keystone_ui-blocks/src/BlockGrid.jsx"
 
 export default function PageBuilder({ base, token, name, pages, block_types, blocks, version }) {
   return (
