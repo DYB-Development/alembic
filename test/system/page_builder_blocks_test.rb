@@ -6,13 +6,15 @@ module Alembic
     test "the page builder lists the block types the host app registered" do
       visit alembic.manage_page_path(Page.create!(name: "Welcome"))
 
+      open_block_list
+
       assert_selector "[data-block-type]", text: "Heading"
     end
 
     test "a block type added from the block list is on the grid and stays after a reload" do
       visit alembic.manage_page_path(Page.create!(name: "Welcome"))
 
-      within("[data-block-type='heading']") { click_on "Add" }
+      add_block "heading"
       find("[data-block]", text: "Heading")
       refresh
 
@@ -22,6 +24,7 @@ module Alembic
     test "a block type dragged from the block list onto the grid is added to the page" do
       visit alembic.manage_page_path(Page.create!(name: "Welcome"))
 
+      open_block_list
       find("[data-block-type='heading']").drag_to(find("[data-block-grid] .react-grid-layout"))
 
       assert_selector "[data-block]", text: "Heading"
@@ -30,16 +33,18 @@ module Alembic
     test "searching the block list leaves only the types whose names match" do
       visit alembic.manage_page_path(Page.create!(name: "Welcome"))
 
+      open_block_list
       fill_in "Search blocks", with: "Tex"
 
       assert_equal [ "text" ], all("[data-block-type]").map { |type| type["data-block-type"] }
     end
 
-    test "on a wide screen the block types sit beside the grid" do
+    test "the block types are offered in a dialog over the grid" do
       visit alembic.manage_page_path(Page.create!(name: "Welcome"))
-      list_right = page.evaluate_script("document.querySelector('[data-block-type]').getBoundingClientRect().right")
 
-      assert_operator list_right, :<=, page.evaluate_script("document.querySelector('[data-block-grid]').getBoundingClientRect().left")
+      open_block_list
+
+      assert_selector "[data-blocks-dialog][open] [data-block-type]", text: "Heading"
     end
 
     test "a block dragged onto the row above it takes that place after a reload" do
@@ -47,9 +52,10 @@ module Alembic
       record.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :heading }, x: 0, y: 0)
       record.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :text }, x: 0, y: 1)
       visit alembic.manage_page_path(record)
+      start_editing
 
       text, heading = find("[data-block]", text: "Text"), find("[data-block]", text: "Heading")
-      page.driver.browser.action.click_and_hold(text.find("[data-block-handle]").native).move_to(heading.native, 0, -20).release.perform
+      page.driver.browser.action.click_and_hold(text.native).move_to(heading.native, 0, -20).release.perform
       wait_until { record.reload.blocks.find { |block| block["type"] == "text" }["y"].zero? }
       refresh
 
@@ -60,6 +66,7 @@ module Alembic
       record = Page.create!(name: "Welcome")
       record.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :text }, x: 0, y: 0)
       visit alembic.manage_page_path(record)
+      start_editing
       block = find("[data-block]", text: "Text")
       width_before = block.rect.width
 
@@ -75,8 +82,9 @@ module Alembic
       record = Page.create!(name: "Welcome")
       record.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :heading }, x: 0, y: 0)
       visit alembic.manage_page_path(record)
+      start_editing
 
-      within(find("[data-block]", text: "Heading")) { click_on "Remove" }
+      drag_to_remove find("[data-block]", text: "Heading")
       wait_until { record.reload.blocks.empty? }
       refresh
 
@@ -88,17 +96,21 @@ module Alembic
       record.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :heading }, x: 0, y: 0)
       record.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :text }, x: 0, y: 1)
       visit alembic.manage_page_path(record)
+      start_editing
       stale_tab = open_new_window
-      within_window(stale_tab) { visit alembic.manage_page_path(record) }
+      within_window(stale_tab) do
+        visit alembic.manage_page_path(record)
+        start_editing
+      end
 
       text, heading = find("[data-block]", text: "Text"), find("[data-block]", text: "Heading")
-      page.driver.browser.action.click_and_hold(text.find("[data-block-handle]").native).move_to(heading.native, 0, -20).release.perform
+      page.driver.browser.action.click_and_hold(text.native).move_to(heading.native, 0, -20).release.perform
       wait_until { record.reload.blocks.find { |block| block["type"] == "text" }["y"].zero? }
       moved = record.reload.blocks
 
       within_window(stale_tab) do
         stale_text = find("[data-block]", text: "Text")
-        page.driver.browser.action.click_and_hold(stale_text.find("[data-block-handle]").native).move_by(600, 0).release.perform
+        page.driver.browser.action.click_and_hold(stale_text.native).move_by(600, 0).release.perform
         find("[role=alert]", text: "changed")
       end
 
@@ -106,6 +118,24 @@ module Alembic
     end
 
     private
+
+    def start_editing
+      click_on "Edit"
+    end
+
+    def open_block_list
+      start_editing
+      click_on "Add a block"
+    end
+
+    def add_block(key)
+      open_block_list
+      within("[data-block-type='#{key}']") { click_on "Add" }
+    end
+
+    def drag_to_remove(block)
+      page.driver.browser.action.click_and_hold(block.native).move_to(find("[data-remove-target]").native).release.perform
+    end
 
     def wait_until
       Timeout.timeout(Capybara.default_max_wait_time) { sleep 0.05 until yield }
