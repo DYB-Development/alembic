@@ -30,6 +30,12 @@ module Alembic
 
         assert_equal :ui_quote, Page::Drawing.of(:quote)
       end
+
+      test "tells there is no component for a page block type registered without one" do
+        Page.block(:quote, name: "Quote", width: 6, height: 2)
+
+        assert_nil Page::Drawing.of(:quote)
+      end
     end
   end
 end
