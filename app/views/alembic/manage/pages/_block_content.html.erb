@@ -1,6 +1,6 @@
 <% component = Alembic::Page::Drawing.of(block["type"]) %>
 <% if component %>
-  <%= send(component, **block.fetch("content", {}).reject { |_key, value| value == "" }.symbolize_keys) %>
+  <%= send(component, **Alembic::Page::Options.for(block)) %>
 <% else %>
   <%= KsBlocks.registry.block_types(kind: :pages).find { |type| type.key.to_s == block["type"] }&.name %>
 <% end %>
