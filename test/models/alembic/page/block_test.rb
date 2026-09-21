@@ -24,6 +24,12 @@ module Alembic
 
         assert_equal :ui_quote, Page::Drawing.of(:quote)
       end
+
+      test "tells which component draws a registered page block type" do
+        Page.block(:quote, name: "Quote", width: 6, height: 2, drawn_by: :ui_quote)
+
+        assert_equal :ui_quote, Page::Drawing.of(:quote)
+      end
     end
   end
 end
