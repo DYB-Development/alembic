@@ -5,6 +5,8 @@ module Alembic
     test "a block added to the grid shows the host's content for it without a reload" do
       visit alembic.manage_page_path(Page.create!(name: "Welcome"))
 
+      click_on "Edit"
+      click_on "Add a block"
       within("[data-block-type='heading']") { click_on "Add" }
 
       assert_selector "[data-block] [data-block-content]", text: "Heading"
