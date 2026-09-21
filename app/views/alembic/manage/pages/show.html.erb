@@ -4,7 +4,9 @@
   <%= javascript_include_tag "alembic/page_builder", defer: true %>
 <% end %>
 
-<%= react_ui("alembic/page-builder", @payload.merge(token: form_authenticity_token)) %>
+<%= ui_panel do %>
+  <%= react_ui("alembic/page-builder", @payload.merge(token: form_authenticity_token)) %>
+<% end %>
 
 <%= block_contents(@page.blocks) do |block| %>
   <%= render "alembic/manage/pages/block_content", block: block %>

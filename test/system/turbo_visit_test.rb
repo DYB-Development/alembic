@@ -11,6 +11,8 @@ module Alembic
       click_on "All pages"
       click_on "Welcome"
 
+      click_on "Edit"
+      click_on "Add a block"
       assert_selector "[data-block-type='heading']"
       find("[data-block-type='heading'] button", text: "Add").click
 

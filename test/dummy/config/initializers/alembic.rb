@@ -8,4 +8,6 @@ Rails.application.config.to_prepare do
 
   KsBlocks.block(:heading, name: "Heading", width: 12, height: 1, kind: :pages, fields: [ { key: :title, label: "Title" } ])
   KsBlocks.block(:text, name: "Text", width: 6, height: 2, kind: :pages)
+  Alembic::Page.block(:section, name: "Section", width: 12, height: 2, drawn_by: :ui_section,
+    fields: [ { key: :title, label: "Title" }, { key: :subtitle, label: "Subtitle" } ])
 end

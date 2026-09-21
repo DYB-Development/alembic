@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Changed
-- **Moving a block** — a block on the page builder's grid is moved by the handle it now carries, so on a touchscreen a finger anywhere else on a block scrolls the page instead of moving the block.
+- **Arranging a page** — the page builder's grid shows the page and nothing else until a designer presses Edit. Adding a block, moving one, resizing one and removing one all wait behind that, and the block types are offered in a dialog rather than beside the grid.
+- **Removing a block** — a block is removed by dragging it onto the target that appears while the page is being edited, where it carried a Remove control.
+- **Moving a block** — a block being edited is moved from any point on it. Holding a block for half a second starts editing, so on a touchscreen a finger that is not held scrolls the page.
+- **The builder's card** — Alembic draws the card around the page builder, which the block grid drew until it stopped drawing one of its own.
+- **The block grid** — Alembic takes `keystone_ui-blocks` at 0.7.0, where it took 0.2.0.
+
+### Fixed
+- **A block being filled in** — a block on the grid is drawn again as a designer types into its fields, where it kept the markup it was first given until the page was reloaded.
 
 ### Changed
 - **Block grid** — the page builder's grid, the block types a host registers and the layout a host keeps come from `keystone_ui-blocks`, which Alembic now depends on, instead of Alembic's own copy of them. A host app installs nothing for this, and a host that registered block types or kept a layout carries on unchanged.
