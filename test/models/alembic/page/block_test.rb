@@ -10,12 +10,19 @@ module Alembic
 
       teardown do
         KsBlocks.instance_variable_set(:@registry, @registry)
+        Page::Drawing.instance_variable_set(:@components, nil)
       end
 
       test "registering a page block type offers it to a designer" do
         Page.block(:quote, name: "Quote", width: 6, height: 2, drawn_by: :ui_quote)
 
         assert_includes KsBlocks.registry.block_types(kind: :pages).map(&:key), :quote
+      end
+
+      test "keeps the component a block type is drawn with" do
+        Page::Drawing.record(:quote, :ui_quote)
+
+        assert_equal :ui_quote, Page::Drawing.of(:quote)
       end
     end
   end
