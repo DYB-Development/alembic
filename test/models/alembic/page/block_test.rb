@@ -36,6 +36,12 @@ module Alembic
 
         assert_nil Page::Drawing.of(:quote)
       end
+
+      test "a block type registered with the grid alone is still offered to a designer" do
+        KsBlocks.block(:quote, name: "Quote", width: 6, height: 2, kind: :pages)
+
+        assert_includes KsBlocks.registry.block_types(kind: :pages).map(&:key), :quote
+      end
     end
   end
 end
