@@ -31,6 +31,15 @@ module Alembic
       assert_includes drawn(page), "Spacer"
     end
 
+    test "a field left empty is passed to the component as no value" do
+      page = badged_page("New")
+      page.fill_block(page.blocks.first["id"], { "label" => "New", "variant" => "" })
+
+      get alembic.manage_page_layout_path(page)
+
+      assert_includes drawn(page), "ks-badge-neutral"
+    end
+
     private
 
     def badged_page(label)
