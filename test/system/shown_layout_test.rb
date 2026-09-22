@@ -12,9 +12,10 @@ module Alembic
 
     test "a shown layout stacks its blocks on a phone" do
       record = Page.create!(name: "Welcome")
-      text = KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :text }
-      record.add_block(text, x: 0, y: 0)
-      record.add_block(text, x: 6, y: 0)
+      note = KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :note }
+      record.add_block(note, x: 0, y: 0)
+      record.add_block(note, x: 6, y: 0)
+      record.reload.blocks.each { |block| record.fill_block(block["id"], { "title" => "Note" }) }
 
       visit "/pages/#{record.id}/shown"
 
