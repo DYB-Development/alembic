@@ -2,9 +2,13 @@ require "ks_blocks/layout_helper"
 
 module Alembic
   module PagesHelper
+    UNDRAWABLE = "This block cannot be drawn until its fields are filled in.".freeze
+
     def drawn_page(page)
-      block_layout(drawn_blocks(page), kind: :pages) do |block|
-        drawn_block(block)
+      drawn = page.blocks.to_h { |block| [ block["id"], drawn_block(block) ] }.compact
+
+      block_layout(page.blocks.select { |block| drawn.key?(block["id"]) }, kind: :pages) do |block|
+        drawn.fetch(block["id"])
       end
     end
 
@@ -12,12 +16,21 @@ module Alembic
       component = Page::Drawing.of(block["type"])
 
       send(component, **Page::Options.for(block)) if component
+    rescue StandardError => undrawable
+      Rails.logger.error("Alembic could not draw the #{block['type']} block: #{undrawable.message}")
+      nil
+    end
+
+    def shown_block(block)
+      drawn_block(block) || undrawn_block(block)
     end
 
     private
 
-    def drawn_blocks(page)
-      page.blocks.select { |block| Page::Drawing.of(block["type"]) }
+    def undrawn_block(block)
+      return UNDRAWABLE if Page::Drawing.of(block["type"])
+
+      KsBlocks.registry.block_types(kind: :pages).find { |type| type.key.to_s == block["type"] }&.name
     end
   end
 end

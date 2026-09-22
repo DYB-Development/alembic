@@ -62,6 +62,24 @@ module Alembic
       assert_includes squeezed(response.body), squeezed(in_builder)
     end
 
+    test "a block missing a value its component needs says so on the block" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(KsBlocks.registry.block_types(kind: :pages).first, x: 0, y: 0)
+
+      get alembic.manage_page_layout_path(page)
+
+      assert_includes drawn(page.reload), "cannot be drawn"
+    end
+
+    test "a block that cannot be drawn leaves the others on the grid drawn" do
+      page = badged_page("New")
+      page.add_block(KsBlocks.registry.block_types(kind: :pages).first, x: 3, y: 0)
+
+      get alembic.manage_page_layout_path(page)
+
+      assert_includes JSON.parse(response.body).fetch("contents").values.join, "ks-badge"
+    end
+
     private
 
     def squeezed(markup)

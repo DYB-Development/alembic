@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - **The block grid** — Alembic takes `keystone_ui-blocks` at 0.7.0, where it took 0.2.0.
 
 ### Added
+- **A block that cannot be drawn** — a block whose component raises says so on the block, and the rest of the grid is drawn and stays editable. The finished page leaves that block out, and the reason goes to the application's log.
 - **A component's options** — a page block type maps a content field onto a differently named option, gives an option a default for when the field is empty, and fixes an option's value for every block of that type. A block whose component needs a value can be dropped onto a page and drawn straight away.
 - **A finished page** — a host app draws a page's blocks with one call, each block drawn with the keystone_ui component its type names and placed where the designer put it. A block whose type names no component is left out.
 
