@@ -40,6 +40,13 @@ module Alembic
       assert_no_match(/data-block=/, drawn_page(page.reload))
     end
 
+    test "leaves a block it cannot draw off the finished page" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(KsBlocks.registry.block_types(kind: :pages).first, x: 0, y: 0)
+
+      assert_no_match(/data-block=/, drawn_page(page.reload))
+    end
+
     private
 
     def badged_page(label, x: 0, y: 0)
