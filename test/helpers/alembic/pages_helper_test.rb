@@ -22,6 +22,10 @@ module Alembic
       assert_includes drawn_page(badged_page("New")), "ks-badge"
     end
 
+    test "draws a block's content as the component's options" do
+      assert_includes drawn_page(badged_page("New")), "New"
+    end
+
     private
 
     def badged_page(label)
