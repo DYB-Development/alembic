@@ -1,12 +1,23 @@
 module Alembic
   class Page < ApplicationRecord
     module Options
-      def self.declare(key, options)
+      def self.declare(key, options, body: nil)
         declared[key.to_sym] = options
+        bodies[key.to_sym] = body
       end
 
       def self.for(block)
-        named(filled(block), declared.fetch(block["type"].to_sym, {}))
+        named(filled(block).except(bodies[block["type"].to_sym]), declared.fetch(block["type"].to_sym, {}))
+      end
+
+      def self.body_for(block)
+        field = bodies[block["type"].to_sym]
+
+        filled(block)[field] if field
+      end
+
+      def self.bodies
+        @bodies ||= {}
       end
 
       def self.declared

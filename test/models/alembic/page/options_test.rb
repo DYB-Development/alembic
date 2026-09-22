@@ -12,6 +12,7 @@ module Alembic
         KsBlocks.instance_variable_set(:@registry, @registry)
         Page::Drawing.instance_variable_set(:@components, nil)
         Page::Options.instance_variable_set(:@declared, nil)
+        Page::Options.instance_variable_set(:@bodies, nil)
       end
 
       test "fills the option a field is mapped onto" do
@@ -40,6 +41,13 @@ module Alembic
           fields: [ { key: :label, label: "Label" } ])
 
         assert_equal({ label: "New" }, Page::Options.for(block_of("badge", "label" => "New")))
+      end
+
+      test "gives a block whose body field is empty no body at all" do
+        Page.block(:panel, name: "Panel", width: 6, height: 3, drawn_by: :ui_panel,
+          fields: [ { key: :text, label: "Text" } ], body: :text)
+
+        assert_nil Page::Options.body_for(block_of("panel", "text" => ""))
       end
 
       private

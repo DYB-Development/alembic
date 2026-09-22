@@ -13,6 +13,8 @@ Rails.application.config.to_prepare do
   Alembic::Page.block(:hero, name: "Hero", width: 12, height: 4, drawn_by: :ui_hero,
     fields: [ { key: :headline, label: "Headline" }, { key: :subtitle, label: "Subtitle" } ],
     options: { title: { from: :headline, default: "Your headline" } })
+  Alembic::Page.block(:panel, name: "Panel", width: 6, height: 3, drawn_by: :ui_panel,
+    fields: [ { key: :text, label: "Text" } ], body: :text)
   Alembic::Page.block(:note, name: "Note", width: 6, height: 2, drawn_by: :ui_section,
     fields: [ { key: :title, label: "Title" } ])
 end
