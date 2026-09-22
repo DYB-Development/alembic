@@ -47,7 +47,24 @@ module Alembic
       assert_no_match(/data-block=/, drawn_page(page.reload))
     end
 
+    test "writes why a block could not be drawn to the log" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(KsBlocks.registry.block_types(kind: :pages).first, x: 0, y: 0)
+
+      assert_match "missing keyword: :label", logged { drawn_page(page.reload) }
+    end
+
     private
+
+    def logged
+      written = StringIO.new
+      kept, Rails.logger = Rails.logger, Logger.new(written)
+      yield
+      written.string
+    ensure
+      Rails.logger = kept
+    end
+
 
     def badged_page(label, x: 0, y: 0)
       page = Page.create!(name: "Welcome")
