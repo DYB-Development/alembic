@@ -80,6 +80,18 @@ module Alembic
       assert_includes JSON.parse(response.body).fetch("contents").values.join, "ks-badge"
     end
 
+    test "a block's body text is inside the drawn component in the builder" do
+      Page.block(:panel, name: "Panel", width: 6, height: 3, drawn_by: :ui_panel,
+        fields: [ { key: :text, label: "Text" } ], body: :text)
+      page = Page.create!(name: "Welcome")
+      page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :panel }, x: 0, y: 0)
+      page.fill_block(page.reload.blocks.first["id"], { "text" => "Ready when you are" })
+
+      get alembic.manage_page_layout_path(page)
+
+      assert_includes drawn(page.reload), "Ready when you are"
+    end
+
     private
 
     def squeezed(markup)
