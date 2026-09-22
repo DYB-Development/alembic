@@ -28,6 +28,13 @@ module Alembic
         assert_equal({ title: "Your headline" }, Page::Options.for(block_of("hero", "title" => "")))
       end
 
+      test "draws every block of a type with an option's fixed value" do
+        Page.block(:hero, name: "Hero", width: 12, height: 3, drawn_by: :ui_hero,
+          fields: [ { key: :title, label: "Title" } ], options: { layout: "split" })
+
+        assert_equal "split", Page::Options.for(block_of("hero", "title" => "Welcome"))[:layout]
+      end
+
       private
 
       def block_of(type, content)

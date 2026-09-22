@@ -19,14 +19,17 @@ module Alembic
 
       def self.named(filled, options)
         options.each_with_object(filled) do |(option, spec), built|
-          field = spec.fetch(:from, option)
-          value = built.delete(field)
-          built[option] = value.nil? ? spec[:default] : value
-          built.delete(option) if built[option].nil?
+          spec.is_a?(Hash) ? fill(built, option, spec) : built[option] = spec
         end
       end
 
-      private_class_method :filled, :named
+      def self.fill(built, option, spec)
+        value = built.delete(spec.fetch(:from, option))
+        built[option] = value.nil? ? spec[:default] : value
+        built.delete(option) if built[option].nil?
+      end
+
+      private_class_method :filled, :named, :fill
     end
   end
 end
