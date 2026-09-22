@@ -26,11 +26,17 @@ module Alembic
       assert_includes drawn_page(badged_page("New")), "New"
     end
 
+    test "places a block where the designer put it" do
+      page = badged_page("New", x: 3, y: 2)
+
+      assert_includes drawn_page(page), "--ks-block-x: 3; --ks-block-y: 2"
+    end
+
     private
 
-    def badged_page(label)
+    def badged_page(label, x: 0, y: 0)
       page = Page.create!(name: "Welcome")
-      page.add_block(KsBlocks.registry.block_types(kind: :pages).first, x: 0, y: 0)
+      page.add_block(KsBlocks.registry.block_types(kind: :pages).first, x: x, y: y)
       page.fill_block(page.blocks.first["id"], { "label" => label })
       page.reload
     end
