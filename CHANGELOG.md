@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file.
 - **The builder's card** — Alembic draws the card around the page builder, which the block grid drew until it stopped drawing one of its own.
 - **The block grid** — Alembic takes `keystone_ui-blocks` at 0.7.0, where it took 0.2.0.
 
+### Added
+- **A finished page** — a host app draws a page's blocks with one call, each block drawn with the keystone_ui component its type names and placed where the designer put it. A block whose type names no component is left out.
+
 ### Fixed
 - **A block being filled in** — a block on the grid is drawn again as a designer types into its fields, where it kept the markup it was first given until the page was reloaded.
 
