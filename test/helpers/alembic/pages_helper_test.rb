@@ -32,6 +32,14 @@ module Alembic
       assert_includes drawn_page(page), "--ks-block-x: 3; --ks-block-y: 2"
     end
 
+    test "leaves out a block whose type names no component" do
+      KsBlocks.block(:spacer, name: "Spacer", width: 3, height: 1, kind: :pages)
+      page = Page.create!(name: "Welcome")
+      page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :spacer }, x: 0, y: 0)
+
+      assert_no_match(/data-block=/, drawn_page(page.reload))
+    end
+
     private
 
     def badged_page(label, x: 0, y: 0)
