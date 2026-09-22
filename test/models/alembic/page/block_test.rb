@@ -45,6 +45,18 @@ module Alembic
         assert_equal "The quote page block names ui_nothing, which nothing draws", refusal.message
       end
 
+      test "takes a page block type whose component is real" do
+        Page.block(:quote, name: "Quote", width: 6, height: 2, drawn_by: :ui_badge)
+
+        assert_equal :ui_badge, Page::Drawing.of(:quote)
+      end
+
+      test "takes a page block type that names no component" do
+        Page.block(:quote, name: "Quote", width: 6, height: 2)
+
+        assert_includes KsBlocks.registry.block_types(kind: :pages).map(&:key), :quote
+      end
+
       test "a block type registered with the grid alone is still offered to a designer" do
         KsBlocks.block(:quote, name: "Quote", width: 6, height: 2, kind: :pages)
 
