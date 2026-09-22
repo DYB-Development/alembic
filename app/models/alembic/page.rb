@@ -8,8 +8,9 @@ module Alembic
 
     validates :name, presence: true
 
-    def self.block(key, drawn_by: nil, **block_type)
+    def self.block(key, drawn_by: nil, options: {}, **block_type)
       Drawing.record(key, drawn_by)
+      Options.declare(key, options)
       KsBlocks.block(key, kind: :pages, **block_type)
     end
   end
