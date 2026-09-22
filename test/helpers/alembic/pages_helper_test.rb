@@ -54,6 +54,16 @@ module Alembic
       assert_match "missing keyword: :label", logged { drawn_page(page.reload) }
     end
 
+    test "draws the field a type names as its component's body inside the component" do
+        Page.block(:panel, name: "Panel", width: 6, height: 3, drawn_by: :ui_panel,
+          fields: [ { key: :text, label: "Text" } ], body: :text)
+        page = Page.create!(name: "Welcome")
+        page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :panel }, x: 0, y: 0)
+        page.fill_block(page.reload.blocks.first["id"], { "text" => "Ready when you are" })
+
+        assert_includes drawn_page(page.reload), "Ready when you are"
+      end
+
     private
 
     def logged

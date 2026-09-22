@@ -14,8 +14,10 @@ module Alembic
 
     def drawn_block(block)
       component = Page::Drawing.of(block["type"])
+      return unless component
 
-      send(component, **Page::Options.for(block)) if component
+      body = Page::Options.body_for(block)
+      body.nil? ? send(component, **Page::Options.for(block)) : send(component, **Page::Options.for(block)) { body }
     rescue StandardError => undrawable
       Rails.logger.error("Alembic could not draw the #{block['type']} block: #{undrawable.message}")
       nil
