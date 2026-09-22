@@ -11,6 +11,7 @@ module Alembic
     teardown do
       KsBlocks.instance_variable_set(:@registry, @registry)
       Page::Drawing.instance_variable_set(:@components, nil)
+      Page::Options.instance_variable_set(:@declared, nil)
     end
 
     test "a block is drawn with the component its type names" do
@@ -38,6 +39,17 @@ module Alembic
       get alembic.manage_page_layout_path(page)
 
       assert_includes drawn(page), "ks-badge-neutral"
+    end
+
+    test "a block added with nothing filled in is drawn with its option's default" do
+      Page.block(:hero, name: "Hero", width: 12, height: 4, drawn_by: :ui_hero,
+        fields: [ { key: :headline, label: "Headline" } ], options: { title: { from: :headline, default: "Your headline" } })
+      page = Page.create!(name: "Welcome")
+      page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :hero }, x: 0, y: 0)
+
+      get alembic.manage_page_layout_path(page)
+
+      assert_includes drawn(page), "Your headline"
     end
 
     private
