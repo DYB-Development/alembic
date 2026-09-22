@@ -19,8 +19,10 @@ module Alembic
 
       def self.named(filled, options)
         options.each_with_object(filled) do |(option, spec), built|
-          field = spec.is_a?(Hash) ? spec.fetch(:from, option) : option
-          built[option] = built.delete(field)
+          field = spec.fetch(:from, option)
+          value = built.delete(field)
+          built[option] = value.nil? ? spec[:default] : value
+          built.delete(option) if built[option].nil?
         end
       end
 

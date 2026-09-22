@@ -21,6 +21,13 @@ module Alembic
         assert_equal({ title: "Welcome" }, Page::Options.for(block_of("hero", "headline" => "Welcome")))
       end
 
+      test "gives an option its default when the field is empty" do
+        Page.block(:hero, name: "Hero", width: 12, height: 3, drawn_by: :ui_hero,
+          fields: [ { key: :title, label: "Title" } ], options: { title: { default: "Your headline" } })
+
+        assert_equal({ title: "Your headline" }, Page::Options.for(block_of("hero", "title" => "")))
+      end
+
       private
 
       def block_of(type, content)
