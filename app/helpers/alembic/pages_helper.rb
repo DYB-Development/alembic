@@ -4,8 +4,14 @@ module Alembic
   module PagesHelper
     def drawn_page(page)
       block_layout(drawn_blocks(page), kind: :pages) do |block|
-        send(Page::Drawing.of(block["type"]), **Page::Options.for(block))
+        drawn_block(block)
       end
+    end
+
+    def drawn_block(block)
+      component = Page::Drawing.of(block["type"])
+
+      send(component, **Page::Options.for(block)) if component
     end
 
     private

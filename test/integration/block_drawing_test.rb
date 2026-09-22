@@ -52,7 +52,22 @@ module Alembic
       assert_includes drawn(page), "Your headline"
     end
 
+    test "a block is drawn the same way in the builder and on the finished page" do
+      page = badged_page("New")
+      get alembic.manage_page_layout_path(page)
+      in_builder = drawn(page)
+
+      get "/pages/#{page.id}/shown"
+
+      assert_includes squeezed(response.body), squeezed(in_builder)
+    end
+
     private
+
+    def squeezed(markup)
+      markup.gsub(/<!--.*?-->/m, "").gsub(/\s+/, " ").strip
+    end
+
 
     def badged_page(label)
       page = Page.create!(name: "Welcome")

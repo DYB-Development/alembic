@@ -11,6 +11,7 @@ module Alembic
       helper KeystoneUiHelper
       helper KeystoneUi::React::MountHelper
       helper KsBlocks::ContentHelper
+      helper Alembic::PagesHelper
     end
   end
 end
