@@ -35,6 +35,13 @@ module Alembic
         assert_equal "split", Page::Options.for(block_of("hero", "title" => "Welcome"))[:layout]
       end
 
+      test "fills the option of a field's own name when nothing maps it" do
+        Page.block(:badge, name: "Badge", width: 3, height: 1, drawn_by: :ui_badge,
+          fields: [ { key: :label, label: "Label" } ])
+
+        assert_equal({ label: "New" }, Page::Options.for(block_of("badge", "label" => "New")))
+      end
+
       private
 
       def block_of(type, content)
