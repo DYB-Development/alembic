@@ -54,6 +54,7 @@ module Alembic
 
     test "a block is drawn the same way in the builder and on the finished page" do
       page = badged_page("New")
+      page.publish
       get alembic.manage_page_layout_path(page)
       in_builder = drawn(page)
 

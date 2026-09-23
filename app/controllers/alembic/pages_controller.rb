@@ -10,7 +10,10 @@ module Alembic
     private
 
     def shown_page
-      Page.find_by(slug: params[:slug]) || raise(NotPublished)
+      page = Page.find_by(slug: params[:slug])
+      raise NotPublished if page.nil? || page.live_version.nil?
+
+      page
     end
   end
 end
