@@ -5,12 +5,13 @@ module Alembic
     class BlockTest < ActiveSupport::TestCase
       setup do
         @registry = KsBlocks.registry
+        @declarations = declarations
         KsBlocks.instance_variable_set(:@registry, KsBlocks::Registry.new)
       end
 
       teardown do
         KsBlocks.instance_variable_set(:@registry, @registry)
-        Page::Drawing.instance_variable_set(:@components, nil)
+        restore(@declarations)
       end
 
       test "registering a page block type offers it to a designer" do
