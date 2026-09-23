@@ -22,6 +22,12 @@ module Alembic
       assert_equal "welcome", Page.find_by(name: "Welcome").slug
     end
 
+    test "the page list offers a field for a new page's address" do
+      get alembic.manage_pages_path
+
+      assert_select "form[action=?] input[name=?]", alembic.manage_pages_path, "page[slug]"
+    end
+
     test "the page list offers a form to create a page by name" do
       get alembic.manage_pages_path
 

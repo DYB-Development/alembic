@@ -14,6 +14,9 @@
       <label class="block text-sm font-medium mb-1">Name</label>
       <%= ui_input(name: "page[name]", placeholder: "e.g. Welcome") %>
 
+      <label class="block text-sm font-medium mb-1">Address</label>
+      <%= ui_input(name: "page[slug]", placeholder: "e.g. welcome") %>
+
       <%= ui_button(label: "Create", type: :submit, variant: :secondary) %>
     <% end %>
   <% end %>
