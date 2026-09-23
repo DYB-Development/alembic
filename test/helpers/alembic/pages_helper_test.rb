@@ -38,32 +38,32 @@ module Alembic
       page = Page.create!(name: "Welcome")
       page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :spacer }, x: 0, y: 0)
 
-      assert_no_match(/data-block=/, drawn_page(page.reload))
+      assert_no_match(/data-block=/, drawn_page(published(page)))
     end
 
     test "leaves a block it cannot draw off the finished page" do
       page = Page.create!(name: "Welcome")
       page.add_block(KsBlocks.registry.block_types(kind: :pages).first, x: 0, y: 0)
 
-      assert_no_match(/data-block=/, drawn_page(page.reload))
+      assert_no_match(/data-block=/, drawn_page(published(page)))
     end
 
     test "writes why a block could not be drawn to the log" do
       page = Page.create!(name: "Welcome")
       page.add_block(KsBlocks.registry.block_types(kind: :pages).first, x: 0, y: 0)
 
-      assert_match "missing keyword: :label", logged { drawn_page(page.reload) }
+      assert_match "missing keyword: :label", logged { drawn_page(published(page)) }
     end
 
     test "draws the field a type names as its component's body inside the component" do
-        Page.block(:panel, name: "Panel", width: 6, height: 3, drawn_by: :ui_panel,
-          fields: [ { key: :text, label: "Text" } ], body: :text)
-        page = Page.create!(name: "Welcome")
-        page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :panel }, x: 0, y: 0)
-        page.fill_block(page.reload.blocks.first["id"], { "text" => "Ready when you are" })
+      Page.block(:panel, name: "Panel", width: 6, height: 3, drawn_by: :ui_panel,
+        fields: [ { key: :text, label: "Text" } ], body: :text)
+      page = Page.create!(name: "Welcome")
+      page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :panel }, x: 0, y: 0)
+      page.fill_block(page.reload.blocks.first["id"], { "text" => "Ready when you are" })
 
-        assert_includes drawn_page(page.reload), "Ready when you are"
-      end
+      assert_includes drawn_page(published(page)), "Ready when you are"
+    end
 
     test "escapes the text a designer types into a body field" do
       Page.block(:panel, name: "Panel", width: 6, height: 3, drawn_by: :ui_panel,
@@ -72,7 +72,15 @@ module Alembic
       page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :panel }, x: 0, y: 0)
       page.fill_block(page.reload.blocks.first["id"], { "text" => "<script>alert(1)</script>" })
 
-      assert_includes drawn_page(page.reload), "&lt;script&gt;"
+      assert_includes drawn_page(published(page)), "&lt;script&gt;"
+    end
+
+    test "gives a developer the blocks being edited when asked for them" do
+      page = Page.create!(name: "Welcome")
+      page.add_block(KsBlocks.registry.block_types(kind: :pages).first, x: 0, y: 0)
+      page.fill_block(page.reload.blocks.first["id"], { "label" => "New" })
+
+      assert_includes drawn_page(page.reload, being_edited: true), "ks-badge"
     end
 
     private
@@ -87,11 +95,17 @@ module Alembic
     end
 
 
+    def published(page)
+      page.reload.publish
+
+      page.reload
+    end
+
     def badged_page(label, x: 0, y: 0)
       page = Page.create!(name: "Welcome")
       page.add_block(KsBlocks.registry.block_types(kind: :pages).first, x: x, y: y)
       page.fill_block(page.blocks.first["id"], { "label" => label })
-      page.reload
+      published(page)
     end
   end
 end

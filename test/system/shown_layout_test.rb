@@ -16,6 +16,7 @@ module Alembic
       record.add_block(note, x: 0, y: 0)
       record.add_block(note, x: 6, y: 0)
       record.reload.blocks.each { |block| record.fill_block(block["id"], { "title" => "Note" }) }
+      record.reload.publish
 
       visit "/pages/#{record.id}/shown"
 
