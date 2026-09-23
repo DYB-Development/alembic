@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_22_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_22_130000) do
   create_table "alembic_flow_runs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "definition_version_id", null: false
@@ -68,6 +68,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_22_120000) do
     t.index ["slug"], name: "index_alembic_flows_on_slug", unique: true
   end
 
+  create_table "alembic_page_versions", force: :cascade do |t|
+    t.json "blocks", default: [], null: false
+    t.datetime "created_at", null: false
+    t.integer "number", null: false
+    t.integer "page_id", null: false
+    t.string "status", default: "draft", null: false
+    t.datetime "updated_at", null: false
+    t.index ["page_id", "number"], name: "index_alembic_page_versions_on_page_id_and_number", unique: true
+    t.index ["page_id"], name: "index_alembic_page_versions_on_one_live_per_page", unique: true, where: "status = 'live'"
+    t.index ["page_id"], name: "index_alembic_page_versions_on_page_id"
+  end
+
   create_table "alembic_pages", force: :cascade do |t|
     t.json "blocks", default: [], null: false
     t.datetime "created_at", null: false
@@ -82,4 +94,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_22_120000) do
   add_foreign_key "alembic_flow_runs", "alembic_flows", column: "flow_id"
   add_foreign_key "alembic_flow_summaries", "alembic_flows", column: "flow_id"
   add_foreign_key "alembic_flow_versions", "alembic_flows", column: "flow_id"
+  add_foreign_key "alembic_page_versions", "alembic_pages", column: "page_id"
 end
