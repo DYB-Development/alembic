@@ -4,6 +4,10 @@
   <%= javascript_include_tag "alembic/page_builder", defer: true %>
 <% end %>
 
+<%= ui_form(action: alembic.publish_manage_page_path(@page), method: :post) do %>
+  <%= ui_button(label: "Publish", type: :submit, variant: :secondary) %>
+<% end %>
+
 <%= ui_panel do %>
   <%= react_ui("alembic/page-builder", @payload.merge(token: form_authenticity_token)) %>
 <% end %>

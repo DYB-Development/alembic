@@ -1,6 +1,7 @@
 Alembic::Engine.routes.draw do
   namespace :manage do
     resources :pages, only: [ :index, :create, :show ] do
+      post "publish", on: :member
       get "layout", to: "page_blocks#layout", as: :layout
       post "blocks", to: "page_blocks#add_block", as: :blocks
       patch "blocks", to: "page_blocks#place_blocks"
