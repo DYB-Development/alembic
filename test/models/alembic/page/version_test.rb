@@ -28,6 +28,31 @@ module Alembic
 
         assert_equal "superseded", first.reload.status
       end
+
+      test "publishing again leaves the earlier version's blocks as they were" do
+        page = Page.create!(name: "Welcome")
+        text = KsBlocks::BlockType.new(key: :text, name: "Text", width: 6, height: 2)
+        page.add_block(text, x: 0, y: 0)
+        first = page.publish
+
+        page.add_block(text, x: 6, y: 0)
+        page.publish
+
+        assert_equal 1, first.reload.blocks.size
+      end
+
+      test "editing a page after publishing changes no recorded version" do
+        page = Page.create!(name: "Welcome")
+        published = page.publish
+
+        page.add_block(KsBlocks::BlockType.new(key: :text, name: "Text", width: 6, height: 2), x: 0, y: 0)
+
+        assert_equal [], published.reload.blocks
+      end
+
+      test "a page that has never been published has no live version" do
+        assert_nil Page.create!(name: "Welcome").live_version
+      end
     end
   end
 end
