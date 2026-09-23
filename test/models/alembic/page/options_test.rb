@@ -5,14 +5,14 @@ module Alembic
     class OptionsTest < ActiveSupport::TestCase
       setup do
         @registry = KsBlocks.registry
+        @declarations = declarations
         KsBlocks.instance_variable_set(:@registry, KsBlocks::Registry.new)
       end
 
       teardown do
         KsBlocks.instance_variable_set(:@registry, @registry)
-        Page::Drawing.instance_variable_set(:@components, nil)
-        Page::Options.instance_variable_set(:@declared, nil)
-        Page::Options.instance_variable_set(:@bodies, nil)
+      restore(@declarations)
+        restore(@declarations)
       end
 
       test "fills the option a field is mapped onto" do

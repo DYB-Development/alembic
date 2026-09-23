@@ -9,13 +9,14 @@ module Alembic
 
     setup do
       @registry = KsBlocks.registry
+      @declarations = declarations
       KsBlocks.instance_variable_set(:@registry, KsBlocks::Registry.new)
       Page.block(:badge, name: "Badge", width: 3, height: 1, drawn_by: :ui_badge, fields: [ { key: :label, label: "Label" } ])
     end
 
     teardown do
       KsBlocks.instance_variable_set(:@registry, @registry)
-      Page::Drawing.instance_variable_set(:@components, nil)
+      restore(@declarations)
     end
 
     test "draws a block with the component its type names" do

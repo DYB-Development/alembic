@@ -30,3 +30,23 @@ end
 
 ActiveSupport::TestCase.include BuildsFlows
 ActionDispatch::IntegrationTest.include BuildsFlows
+
+# Keeps the page block types a host registered at boot, so a test that registers
+# its own gives them back rather than leaving later tests without them.
+module KeepsPageBlocks
+  def declarations
+    {
+      components: Alembic::Page::Drawing.components.dup,
+      options: Alembic::Page::Options.declared.dup,
+      bodies: Alembic::Page::Options.bodies.dup
+    }
+  end
+
+  def restore(kept)
+    Alembic::Page::Drawing.instance_variable_set(:@components, kept[:components])
+    Alembic::Page::Options.instance_variable_set(:@declared, kept[:options])
+    Alembic::Page::Options.instance_variable_set(:@bodies, kept[:bodies])
+  end
+end
+
+ActiveSupport::TestCase.include KeepsPageBlocks

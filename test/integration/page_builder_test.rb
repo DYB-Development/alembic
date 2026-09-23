@@ -16,6 +16,18 @@ module Alembic
       assert Page.exists?(name: "Welcome")
     end
 
+    test "creating a page saves the address a designer gave it" do
+      post alembic.manage_pages_path, params: { page: { name: "Welcome", slug: "welcome" } }
+
+      assert_equal "welcome", Page.find_by(name: "Welcome").slug
+    end
+
+    test "the page list offers a field for a new page's address" do
+      get alembic.manage_pages_path
+
+      assert_select "form[action=?] input[name=?]", alembic.manage_pages_path, "page[slug]"
+    end
+
     test "the page list offers a form to create a page by name" do
       get alembic.manage_pages_path
 

@@ -6,6 +6,12 @@ module Alembic
       assert_not Page.new(name: "").valid?
     end
 
+    test "refuses a slug another page already holds" do
+      Page.create!(name: "Welcome", slug: "welcome")
+
+      assert_not Page.new(name: "Second", slug: "welcome").valid?
+    end
+
     test "starts with no blocks" do
       assert_equal [], Page.create!(name: "Welcome").blocks
     end
