@@ -19,6 +19,15 @@ module Alembic
 
         assert_equal published, page.reload.live_version
       end
+
+      test "publishing again supersedes the version that was live" do
+        page = Page.create!(name: "Welcome")
+        first = page.publish
+
+        page.publish
+
+        assert_equal "superseded", first.reload.status
+      end
     end
   end
 end

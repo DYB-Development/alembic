@@ -12,7 +12,10 @@ module Alembic
     validates :slug, uniqueness: true, allow_nil: true
 
     def publish
-      versions.create!(number: next_number, blocks: blocks, status: :live)
+      transaction do
+        live_version&.update!(status: :superseded)
+        versions.create!(number: next_number, blocks: blocks, status: :live)
+      end
     end
 
     def live_version
