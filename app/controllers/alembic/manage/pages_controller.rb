@@ -20,6 +20,13 @@ module Alembic
         redirect_to manage_page_path(page)
       end
 
+      def publish
+        page = Page.find(params[:id])
+        page.publish
+
+        redirect_to manage_page_path(page)
+      end
+
       private
 
       def payload(page)

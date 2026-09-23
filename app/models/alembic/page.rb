@@ -6,8 +6,25 @@ module Alembic
 
     block_layout :blocks, kind: :pages
 
+    has_many :versions, class_name: "Alembic::Page::Version", dependent: :destroy, inverse_of: :page
+
     validates :name, presence: true
     validates :slug, uniqueness: true, allow_nil: true
+
+    def publish
+      transaction do
+        live_version&.update!(status: :superseded)
+        versions.create!(number: next_number, blocks: blocks, status: :live)
+      end
+    end
+
+    def live_version
+      versions.find_by(status: :live)
+    end
+
+    def next_number
+      (versions.maximum(:number) || 0) + 1
+    end
 
     def self.block(key, drawn_by: nil, options: {}, body: nil, **block_type)
       refuse_unknown(key, drawn_by)

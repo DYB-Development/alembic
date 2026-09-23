@@ -22,6 +22,22 @@ module Alembic
       assert_equal "welcome", Page.find_by(name: "Welcome").slug
     end
 
+    test "publishing a page records its blocks as a version" do
+      page = Page.create!(name: "Welcome")
+
+      post alembic.publish_manage_page_path(page)
+
+      assert_equal 1, page.reload.live_version.number
+    end
+
+    test "the page builder offers a way to publish the page" do
+      page = Page.create!(name: "Welcome")
+
+      get alembic.manage_page_path(page)
+
+      assert_select "form[action=?]", alembic.publish_manage_page_path(page)
+    end
+
     test "the page list offers a field for a new page's address" do
       get alembic.manage_pages_path
 
