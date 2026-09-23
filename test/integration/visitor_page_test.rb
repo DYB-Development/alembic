@@ -21,6 +21,25 @@ module Alembic
       assert_not_includes response.body, "Still being written"
     end
 
+    test "a publish moves a visitor to the new version on the next request" do
+      page = welcoming_page
+      page.publish
+      page.fill_block(page.reload.blocks.first["id"], { "title" => "Our people" })
+      page.reload.publish
+
+      get alembic.page_path(page.slug)
+
+      assert_includes response.body, "Our people"
+    end
+
+    test "a visitor opening a page with no live version is refused" do
+      welcoming_page
+
+      get alembic.page_path("welcome")
+
+      assert_response :not_found
+    end
+
     test "a visitor opening a slug no page holds is refused" do
       get alembic.page_path("nothing-here")
 
