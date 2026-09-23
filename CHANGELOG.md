@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - **The block grid** — Alembic takes `keystone_ui-blocks` at 0.7.0, where it took 0.2.0.
 
 ### Added
+- **Publishing a page** — a designer publishes a page from the builder and the blocks as they stand are recorded as a numbered version, which becomes the live one. The version that was live is marked superseded, earlier versions keep the blocks they were recorded with, and a page that has never been published has no live version.
 - **A page at its own address** — a page carries a slug no other page can hold, and a visitor opening that address is shown the finished page. An address no page holds is refused the way an unknown flow is, and a flow and a page may hold the same slug.
 - **A component that does not exist** — registering a page block type that names a component nothing draws is refused when the type is registered, and the message names the type and the component. A developer finds the mistake at boot rather than when a designer adds the block.
 - **A block's body** — a page block type names the content field that becomes its component's body, so a designer types a paragraph into the block and sees it inside the drawn component. A field left empty draws no body, and what a designer types is escaped rather than treated as markup.
