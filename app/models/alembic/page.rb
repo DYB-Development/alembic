@@ -7,6 +7,7 @@ module Alembic
     block_layout :blocks, kind: :pages
 
     validates :name, presence: true
+    validates :slug, uniqueness: true, allow_nil: true
 
     def self.block(key, drawn_by: nil, options: {}, body: nil, **block_type)
       refuse_unknown(key, drawn_by)

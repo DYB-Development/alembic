@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_15_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_22_120000) do
   create_table "alembic_flow_runs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "definition_version_id", null: false
@@ -72,7 +72,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_15_120000) do
     t.json "blocks", default: [], null: false
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.string "slug"
     t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_alembic_pages_on_slug", unique: true
   end
 
   add_foreign_key "alembic_flow_runs", "alembic_flow_summaries", column: "summary_version_id"
