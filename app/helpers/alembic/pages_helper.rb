@@ -4,10 +4,11 @@ module Alembic
   module PagesHelper
     UNDRAWABLE = "This block cannot be drawn until its fields are filled in.".freeze
 
-    def drawn_page(page)
-      drawn = page.blocks.to_h { |block| [ block["id"], drawn_block(block) ] }.compact
+    def drawn_page(page, being_edited: false)
+      blocks = being_edited ? page.blocks : page.live_version&.blocks.to_a
+      drawn = blocks.to_h { |block| [ block["id"], drawn_block(block) ] }.compact
 
-      block_layout(page.blocks.select { |block| drawn.key?(block["id"]) }, kind: :pages) do |block|
+      block_layout(blocks.select { |block| drawn.key?(block["id"]) }, kind: :pages) do |block|
         drawn.fetch(block["id"])
       end
     end

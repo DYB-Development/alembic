@@ -3,9 +3,22 @@ require "test_helper"
 module Alembic
   class VisitorPageTest < ActionDispatch::IntegrationTest
     test "a visitor opening a page's address is shown the finished page" do
-      get alembic.page_path(welcoming_page.slug)
+      page = welcoming_page
+      page.publish
+
+      get alembic.page_path(page.slug)
 
       assert_includes response.body, "Our team"
+    end
+
+    test "a visitor is shown the live version rather than the blocks being edited" do
+      page = welcoming_page
+      page.publish
+      page.fill_block(page.reload.blocks.first["id"], { "title" => "Still being written" })
+
+      get alembic.page_path(page.slug)
+
+      assert_not_includes response.body, "Still being written"
     end
 
     test "a visitor opening a slug no page holds is refused" do
@@ -15,7 +28,7 @@ module Alembic
     end
 
     test "a flow and a page can hold the same slug" do
-      welcoming_page
+      welcoming_page.publish
       Flow::Definition.create!(slug: "welcome", title: "Welcome")
 
       get alembic.page_path("welcome")
