@@ -31,7 +31,7 @@ module Alembic
       end
 
       def page_params
-        params.require(:page).permit(:name)
+        params.require(:page).permit(:name, :slug)
       end
     end
   end
