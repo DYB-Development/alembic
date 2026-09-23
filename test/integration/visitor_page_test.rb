@@ -8,6 +8,21 @@ module Alembic
       assert_includes response.body, "Our team"
     end
 
+    test "a visitor opening a slug no page holds is refused" do
+      get alembic.page_path("nothing-here")
+
+      assert_response :not_found
+    end
+
+    test "a flow and a page can hold the same slug" do
+      welcoming_page
+      Flow::Definition.create!(slug: "welcome", title: "Welcome")
+
+      get alembic.page_path("welcome")
+
+      assert_includes response.body, "Our team"
+    end
+
     private
 
     def welcoming_page
