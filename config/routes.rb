@@ -37,6 +37,8 @@ Alembic::Engine.routes.draw do
   get "runs/:id", to: "flows#step", as: :run
   patch "runs/:id", to: "flows#update"
 
+  get "pages/:slug", to: "pages#show", as: :page
+
   get ":slug", to: "flows#show", as: :flow
   get ":slug/step", to: "flows#step", as: :flow_step
 end
