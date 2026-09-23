@@ -11,6 +11,14 @@ module Alembic
 
         assert_equal [ 1, page.reload.blocks ], [ published.number, published.blocks ]
       end
+
+      test "the version just published is the live one" do
+        page = Page.create!(name: "Welcome")
+
+        published = page.publish
+
+        assert_equal published, page.reload.live_version
+      end
     end
   end
 end

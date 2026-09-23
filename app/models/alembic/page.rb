@@ -15,6 +15,10 @@ module Alembic
       versions.create!(number: next_number, blocks: blocks, status: :live)
     end
 
+    def live_version
+      versions.find_by(status: :live)
+    end
+
     def next_number
       (versions.maximum(:number) || 0) + 1
     end
