@@ -82,7 +82,7 @@ module Alembic
 
     test "an admin can preview a flow a visitor cannot reach" do
       without_host_configuration do
-        get easy_flow.manage_flow_preview_path(published)
+        get alembic.manage_flow_preview_path(published)
 
         assert_response :success
       end
@@ -90,7 +90,7 @@ module Alembic
 
     test "an admin can step through a preview a visitor cannot reach" do
       without_host_configuration do
-        get easy_flow.step_manage_flow_preview_path(published)
+        get alembic.step_manage_flow_preview_path(published)
 
         assert_response :success
       end
@@ -98,9 +98,9 @@ module Alembic
 
     test "a preview starts into the preview rather than the visitor path" do
       without_host_configuration do
-        get easy_flow.manage_flow_preview_path(published)
+        get alembic.manage_flow_preview_path(published)
 
-        assert_select "a[href=?]", easy_flow.step_manage_flow_preview_path(published)
+        assert_select "a[href=?]", alembic.step_manage_flow_preview_path(published)
       end
     end
 

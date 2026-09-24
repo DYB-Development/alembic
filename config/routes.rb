@@ -9,7 +9,11 @@ Alembic::Engine.routes.draw do
       delete "blocks/:block_id", to: "page_blocks#remove_block", as: :block
     end
 
-    resources :flows, only: [ :edit, :update ]
+    resources :flows, only: [ :edit, :update ] do
+      resource :preview, only: :show, controller: "previews" do
+        get :step
+      end
+    end
   end
 
   constraints(->(request) { request.path_info.match?(%r{\A/manage/flows(/|\z)}) }) do

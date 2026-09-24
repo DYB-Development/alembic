@@ -5,13 +5,17 @@ module Alembic
     included do
       layout -> { Alembic.layout }
       helper ApplicationHelper
-      helper_method :flow_summary
+      helper_method :flow_summary, :first_step_path
     end
 
     private
 
     def flow_summary(flow)
       Flow::Summaries.new(flow).text
+    end
+
+    def first_step_path(slug)
+      flow_step_path(slug)
     end
 
     def start_run(flow)
