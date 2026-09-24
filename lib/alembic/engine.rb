@@ -20,6 +20,12 @@ module Alembic
       KeystoneUi.configuration.tailwind_sources << root.join("app/assets/builds/alembic/*.js").to_s
     end
 
+    initializer "alembic.easy_flow_route_helpers" do |app|
+      app.config.to_prepare do
+        EasyFlow::Manage::BaseController.helper EasyFlow::Engine.routes.url_helpers
+      end
+    end
+
     initializer "alembic.output_types" do |app|
       app.config.to_prepare do
         Alembic::Outputs::WeightedSum.register
