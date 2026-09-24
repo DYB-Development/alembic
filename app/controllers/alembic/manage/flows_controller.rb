@@ -9,7 +9,7 @@ module Alembic
 
       def update
         summary = params.require(:flow)[:summary]
-        Flow::Summaries.new(EasyFlow::Definition.find(params[:id])).describe(summary) unless summary.nil?
+        Flow::Summaries.new(flow_host.flows.find(params[:id])).describe(summary) unless summary.nil?
 
         super
       end

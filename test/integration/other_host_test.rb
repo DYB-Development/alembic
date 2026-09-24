@@ -41,5 +41,11 @@ module Alembic
 
       assert_response :not_found
     end
+
+    test "alembic's details editor does not save a summary onto a flow of another host" do
+      patch easy_flow.manage_flow_path(console_flow), params: { flow: { summary: "Taken over" } }
+
+      assert_nil Flow::Summaries.new(console_flow).text
+    end
   end
 end
