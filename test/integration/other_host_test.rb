@@ -47,5 +47,11 @@ module Alembic
 
       assert_nil Flow::Summaries.new(console_flow).text
     end
+
+    test "alembic's previews do not open a flow of another host" do
+      get alembic.manage_flow_preview_path(console_flow)
+
+      assert_response :not_found
+    end
   end
 end
