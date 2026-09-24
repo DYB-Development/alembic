@@ -45,5 +45,15 @@ module Alembic
 
       assert_equal "New summary", Flow::Summaries.new(flow).text
     end
+
+    test "the flow builder runs the admin check the host gave alembic" do
+      Alembic.admin_authentication_method = :require_an_admin
+
+      get easy_flow.manage_flows_path
+
+      assert_redirected_to "/host-login"
+    ensure
+      Alembic.admin_authentication_method = nil
+    end
   end
 end
