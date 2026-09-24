@@ -13,7 +13,7 @@ module Alembic
       end
 
       def self.bucket(step, marker)
-        marker ? step[marker] : Steps::Question.category_of(step)
+        marker ? step[marker] : EasyFlow::Steps::Question.category_of(step)
       end
 
       def self.shares(run, marker)

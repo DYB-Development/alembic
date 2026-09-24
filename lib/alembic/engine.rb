@@ -1,6 +1,7 @@
 require "alembic/leftover_stylesheet"
 require "keystone_ui-blocks"
 require "keystone_ui-react"
+require "easy_flow"
 
 module Alembic
   class Engine < ::Rails::Engine
@@ -19,18 +20,8 @@ module Alembic
       KeystoneUi.configuration.tailwind_sources << root.join("app/assets/builds/alembic/*.js").to_s
     end
 
-    initializer "alembic.step_types" do |app|
+    initializer "alembic.output_types" do |app|
       app.config.to_prepare do
-        Alembic::Flow::Start.register
-        Alembic::Flow::Terminal.register
-
-        Alembic::Steps::Question.register
-        Alembic::Flow::Condition.register
-        Alembic::Flow::Switch.register
-
-        Alembic::Flow.check(:unrouted_value)
-        Alembic::Flow.check(:unfollowed_path)
-        Alembic::Flow.check(:dead_end)
         Alembic::Outputs::WeightedSum.register
         Alembic::Outputs::Percentage.register
         Alembic::Outputs::Grouped.register

@@ -1,20 +1,18 @@
 # Alembic
 
-A diagnostics engine built on a general-purpose flow layer: typed steps joined
-into a graph, walked by the host application, and summarised separately.
+A diagnostics engine built on [easy_flow](https://github.com/DYB-Development/easy_flow):
+easy_flow stores and runs the flows, and Alembic works out a summary of each
+finished run and builds pages.
 
 ## Usage
 
-Alembic ships a builder for authoring flows and a small runtime for walking
-them. The flow layer knows nothing about diagnostics — it is step-typed, and a
-host application registers whatever step types it needs.
+easy_flow owns the flow layer: the flow document, step types, runs, versions,
+the canvas editor, and the visitor and admin pages. Its README documents that
+interface, including registering your own step types.
 
-**[docs/vocabulary.md](docs/vocabulary.md)** defines every word the flow layer
-uses, and says which word to use where two could mean the same thing.
-
-**[docs/consuming.md](docs/consuming.md)** documents that interface: the flow
-document format, the step-type DSL, driving a run, validation, and the summary
-layer. Read it if you are embedding Alembic, or writing your own step types.
+**[docs/consuming.md](docs/consuming.md)** documents what Alembic adds:
+installing it, the settings a host gives it, the addresses it serves, the
+summary layer and its output types, and deciding who may see a flow.
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -31,6 +29,19 @@ $ bundle
 Or install it yourself as:
 ```bash
 $ gem install alembic
+```
+
+Alembic's tables refer to easy_flow's, so install easy_flow's migrations first:
+```bash
+$ bin/rails easy_flow:install:migrations
+$ bin/rails alembic:install:migrations
+$ bin/rails db:migrate
+```
+
+Mount Alembic only. It mounts easy_flow's admin pages under its own
+`manage/flows` address:
+```ruby
+mount Alembic::Engine => "/alembic"
 ```
 
 ## Styling
@@ -79,24 +90,24 @@ Alembic.layout = "application"
 Alembic.admin_layout = "admin"
 ```
 
-## The flow canvas
+## The page builder bundle
 
-The builder's flow canvas is a React application — DOM nodes laid out on a
-grid with an SVG connector layer, not a graph library — built here and shipped
-as a committed bundle — a gem cannot run a JavaScript build on the host's
-machine. Host applications need no Node toolchain and no configuration; the
-bundle is served by the asset pipeline like any other engine asset.
+The page builder is a React application built here and shipped as a committed
+bundle, since a gem cannot run a JavaScript build on the host's machine. Host
+applications need no Node toolchain; the bundle is served by the asset pipeline
+like any other engine asset. The flow canvas comes from easy_flow.
 
-Working on the canvas source in `app/javascript/alembic` means rebuilding it:
+Working on the page builder source in `app/javascript/alembic` means rebuilding
+it:
 
 ```bash
 $ npm install
 $ npm run build
 ```
 
-That writes `app/assets/builds/alembic/canvas.js` and its stylesheet, both of
-which are committed. CI rebuilds the bundle and fails if it differs from what
-is committed, so the artifact cannot drift away from its source.
+That writes `app/assets/builds/alembic/page_builder.js` and its stylesheet, both
+of which are committed. CI rebuilds the bundle and fails if it differs from what
+is committed.
 
 ## Contributing
 Contribution directions go here.

@@ -13,6 +13,10 @@ class ApplicationController < ActionController::Base
     redirect_to "/host-login"
   end
 
+  def require_an_admin
+    redirect_to "/host-login"
+  end
+
   def alembic_visitor_permitted?(diagnostic)
     diagnostic.present?
   end

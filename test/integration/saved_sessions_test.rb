@@ -15,84 +15,51 @@ module Alembic
     end
 
     def saved
-      @saved ||= Flow::Definition.create!(slug: "saved", persists: :each_step).tap { |diagnostic| diagnostic.record_definition(flowing(branching)); diagnostic.publish }
+      @saved ||= EasyFlow::Definition.create!(slug: "saved", persists: :each_step).tap { |flow| flow.record_definition(flowing(branching)); flow.publish }
     end
 
-    test "starting a saved session sends the visitor to its durable URL" do
+    def summaries
+      Flow::Summaries.new(saved)
+    end
+
+    test "starting a saved session sends the visitor to its address under alembic" do
       post alembic.flow_runs_path(saved.slug)
 
-      assert_redirected_to alembic.run_path(Flow::Run.last)
+      assert_redirected_to alembic.run_path(EasyFlow::Run.last)
     end
 
-    test "a saved session renders the step it is waiting on" do
-      run = Flow::Run.start(saved)
+    test "starting a saved session pins it to the summary the flow is on" do
+      summaries.record("outputs" => [ { "id" => "answered", "type" => "tally" } ])
 
-      get alembic.run_path(run)
+      post alembic.flow_runs_path(saved.slug)
 
-      assert_select "legend", text: /Budget\?/
+      assert_equal summaries.current_version, summaries.pinned_to(EasyFlow::Run.last)
     end
 
-    test "answering a step stores the answer against it" do
-      run = Flow::Run.start(saved)
-
-      patch alembic.run_path(run), params: { answers: { budget: "high" } }
-
-      assert_equal({ budget: "high" }, run.reload.recorded)
-    end
-
-    test "a saved session submits its answers back to itself" do
-      run = Flow::Run.start(saved)
+    test "a saved session submits its answers back to its address under alembic" do
+      run = EasyFlow::Run.start(saved)
 
       get alembic.run_path(run)
 
       assert_select "form[action=?]", alembic.run_path(run)
     end
 
-    test "an answer sends the visitor down the branch it selects" do
-      run = Flow::Run.start(saved)
+    test "answering a step sends the visitor back to the run's address under alembic" do
+      run = EasyFlow::Run.start(saved)
 
       patch alembic.run_path(run), params: { answers: { budget: "high" } }
-      get alembic.run_path(run)
 
-      assert_select "legend", text: /Premium tier\?/
-    end
-
-    test "going back removes the last answer along the walked path" do
-      run = Flow::Run.start(saved)
-      run.record(:budget, "high")
-
-      patch alembic.run_path(run), params: { back: "1" }
-
-      assert_empty run.reload.recorded
-    end
-
-    test "returning resumes at the step still waiting" do
-      run = Flow::Run.start(saved)
-      run.record(:budget, "low")
-
-      get alembic.run_path(run)
-
-      assert_select "legend", text: /Basic tier\?/
+      assert_redirected_to alembic.run_path(run)
     end
 
     test "a completed saved session lists what was said" do
-      run = Flow::Run.start(saved)
+      run = EasyFlow::Run.start(saved)
       run.record(:budget, "low")
       run.record(:plain, "bronze")
 
       get alembic.run_path(run)
 
       assert_select "[data-answer=?]", "budget"
-    end
-
-    test "a session started before an edit still serves the version it began on" do
-      run = Flow::Run.start(saved)
-      saved.record_definition(flowing(branching).merge(
-        "nodes" => branching["nodes"].map { |node| node["id"] == "budget" ? node.merge("text" => "Changed") : node }))
-
-      get alembic.run_path(run)
-
-      assert_select "legend", text: /Budget\?/
     end
 
     test "the intro offers to start a saved session" do
@@ -102,11 +69,12 @@ module Alembic
     end
 
     test "a completed saved session shows its pinned summary's outputs" do
-      saved.summaries.record("outputs" => [ { "id" => "answered", "type" => "tally", "label" => "Steps answered" } ])
-      run = Flow::Run.start(saved)
+      summaries.record("outputs" => [ { "id" => "answered", "type" => "tally", "label" => "Steps answered" } ])
+      post alembic.flow_runs_path(saved.slug)
+      run = EasyFlow::Run.last
       run.record(:budget, "low")
       run.record(:plain, "bronze")
-      saved.summaries.record("outputs" => [ { "id" => "other", "type" => "tally", "label" => "Something else" } ])
+      summaries.record("outputs" => [ { "id" => "other", "type" => "tally", "label" => "Something else" } ])
 
       get alembic.run_path(run)
 
@@ -115,43 +83,14 @@ module Alembic
 
     test "a visitor part way through a withdrawn version is told it was withdrawn" do
       Alembic.refusal_method = :note_the_refusal
-      response = Flow::Run.start(saved)
-      response.definition_version.update!(status: :withdrawn)
+      run = EasyFlow::Run.start(saved)
+      run.definition_version.update!(status: :withdrawn)
 
-      get alembic.run_path(response)
+      get alembic.run_path(run)
 
-      assert_equal "Alembic::Withdrawn", @response.headers["X-Refusal"]
+      assert_equal Alembic::Withdrawn.name, response.headers["X-Refusal"]
     ensure
       Alembic.refusal_method = nil
-    end
-
-    test "a withdrawn version keeps the answers already recorded" do
-      response = Flow::Run.start(saved)
-      response.record(:budget, "low")
-      response.definition_version.update!(status: :withdrawn)
-
-      get alembic.run_path(response)
-
-      assert_equal({ budget: "low" }, response.reload.recorded)
-    end
-
-    test "a run carries on after its version is superseded" do
-      response = Flow::Run.start(saved)
-      saved.update!(document: branching.merge("entry" => "gate"))
-      saved.publish
-
-      get alembic.run_path(response)
-
-      assert_response :success
-    end
-
-    test "a run carries on after its version is retired" do
-      response = Flow::Run.start(saved)
-      saved.retire_version(response.definition_version)
-
-      get alembic.run_path(response)
-
-      assert_response :success
     end
   end
 end

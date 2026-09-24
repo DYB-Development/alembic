@@ -3,7 +3,7 @@ module Alembic
     class SummaryVersion < ApplicationRecord
       self.table_name = "alembic_flow_summaries"
 
-      belongs_to :flow, class_name: "Alembic::Flow::Definition"
+      belongs_to :flow, class_name: "EasyFlow::Definition"
 
       validates :number, uniqueness: { scope: :flow_id }
 

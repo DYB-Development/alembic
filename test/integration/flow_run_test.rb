@@ -3,8 +3,8 @@ require "test_helper"
 module Alembic
   class FlowRunTest < ActionDispatch::IntegrationTest
     def flowed
-      @flowed ||= Flow::Definition.create!(slug: "flowed").tap do |diagnostic|
-        diagnostic.record_definition(flowing(
+      @flowed ||= EasyFlow::Definition.create!(slug: "flowed").tap do |flow|
+        flow.record_definition(flowing(
           "slug" => "flowed", "entry" => "budget",
           "nodes" => [ { "id" => "budget", "type" => "question", "text" => "What is your budget?", "tag" => "money",
                          "options" => [ { "value" => "low", "label" => "Modest", "weight" => 1 },
@@ -18,13 +18,13 @@ module Alembic
                        { "from" => "gate", "to" => "posh", "on" => true },
                        { "from" => "gate", "to" => "plain", "on" => false } ]
         ))
-        diagnostic.publish
+        flow.publish
       end
     end
 
     def summarised
-      flowed.tap do |diagnostic|
-        diagnostic.summaries.record(
+      flowed.tap do |flow|
+        Flow::Summaries.new(flow).record(
           "outputs" => [
             { "id" => "score", "type" => "weighted_sum", "label" => "Your score" },
             { "id" => "band", "type" => "band", "label" => "Where that puts you", "of" => "score",
@@ -39,15 +39,17 @@ module Alembic
     test "a flow keeping a run at the end stores it once the flow finishes" do
       flowed.update!(persists: :on_finish)
 
-      assert_difference -> { Flow::Run.count }, 1 do
+      assert_difference -> { EasyFlow::Run.count }, 1 do
         get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
       end
     end
 
-    test "a flow keeping nothing stores no run when it finishes" do
-      assert_no_difference -> { Flow::Run.count } do
-        get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
-      end
+    test "a run kept at the end is pinned to the summary the flow is on" do
+      summarised.update!(persists: :on_finish)
+
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_equal Flow::Summaries.new(flowed).current_version, Flow::Summaries.new(flowed).pinned_to(EasyFlow::Run.last)
     end
 
     test "a finished run shows what its summary makes of it" do
@@ -80,16 +82,24 @@ module Alembic
       assert_select "[data-output=?]", "answered", text: /2/
     end
 
-    test "a diagnostic with no summary still shows what was said" do
+    test "a flow with no summary still shows what was said" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
       assert_select "[data-answer=?]", "budget"
     end
 
-    test "a visitor can see the intro of a nodes and edges diagnostic" do
+    test "the finished page offers to start over at alembic's address for the flow" do
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
+
+      assert_select "a[href=?]", alembic.flow_path(flowed.slug)
+    end
+
+    test "the intro shows the flow's summary under its title" do
+      Flow::Summaries.new(flowed).describe("What this asks about")
+
       get alembic.flow_path(flowed.slug)
 
-      assert_response :success
+      assert_includes response.body, "What this asks about"
     end
 
     test "the intro links into the flow" do
@@ -104,76 +114,10 @@ module Alembic
       assert_select "legend", text: /What is your budget\?/
     end
 
-    test "a visitor is offered a labelled choice for each option" do
-      get alembic.flow_step_path(flowed.slug)
-
-      assert_select "label", text: /Generous/
-    end
-
     test "answering sends the visitor down the branch their answer selects" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
 
       assert_select "legend", text: /Which premium tier\?/
-    end
-
-    test "the other answer sends them down the other branch" do
-      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low" } }
-
-      assert_select "legend", text: /Which basic tier\?/
-    end
-
-    test "a visitor reaching the end is told the run is complete" do
-      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
-
-      assert_response :success
-    end
-
-    test "a saved session walks the same flow" do
-      response_record = Flow::Run.start(flowed)
-
-      patch alembic.run_path(response_record), params: { answers: { budget: "high" } }
-      get alembic.run_path(response_record)
-
-      assert_select "legend", text: /Which premium tier\?/
-    end
-
-    test "a saved session records the answer against the step that asked it" do
-      response_record = Flow::Run.start(flowed)
-
-      patch alembic.run_path(response_record), params: { answers: { budget: "high" } }
-
-      assert_equal({ budget: "high" }, response_record.reload.recorded)
-    end
-
-    test "a visitor runs the published version, not what the author is editing" do
-      diagnostic = flowed
-      diagnostic.publish
-      diagnostic.update!(document: { "slug" => diagnostic.slug, "entry" => "gone", "nodes" => [], "edges" => [] })
-
-      get alembic.flow_step_path(diagnostic.slug)
-
-      assert_select "legend", text: /What is your budget\?/
-    end
-
-    test "a visitor keeps running the published version after a newer one is created" do
-      diagnostic = flowed
-      diagnostic.publish
-      diagnostic.update!(document: { "slug" => diagnostic.slug, "entry" => "later",
-        "nodes" => [ { "id" => "later", "type" => "question", "question" => "Something else?" } ], "edges" => [] })
-      diagnostic.create_version
-
-      get alembic.flow_step_path(diagnostic.slug)
-
-      assert_select "legend", text: /What is your budget\?/
-    end
-
-    test "a visitor cannot start on a version that has been retired" do
-      diagnostic = flowed
-      diagnostic.retire_version(diagnostic.live_version)
-
-      get alembic.flow_step_path(diagnostic.slug)
-
-      assert_response :not_found
     end
   end
 end
