@@ -29,5 +29,11 @@ module Alembic
 
       assert_select "a", text: "Console setup", count: 0
     end
+
+    test "alembic's management pages do not open a flow of another host" do
+      get easy_flow.manage_flow_path(console_flow)
+
+      assert_response :not_found
+    end
   end
 end
