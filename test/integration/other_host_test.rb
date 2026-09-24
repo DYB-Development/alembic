@@ -53,5 +53,11 @@ module Alembic
 
       assert_response :not_found
     end
+
+    test "a flow created on alembic's management pages belongs to the alembic host" do
+      post easy_flow.manage_flows_path, params: { flow: { slug: "made-here", kind: "guide" } }
+
+      assert_equal "alembic", EasyFlow::Definition.find_by!(slug: "made-here").host
+    end
   end
 end
