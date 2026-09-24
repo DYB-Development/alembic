@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_24_220000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_24_224005) do
   create_table "alembic_flow_definition_summaries", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "flow_id", null: false
@@ -64,6 +64,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_220000) do
     t.datetime "created_at", null: false
     t.integer "definition_cursor"
     t.json "document"
+    t.string "host", null: false
     t.string "kind"
     t.string "persists", default: "unsaved", null: false
     t.string "slug"
@@ -73,7 +74,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_220000) do
     t.json "undo_history"
     t.json "undone_changes"
     t.datetime "updated_at", null: false
-    t.index ["slug"], name: "index_easy_flow_definitions_on_slug", unique: true
+    t.index ["host", "slug"], name: "index_easy_flow_definitions_on_host_and_slug", unique: true
   end
 
   create_table "easy_flow_runs", force: :cascade do |t|

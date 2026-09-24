@@ -20,5 +20,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rails", ">= 8.1.3"
   spec.add_dependency "keystone_ui-react", ">= 0.1.2"
   spec.add_dependency "keystone_ui-blocks", ">= 0.7.0"
-  spec.add_dependency "easy_flow", "~> 0.3"
+  spec.add_dependency "easy_flow", "~> 0.4"
 end
