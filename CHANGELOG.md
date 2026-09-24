@@ -5,10 +5,10 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Changed
-- **Flows** — flows, their versions and their runs are easy_flow's, which Alembic now depends on at 0.3. Alembic's own copy of the flow layer, the canvas editor and their tables are gone, and a host that registered step types does so with `EasyFlow.step` in place of `Alembic::Flow.step`.
+- **Flows** — flows, their versions and their runs are easy_flow's, which Alembic now depends on at 0.4. Alembic's own copy of the flow layer, the canvas editor and their tables are gone, and a host that registered step types does so with `EasyFlow.step` in place of `Alembic::Flow.step`.
 - **The flow builder** — the flow builder, the canvas and the version history are easy_flow's pages, served at the same `manage/flows` address under Alembic's mount. Links to them come from the `easy_flow` route helper in place of the `alembic` one.
 - **A flow's summary text** — an author writes it on the flow's details page, since easy_flow's canvas panel does not offer it.
-- **Settings** — each of Alembic's settings also sets easy_flow's setting of the same name, so a host keeps setting Alembic's.
+- **Settings** — Alembic's layout, admin layout, admin check, visitor check and refusal answer set up the easy_flow host named `alembic` and no other host, so a host keeps setting Alembic's. `Alembic.base_controller` also sets `EasyFlow.base_controller`, which easy_flow keeps for every host.
 - **Refusals** — `Alembic::NotPublished`, `Alembic::NotPermitted`, `Alembic::Withdrawn` and `Alembic::OutOfService` are easy_flow's classes of the same name, so a refusal's class is named `EasyFlow::` while matching on Alembic's names still works.
 - **Arranging a page** — the page builder's grid shows the page and nothing else until a designer presses Edit. Adding a block, moving one, resizing one and removing one all wait behind that, and the block types are offered in a dialog rather than beside the grid.
 - **Removing a block** — a block is removed by dragging it onto the target that appears while the page is being edited, where it carried a Remove control.
@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - **The block grid** — Alembic takes `keystone_ui-blocks` at 0.7.0, where it took 0.2.0.
 
 ### Added
+- **Flows held apart** — Alembic's flows belong to the easy_flow host named `alembic`, so an application that also holds another host's flows never lists, opens, runs or previews them on Alembic's pages. A flow made on Alembic's flow builder belongs to the `alembic` host, and code that stores a flow for Alembic names that host with `host: "alembic"`.
 - **What a visitor is shown** — a visitor opening a page is shown the blocks of the live version, and a page with no live version is refused the way a flow that has never been published is. A developer asking the helper for the blocks being edited gets those instead.
 - **Publishing a page** — a designer publishes a page from the builder and the blocks as they stand are recorded as a numbered version, which becomes the live one. The version that was live is marked superseded, earlier versions keep the blocks they were recorded with, and a page that has never been published has no live version.
 - **A page at its own address** — a page carries a slug no other page can hold, and a visitor opening that address is shown the finished page. An address no page holds is refused the way an unknown flow is, and a flow and a page may hold the same slug.
@@ -38,7 +39,9 @@ All notable changes to this project will be documented in this file.
 - **Generated stylesheet** — hosts no longer get `app/assets/builds/tailwind/alembic.css`. With `stylesheet_link_tag :app`, that file made the browser request a path inside the installed gem and raise a routing error. When `keystone_ui` is installed, Alembic's views and React source now come in through `keystone_source.css`.
 
 ### Upgrading
-- Run `bin/rails easy_flow:install:migrations` before `bin/rails alembic:install:migrations`, then migrate. Alembic's migration drops `alembic_flows`, `alembic_flow_versions` and `alembic_flow_runs`, clears the summary versions that belonged to them, and keeps summary data in `alembic_flow_definition_summaries` and `alembic_flow_run_summaries`, keyed to easy_flow's tables.
+- Run `bin/rails easy_flow:install:migrations` before `bin/rails alembic:install:migrations`, then migrate. From easy_flow 0.4 this copies the migration that gives every flow a host.
+- A flow stored before that migration has an empty host, so set the host of each flow Alembic runs to `alembic`.
+- Alembic's migration drops `alembic_flows`, `alembic_flow_versions` and `alembic_flow_runs`, clears the summary versions that belonged to them, and keeps summary data in `alembic_flow_definition_summaries` and `alembic_flow_run_summaries`, keyed to easy_flow's tables.
 - Do not mount easy_flow in the host's routes, since Alembic mounts it.
 - Remove `@import "../builds/tailwind/alembic";` from `app/assets/tailwind/application.css`.
 - Alembic deletes the leftover `app/assets/builds/tailwind/alembic.css` when the host app boots, so there is nothing to delete by hand.
