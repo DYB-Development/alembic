@@ -55,5 +55,15 @@ module Alembic
     ensure
       Alembic.admin_authentication_method = nil
     end
+
+    test "the flow builder is drawn in the admin layout the host gave alembic" do
+      Alembic.admin_layout = "mailer"
+
+      get easy_flow.manage_flows_path
+
+      assert_select "meta[http-equiv=Content-Type]"
+    ensure
+      Alembic.admin_layout = nil
+    end
   end
 end
