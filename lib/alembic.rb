@@ -8,10 +8,26 @@ module Alembic
   OutOfService = EasyFlow::OutOfService
   Withdrawn = EasyFlow::Withdrawn
 
+  FLOW_HOST = :alembic
+  FLOW_HOST_SETTINGS = %i[layout admin_layout admin_authentication_method
+                          visitor_authorization_method refusal_method].freeze
+
   class << self
     attr_accessor :lead_partial
-    attr_writer :layout, :admin_layout
-    attr_accessor :admin_authentication_method, :visitor_authorization_method, :refusal_method
+    attr_reader :admin_authentication_method, :visitor_authorization_method, :refusal_method
+
+    FLOW_HOST_SETTINGS.each do |name|
+      define_method(:"#{name}=") do |value|
+        instance_variable_set(:"@#{name}", value)
+        set_up_flow_host
+      end
+    end
+
+    def set_up_flow_host
+      EasyFlow.host(FLOW_HOST) do |host|
+        FLOW_HOST_SETTINGS.each { |name| host.public_send(:"#{name}=", public_send(name)) }
+      end
+    end
 
     def base_controller=(value)
       @base_controller = value
@@ -37,4 +53,6 @@ module Alembic
       @admin_layout || "application"
     end
   end
+
+  set_up_flow_host
 end

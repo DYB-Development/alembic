@@ -1,6 +1,7 @@
 module Alembic
   module Manage
     class FlowsController < EasyFlow::Manage::FlowsController
+      hosted_by FLOW_HOST
       def edit
         super
         @summary = Flow::Summaries.new(@flow).text

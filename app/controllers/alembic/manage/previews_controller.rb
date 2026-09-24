@@ -1,6 +1,7 @@
 module Alembic
   module Manage
     class PreviewsController < EasyFlow::Manage::PreviewsController
+      hosted_by FLOW_HOST
       include Summarizes
 
       def show
