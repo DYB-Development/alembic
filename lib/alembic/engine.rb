@@ -1,6 +1,7 @@
 require "alembic/leftover_stylesheet"
 require "keystone_ui-blocks"
 require "keystone_ui-react"
+require "easy_flow"
 
 module Alembic
   class Engine < ::Rails::Engine
