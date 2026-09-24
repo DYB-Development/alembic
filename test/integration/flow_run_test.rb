@@ -44,6 +44,14 @@ module Alembic
       end
     end
 
+    test "a run kept at the end is pinned to the summary the flow is on" do
+      summarised.update!(persists: :on_finish)
+
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_equal Flow::Summaries.new(flowed).current_version, Flow::Summaries.new(flowed).pinned_to(EasyFlow::Run.last)
+    end
+
     test "a finished run shows what its summary makes of it" do
       get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
 
