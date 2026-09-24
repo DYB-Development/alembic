@@ -35,5 +35,11 @@ module Alembic
 
       assert_response :not_found
     end
+
+    test "alembic's details editor does not open a flow of another host" do
+      get easy_flow.edit_manage_flow_path(console_flow)
+
+      assert_response :not_found
+    end
   end
 end
