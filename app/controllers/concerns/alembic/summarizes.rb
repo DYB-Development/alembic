@@ -5,9 +5,14 @@ module Alembic
     included do
       layout -> { Alembic.layout }
       helper ApplicationHelper
+      helper_method :flow_summary
     end
 
     private
+
+    def flow_summary(flow)
+      Flow::Summaries.new(flow).text
+    end
 
     def start_run(flow)
       super.tap { |run| Flow::Summaries.new(flow).pin(run) }

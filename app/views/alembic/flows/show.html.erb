@@ -1,7 +1,7 @@
 <% content_for(:title, @flow.title.presence || @flow.slug) %>
 
 <%= ui_page(max_width: :md) do %>
-  <%= ui_page_header(title: @flow.title.presence || @flow.slug) %>
+  <%= ui_page_header(title: @flow.title.presence || @flow.slug, subtitle: flow_summary(@flow)) %>
 
   <%= ui_section do %>
     <div class="flex flex-wrap items-center gap-3">

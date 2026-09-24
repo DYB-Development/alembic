@@ -86,6 +86,14 @@ module Alembic
       assert_select "a[href=?]", alembic.flow_path(flowed.slug)
     end
 
+    test "the intro shows the flow's summary under its title" do
+      Flow::Summaries.new(flowed).describe("What this asks about")
+
+      get alembic.flow_path(flowed.slug)
+
+      assert_includes response.body, "What this asks about"
+    end
+
     test "the intro links into the flow" do
       get alembic.flow_path(flowed.slug)
 
