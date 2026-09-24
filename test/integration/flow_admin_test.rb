@@ -28,5 +28,14 @@ module Alembic
       drawn = JSON.parse(css_select("[data-flow-canvas]").first["data-props"])
       assert_equal "/alembic/manage/flows/#{flow.id}/canvas", drawn["base"]
     end
+
+    test "the details editor offers the flow's summary for editing" do
+      flow = easy_flow_definitions(:business_scorecard)
+      Flow::Summaries.new(flow).describe("What this asks about")
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "textarea[name=?]", "flow[summary]", text: "What this asks about"
+    end
   end
 end
