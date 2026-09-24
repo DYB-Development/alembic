@@ -37,5 +37,13 @@ module Alembic
 
       assert_select "textarea[name=?]", "flow[summary]", text: "What this asks about"
     end
+
+    test "saving the details stores the flow's summary" do
+      flow = easy_flow_definitions(:business_scorecard)
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { summary: "New summary" } }
+
+      assert_equal "New summary", Flow::Summaries.new(flow).text
+    end
   end
 end
