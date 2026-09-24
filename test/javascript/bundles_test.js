@@ -8,7 +8,7 @@ const built = (name) => readFileSync(new URL(`../../app/assets/builds/alembic/${
 
 test("alembic's scripts carry no React of their own", () => {
   assert.deepEqual(
-    [ "canvas.js", "page_builder.js" ].filter((name) => built(name).includes(REACTS_OWN)),
+    [ "page_builder.js" ].filter((name) => built(name).includes(REACTS_OWN)),
     []
   )
 })

@@ -8,30 +8,10 @@ Alembic::Engine.routes.draw do
       patch "blocks/:block_id", to: "page_blocks#fill_block"
       delete "blocks/:block_id", to: "page_blocks#remove_block", as: :block
     end
+  end
 
-    resources :flows, only: [ :index, :create, :show, :edit, :update, :destroy ] do
-      resource :definition, only: [ :edit, :update ]
-      resource :preview, only: :show, controller: "previews" do
-        get :step
-      end
-      resources :versions, only: :index do
-        post :return, on: :member
-      end
-
-      resource :canvas, only: :show, controller: "canvas" do
-        post   "steps",       action: :add_step
-        patch  "steps/:step", action: :configure_step
-        delete "steps/:step",      action: :remove_step
-        patch  "steps/:step/move", action: :move_step
-        post   "versions",    action: :create
-        post   "publish",     action: :publish
-        patch  "details",     action: :details
-        post   "undo",        action: :undo
-        post   "redo",        action: :redo
-        post   "edges",       action: :connect
-        delete "edges",       action: :disconnect
-      end
-    end
+  constraints(->(request) { request.path_info.match?(%r{\A/manage/flows(/|\z)}) }) do
+    mount EasyFlow::Engine, at: "/"
   end
 
   post ":slug/runs", to: "flows#start", as: :flow_runs

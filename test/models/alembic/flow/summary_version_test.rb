@@ -3,28 +3,29 @@ require "test_helper"
 module Alembic
   module Flow
     class SummaryVersionTest < ActiveSupport::TestCase
-      test "is invalid when the diagnostic already has that version number" do
-        diagnostic = Definition.create!(slug: "demo")
-        diagnostic.summary_versions.create!(number: 1, summary: { "outputs" => [] })
+      def flow
+        @flow ||= EasyFlow::Definition.create!(slug: "demo")
+      end
 
-        duplicate = diagnostic.summary_versions.build(number: 1, summary: { "outputs" => [] })
+      test "is invalid when the flow already has that version number" do
+        SummaryVersion.create!(flow: flow, number: 1, summary: { "outputs" => [] })
+
+        duplicate = SummaryVersion.new(flow: flow, number: 1, summary: { "outputs" => [] })
 
         assert_not duplicate.valid?
       end
 
       test "refuses to be updated once persisted" do
-        diagnostic = Definition.create!(slug: "demo")
-        version = diagnostic.summary_versions.create!(number: 1, summary: { "outputs" => [] })
+        version = SummaryVersion.create!(flow: flow, number: 1, summary: { "outputs" => [] })
 
         assert_raises(ActiveRecord::ReadOnlyRecord) { version.update!(summary: { "outputs" => [ { "id" => "x" } ] }) }
       end
 
-      test "is destroyed along with its diagnostic" do
-        diagnostic = Definition.create!(slug: "demo")
-        diagnostic.summary_versions.create!(number: 1, summary: { "outputs" => [] })
+      test "is destroyed along with its flow" do
+        SummaryVersion.create!(flow: flow, number: 1, summary: { "outputs" => [] })
 
         assert_difference -> { SummaryVersion.count }, -1 do
-          diagnostic.destroy!
+          flow.destroy!
         end
       end
     end

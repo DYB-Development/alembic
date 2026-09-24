@@ -3,14 +3,14 @@ require "test_helper"
 module Alembic
   class VisitorGateTest < ActionDispatch::IntegrationTest
     def published
-      @published ||= Flow::Definition.create!(slug: "gated").tap do |diagnostic|
-        diagnostic.record_definition(
+      @published ||= EasyFlow::Definition.create!(slug: "gated").tap do |flow|
+        flow.record_definition(
           "slug" => "gated", "entry" => "ask",
           "nodes" => [ { "id" => "ask", "type" => "question", "text" => "Ready?",
                          "options" => [ { "value" => "yes", "weight" => 1 } ] } ],
           "edges" => []
         )
-        diagnostic.publish
+        flow.publish
       end
     end
 
@@ -22,7 +22,7 @@ module Alembic
       Alembic.visitor_authorization_method = permission
     end
 
-    test "a visitor cannot reach a diagnostic the host has not authorized" do
+    test "a visitor cannot reach a flow the host has not authorized" do
       without_host_configuration do
         get alembic.flow_path(published.slug)
 
@@ -30,21 +30,21 @@ module Alembic
       end
     end
 
-    test "a visitor can reach a diagnostic the host authorizes" do
+    test "a visitor can reach a flow the host authorizes" do
       get alembic.flow_path(published.slug)
 
       assert_response :success
     end
 
-    test "a visitor cannot reach a diagnostic with nothing published even when the host authorizes it" do
-      unpublished = Flow::Definition.create!(slug: "unpublished")
+    test "a visitor cannot reach a flow with nothing published even when the host authorizes it" do
+      unpublished = EasyFlow::Definition.create!(slug: "unpublished")
 
       get alembic.flow_path(unpublished.slug)
 
       assert_response :not_found
     end
 
-    test "a visitor cannot step through a diagnostic the host has not authorized" do
+    test "a visitor cannot step through a flow the host has not authorized" do
       without_host_configuration do
         get alembic.flow_step_path(published.slug)
 
@@ -52,7 +52,7 @@ module Alembic
       end
     end
 
-    test "a visitor cannot start a saved session on a diagnostic the host has not authorized" do
+    test "a visitor cannot start a saved session on a flow the host has not authorized" do
       without_host_configuration do
         post alembic.flow_runs_path(published.slug)
 
@@ -60,8 +60,8 @@ module Alembic
       end
     end
 
-    test "a visitor cannot resume a saved session on a diagnostic the host has not authorized" do
-      response = Flow::Run.start(published)
+    test "a visitor cannot resume a saved session on a flow the host has not authorized" do
+      response = EasyFlow::Run.start(published)
 
       without_host_configuration do
         get alembic.run_path(response)
@@ -70,8 +70,8 @@ module Alembic
       end
     end
 
-    test "a visitor cannot answer into a saved session on a diagnostic the host has not authorized" do
-      response = Flow::Run.start(published)
+    test "a visitor cannot answer into a saved session on a flow the host has not authorized" do
+      response = EasyFlow::Run.start(published)
 
       without_host_configuration do
         patch alembic.run_path(response), params: { answers: { ask: "yes" } }
@@ -80,9 +80,9 @@ module Alembic
       end
     end
 
-    test "an admin can preview a diagnostic a visitor cannot reach" do
+    test "an admin can preview a flow a visitor cannot reach" do
       without_host_configuration do
-        get alembic.manage_flow_preview_path(published)
+        get easy_flow.manage_flow_preview_path(published)
 
         assert_response :success
       end
@@ -90,7 +90,7 @@ module Alembic
 
     test "an admin can step through a preview a visitor cannot reach" do
       without_host_configuration do
-        get alembic.step_manage_flow_preview_path(published)
+        get easy_flow.step_manage_flow_preview_path(published)
 
         assert_response :success
       end
@@ -98,9 +98,9 @@ module Alembic
 
     test "a preview starts into the preview rather than the visitor path" do
       without_host_configuration do
-        get alembic.manage_flow_preview_path(published)
+        get easy_flow.manage_flow_preview_path(published)
 
-        assert_select "a[href=?]", alembic.step_manage_flow_preview_path(published)
+        assert_select "a[href=?]", easy_flow.step_manage_flow_preview_path(published)
       end
     end
 
@@ -122,7 +122,7 @@ module Alembic
       without_host_configuration do
         get alembic.flow_path(published.slug)
 
-        assert_equal "Alembic::NotPermitted", response.headers["X-Refusal"]
+        assert_equal Alembic::NotPermitted.name, response.headers["X-Refusal"]
       end
     ensure
       Alembic.refusal_method = nil

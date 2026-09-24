@@ -3,14 +3,24 @@ require "alembic/version"
 require "alembic/engine"
 
 module Alembic
-  class NotPublished < StandardError; end
-  class NotPermitted < StandardError; end
-  class OutOfService < StandardError; end
-  class Withdrawn < StandardError; end
+  NotPublished = EasyFlow::NotPublished
+  NotPermitted = EasyFlow::NotPermitted
+  OutOfService = EasyFlow::OutOfService
+  Withdrawn = EasyFlow::Withdrawn
+
+  SHARED_WITH_EASY_FLOW = %i[layout base_controller admin_layout
+                             admin_authentication_method visitor_authorization_method refusal_method].freeze
 
   class << self
-    attr_writer :layout, :base_controller, :admin_layout
-    attr_accessor :lead_partial, :admin_authentication_method, :visitor_authorization_method, :refusal_method
+    attr_accessor :lead_partial
+    attr_reader :admin_authentication_method, :visitor_authorization_method, :refusal_method
+
+    SHARED_WITH_EASY_FLOW.each do |name|
+      define_method(:"#{name}=") do |value|
+        instance_variable_set(:"@#{name}", value)
+        EasyFlow.public_send(:"#{name}=", value)
+      end
+    end
 
     # The host app sets this to render the engine inside its own layout
     # (e.g. "marketing"). Defaults to the engine's own layout.

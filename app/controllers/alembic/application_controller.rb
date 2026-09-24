@@ -5,23 +5,7 @@ module Alembic
 
     rescue_from NotPublished, NotPermitted, Withdrawn, with: :refuse
 
-    helper_method :flow_start_path
-
     private
-
-    def flow_start_path(slug)
-      alembic.flow_path(slug)
-    end
-
-    def admit(diagnostic)
-      Flow::Admission.of(diagnostic, permitted: permitted?(diagnostic))
-    end
-
-    def permitted?(diagnostic)
-      return false unless Alembic.visitor_authorization_method
-
-      send(Alembic.visitor_authorization_method, diagnostic)
-    end
 
     def refuse(refusal)
       return head :not_found unless Alembic.refusal_method

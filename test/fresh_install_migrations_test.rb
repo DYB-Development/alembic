@@ -11,11 +11,11 @@ class FreshInstallMigrationsTest < ActiveSupport::TestCase
     Dir.mktmpdir do |dir|
       ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: File.join(dir, "fresh.sqlite3"))
       ActiveRecord::Migration.verbose = false
-      ActiveRecord::MigrationContext.new("db/migrate").migrate
+      ActiveRecord::MigrationContext.new([ EasyFlow::Engine.root.join("db/migrate").to_s, "db/migrate" ]).migrate
     end
   RUBY
 
-  test "alembic's migrations run in order from an empty database" do
+  test "alembic's migrations run in order after easy_flow's from an empty database" do
     output, status = Open3.capture2e(RbConfig.ruby, "-e", MIGRATE_AN_EMPTY_DATABASE, chdir: Alembic::Engine.root.to_s)
 
     assert status.success?, output
