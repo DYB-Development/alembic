@@ -15,5 +15,11 @@ module Alembic
 
       assert_response :not_found
     end
+
+    test "alembic's visitor pages do not open a run of another host's flow" do
+      get alembic.run_path(EasyFlow::Run.start(console_flow))
+
+      assert_response :not_found
+    end
   end
 end
