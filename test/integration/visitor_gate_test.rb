@@ -3,7 +3,7 @@ require "test_helper"
 module Alembic
   class VisitorGateTest < ActionDispatch::IntegrationTest
     def published
-      @published ||= EasyFlow::Definition.create!(slug: "gated").tap do |flow|
+      @published ||= EasyFlow::Definition.create!(host: "alembic", slug: "gated").tap do |flow|
         flow.record_definition(
           "slug" => "gated", "entry" => "ask",
           "nodes" => [ { "id" => "ask", "type" => "question", "text" => "Ready?",
@@ -37,7 +37,7 @@ module Alembic
     end
 
     test "a visitor cannot reach a flow with nothing published even when the host authorizes it" do
-      unpublished = EasyFlow::Definition.create!(slug: "unpublished")
+      unpublished = EasyFlow::Definition.create!(host: "alembic", slug: "unpublished")
 
       get alembic.flow_path(unpublished.slug)
 

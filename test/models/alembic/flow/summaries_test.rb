@@ -4,7 +4,7 @@ module Alembic
   module Flow
     class SummariesTest < ActiveSupport::TestCase
       def published(slug = "demo")
-        EasyFlow::Definition.create!(slug: slug).tap do |flow|
+        EasyFlow::Definition.create!(host: "alembic", slug: slug).tap do |flow|
           flow.record_definition(flowing("slug" => slug, "entry" => "a",
             "nodes" => [ { "id" => "a", "type" => "question", "question" => "A?",
                            "answers" => [ { "value" => "yes", "weight" => 5 } ] } ]))

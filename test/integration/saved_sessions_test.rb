@@ -15,7 +15,7 @@ module Alembic
     end
 
     def saved
-      @saved ||= EasyFlow::Definition.create!(slug: "saved", persists: :each_step).tap { |flow| flow.record_definition(flowing(branching)); flow.publish }
+      @saved ||= EasyFlow::Definition.create!(host: "alembic", slug: "saved", persists: :each_step).tap { |flow| flow.record_definition(flowing(branching)); flow.publish }
     end
 
     def summaries
