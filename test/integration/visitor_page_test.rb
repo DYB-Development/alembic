@@ -48,7 +48,7 @@ module Alembic
 
     test "a flow and a page can hold the same slug" do
       welcoming_page.publish
-      EasyFlow::Definition.create!(slug: "welcome", title: "Welcome")
+      EasyFlow::Definition.create!(host: "alembic", slug: "welcome", title: "Welcome")
 
       get alembic.page_path("welcome")
 

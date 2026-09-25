@@ -4,7 +4,7 @@ module Alembic
   module Flow
     class SummaryVersionTest < ActiveSupport::TestCase
       def flow
-        @flow ||= EasyFlow::Definition.create!(slug: "demo")
+        @flow ||= EasyFlow::Definition.create!(host: "alembic", slug: "demo")
       end
 
       test "is invalid when the flow already has that version number" do

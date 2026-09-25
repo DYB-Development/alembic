@@ -17,7 +17,7 @@ Alembic::Engine.routes.draw do
   end
 
   constraints(->(request) { request.path_info.match?(%r{\A/manage/flows(/|\z)}) }) do
-    mount EasyFlow::Engine, at: "/"
+    mount EasyFlow::Engine, at: "/", defaults: { easy_flow_host: Alembic::FLOW_HOST.to_s }
   end
 
   post ":slug/runs", to: "flows#start", as: :flow_runs

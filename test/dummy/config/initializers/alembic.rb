@@ -2,6 +2,8 @@ Alembic.layout = "application"
 Alembic.base_controller = "ApplicationController"
 Alembic.visitor_authorization_method = :alembic_visitor_permitted?
 
+EasyFlow.host(:console) { |host| host.visitor_authorization_method = :alembic_visitor_permitted? }
+
 Rails.application.config.to_prepare do
   KsBlocks.block(:heading, name: "Heading", width: 12, height: 1, kind: :pages, fields: [ { key: :title, label: "Title" } ])
   KsBlocks.block(:text, name: "Text", width: 6, height: 2, kind: :pages)

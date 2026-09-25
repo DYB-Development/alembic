@@ -31,7 +31,9 @@ Or install it yourself as:
 $ gem install alembic
 ```
 
-Alembic's tables refer to easy_flow's, so install easy_flow's migrations first:
+Alembic's tables refer to easy_flow's, so install easy_flow's migrations first.
+They give every flow a host, and Alembic's flows belong to the host named
+`alembic`:
 ```bash
 $ bin/rails easy_flow:install:migrations
 $ bin/rails alembic:install:migrations
@@ -83,7 +85,8 @@ Remove `@import "../builds/tailwind/alembic";` from
 
 Finally, the engine has to render inside a layout that links your compiled CSS.
 Point `Alembic.layout` (visitor pages) and `Alembic.admin_layout` (the builder)
-at your own layouts:
+at your own layouts. They set up the easy_flow host named `alembic` and no other
+host:
 
 ```ruby
 Alembic.layout = "application"

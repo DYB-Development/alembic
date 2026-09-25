@@ -22,8 +22,18 @@ $ bin/rails alembic:install:migrations
 $ bin/rails db:migrate
 ```
 
+easy_flow's migrations give every flow a host. Alembic's flows belong to the
+host named `alembic`, so code that stores a flow for Alembic names it:
+
+```ruby
+EasyFlow::Definition.upsert_definition(definition, host: "alembic")
+```
+
+A flow of another host is never listed, opened, run or previewed on Alembic's
+pages.
+
 Mount Alembic and nothing else. Alembic mounts easy_flow's admin pages inside
-its own routes, so a host does not mount easy_flow itself:
+its own routes, so a host does not mount easy_flow itself for Alembic:
 
 ```ruby
 mount Alembic::Engine => "/alembic"
@@ -43,8 +53,11 @@ mount Alembic::Engine => "/alembic"
 
 ## 2. Settings
 
-A host sets Alembic's settings, and each one also sets easy_flow's setting of
-the same name, since easy_flow's controllers serve the flow pages:
+A host sets Alembic's settings. The layout, the admin layout, the admin check,
+the visitor check and the refusal answer set up the easy_flow host named
+`alembic`, which serves Alembic's flow pages, and reach no other host.
+`Alembic.base_controller` also sets `EasyFlow.base_controller`, which easy_flow
+keeps for every host:
 
 ```ruby
 # config/initializers/alembic.rb

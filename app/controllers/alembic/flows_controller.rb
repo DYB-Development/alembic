@@ -1,5 +1,6 @@
 module Alembic
   class FlowsController < EasyFlow::FlowsController
+    hosted_by FLOW_HOST
     include Summarizes
 
     private

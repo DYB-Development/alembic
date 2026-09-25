@@ -8,18 +8,30 @@ module Alembic
   OutOfService = EasyFlow::OutOfService
   Withdrawn = EasyFlow::Withdrawn
 
-  SHARED_WITH_EASY_FLOW = %i[layout base_controller admin_layout
-                             admin_authentication_method visitor_authorization_method refusal_method].freeze
+  FLOW_HOST = :alembic
+  FLOW_HOST_SETTINGS = %i[layout admin_layout admin_authentication_method
+                          visitor_authorization_method refusal_method].freeze
 
   class << self
     attr_accessor :lead_partial
     attr_reader :admin_authentication_method, :visitor_authorization_method, :refusal_method
 
-    SHARED_WITH_EASY_FLOW.each do |name|
+    FLOW_HOST_SETTINGS.each do |name|
       define_method(:"#{name}=") do |value|
         instance_variable_set(:"@#{name}", value)
-        EasyFlow.public_send(:"#{name}=", value)
+        set_up_flow_host
       end
+    end
+
+    def set_up_flow_host
+      EasyFlow.host(FLOW_HOST) do |host|
+        FLOW_HOST_SETTINGS.each { |name| host.public_send(:"#{name}=", public_send(name)) }
+      end
+    end
+
+    def base_controller=(value)
+      @base_controller = value
+      EasyFlow.base_controller = value
     end
 
     # The host app sets this to render the engine inside its own layout
@@ -41,4 +53,6 @@ module Alembic
       @admin_layout || "application"
     end
   end
+
+  set_up_flow_host
 end
