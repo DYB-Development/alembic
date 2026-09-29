@@ -35,12 +35,17 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
     self.table_name = "alembic_flow_definition_summaries"
   end
 
+  class RunSummary < ActiveRecord::Base
+    self.table_name = "alembic_flow_run_summaries"
+  end
+
   def up
     [ OldFlow, Definition, OldVersion, Version, OldRun, Run, SummaryVersion ].each(&:reset_column_information)
     flows = copy_flows
     versions = copy_versions(flows)
-    copy_runs(flows, versions)
+    runs = copy_runs(flows, versions)
     summaries = OldFlow.pluck(:id, :summary, :summary_cursor)
+    pins = OldRun.where.not(summary_version_id: nil).pluck(:id, :summary_version_id)
 
     drop_table :alembic_flow_runs
     remove_foreign_key :alembic_flow_summaries, column: :flow_id
@@ -65,6 +70,7 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
         foreign_key: { to_table: :alembic_flow_summaries, on_delete: :cascade }
       t.timestamps
     end
+    restore_pins(pins, runs)
   end
 
   def down
@@ -147,6 +153,11 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
 
       DefinitionSummary.create!(flow_id: flows.fetch(flow_id), summary: summary, summary_cursor: cursor)
     end
+  end
+
+  def restore_pins(pins, runs)
+    RunSummary.reset_column_information
+    pins.each { |run_id, summary_version_id| RunSummary.create!(run_id: runs.fetch(run_id), summary_version_id: summary_version_id) }
   end
 
   def repoint_summary_versions(flows)

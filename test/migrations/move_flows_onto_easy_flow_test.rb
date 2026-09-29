@@ -63,6 +63,16 @@ class MoveFlowsOntoEasyFlowTest < ActiveSupport::TestCase
       connection.select_rows("SELECT d.slug, s.summary, s.summary_cursor FROM alembic_flow_definition_summaries s JOIN easy_flow_definitions d ON d.id = s.flow_id")
   end
 
+  test "keeps the summary version each run is pinned to" do
+    migrated do
+      flow = old_flow
+      old_run(flow, old_version(flow), summary_version_id: old_summary_version(flow, number: 3))
+    end
+
+    assert_equal [ [ "Acme", 3 ] ],
+      connection.select_rows("SELECT r.label, s.number FROM alembic_flow_run_summaries p JOIN easy_flow_runs r ON r.id = p.run_id JOIN alembic_flow_summaries s ON s.id = p.summary_version_id")
+  end
+
   test "drops alembic's own flow tables" do
     migrated
 
