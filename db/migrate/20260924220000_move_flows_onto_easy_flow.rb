@@ -27,15 +27,19 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
     self.table_name = "easy_flow_runs"
   end
 
+  class SummaryVersion < ActiveRecord::Base
+    self.table_name = "alembic_flow_summaries"
+  end
+
   def up
-    [ OldFlow, Definition, OldVersion, Version, OldRun, Run ].each(&:reset_column_information)
+    [ OldFlow, Definition, OldVersion, Version, OldRun, Run, SummaryVersion ].each(&:reset_column_information)
     flows = copy_flows
     versions = copy_versions(flows)
     copy_runs(flows, versions)
 
     drop_table :alembic_flow_runs
     remove_foreign_key :alembic_flow_summaries, column: :flow_id
-    execute "DELETE FROM alembic_flow_summaries"
+    repoint_summary_versions(flows)
     drop_table :alembic_flow_versions
     drop_table :alembic_flows
     add_foreign_key :alembic_flow_summaries, :easy_flow_definitions, column: :flow_id, on_delete: :cascade
@@ -128,5 +132,9 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
       moved = copied.merge("flow_id" => flows.fetch(run.flow_id), "definition_version_id" => versions.fetch(run.definition_version_id))
       [ run.id, Run.create!(moved).id ]
     end
+  end
+
+  def repoint_summary_versions(flows)
+    SummaryVersion.find_each { |version| version.update_columns(flow_id: flows.fetch(version.flow_id)) }
   end
 end

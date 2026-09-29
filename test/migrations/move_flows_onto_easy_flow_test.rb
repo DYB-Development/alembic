@@ -66,13 +66,15 @@ class MoveFlowsOntoEasyFlowTest < ActiveSupport::TestCase
     assert_equal({ "flow_id" => "easy_flow_definitions" }, referenced_by(:alembic_flow_summaries))
   end
 
-  test "clears the summary versions of the flows it drops" do
-    migrated do
-      flow_id = connection.insert("INSERT INTO alembic_flows (slug, created_at, updated_at) VALUES ('old', '2026-01-01', '2026-01-01')")
-      connection.insert("INSERT INTO alembic_flow_summaries (flow_id, number, created_at) VALUES (#{flow_id}, 1, '2026-01-01')")
-    end
+  def old_summary_version(flow_id, number: 1)
+    connection.insert("INSERT INTO alembic_flow_summaries (flow_id, number, summary, created_at) VALUES (#{flow_id}, #{number}, '{\"bands\":[]}', '2026-01-01')")
+  end
 
-    assert_equal 0, connection.select_value("SELECT COUNT(*) FROM alembic_flow_summaries")
+  test "keeps each summary version against its flow of easy_flow's" do
+    migrated { old_summary_version(old_flow) }
+
+    assert_equal [ [ "old", 1, "{\"bands\":[]}" ] ],
+      connection.select_rows("SELECT d.slug, s.number, s.summary FROM alembic_flow_summaries s JOIN easy_flow_definitions d ON d.id = s.flow_id")
   end
 
   test "keeps a flow's summary text and summary cursor against a flow of easy_flow's" do
