@@ -38,6 +38,12 @@ module Alembic
       assert_select "form[action=?]", alembic.publish_manage_page_path(page)
     end
 
+    test "the page list labels the new page fields with the look's label style" do
+      get alembic.manage_pages_path
+
+      assert_select "label.ks-label", 2
+    end
+
     test "the page list offers a field for a new page's address" do
       get alembic.manage_pages_path
 

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Changed
+- **Looks** — the finished page's questions, answers and dividers, the details editor's labels and back link, and the page list's labels read keystone_ui-styles' `--ks-` variables and `ks-` classes, so they follow the look, palette and dark mode a host, account or user chose.
 - **Flows** — flows, their versions and their runs are easy_flow's, which Alembic now depends on at 0.4. Alembic's own copy of the flow layer, the canvas editor and their tables are gone, and a host that registered step types does so with `EasyFlow.step` in place of `Alembic::Flow.step`.
 - **The flow builder** — the flow builder, the canvas and the version history are easy_flow's pages, served at the same `manage/flows` address under Alembic's mount. Links to them come from the `easy_flow` route helper in place of the `alembic` one.
 - **A flow's summary text** — an author writes it on the flow's details page, since easy_flow's canvas panel does not offer it.
