@@ -19,6 +19,16 @@ class MoveFlowsOntoEasyFlowTest < ActiveSupport::TestCase
     connection.foreign_keys(table).to_h { |key| [ key.column, key.to_table ] }
   end
 
+  def old_flow(slug = "old")
+    connection.insert("INSERT INTO alembic_flows (slug, title, kind, created_at, updated_at) VALUES ('#{slug}', 'Old flow', 'guide', '2026-01-01', '2026-01-01')")
+  end
+
+  test "keeps each flow as a flow of easy_flow's under alembic's host" do
+    migrated { old_flow }
+
+    assert_equal [ [ "alembic", "Old flow", "guide" ] ], connection.select_rows("SELECT host, title, kind FROM easy_flow_definitions WHERE slug = 'old'")
+  end
+
   test "drops alembic's own flow tables" do
     migrated
 

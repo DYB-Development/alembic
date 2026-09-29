@@ -1,5 +1,20 @@
 class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
+  HOST = "alembic"
+  FLOW_COLUMNS = %w[slug title start_label kind status persists document definition_cursor
+    changes_since_version undo_history undone_changes created_at updated_at].freeze
+
+  class OldFlow < ActiveRecord::Base
+    self.table_name = "alembic_flows"
+  end
+
+  class Definition < ActiveRecord::Base
+    self.table_name = "easy_flow_definitions"
+  end
+
   def up
+    [ OldFlow, Definition ].each(&:reset_column_information)
+    copy_flows
+
     drop_table :alembic_flow_runs
     remove_foreign_key :alembic_flow_summaries, column: :flow_id
     execute "DELETE FROM alembic_flow_summaries"
@@ -71,6 +86,14 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
       t.string :label
       t.string :status
       t.timestamps
+    end
+  end
+
+  private
+
+  def copy_flows
+    OldFlow.order(:id).to_h do |flow|
+      [ flow.id, Definition.create!(flow.attributes.slice(*FLOW_COLUMNS).merge("host" => HOST)).id ]
     end
   end
 end
