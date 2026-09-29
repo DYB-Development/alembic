@@ -94,6 +94,12 @@ module Alembic
       assert_select "[data-answer=budget] .ks-tone-muted", text: "What is your budget?"
     end
 
+    test "the finished page shows each answer in the look's text colour" do
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
+
+      assert_select "[data-answer=budget] .ks-tone-neutral", text: "Modest"
+    end
+
     test "the finished page offers to start over at alembic's address for the flow" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
