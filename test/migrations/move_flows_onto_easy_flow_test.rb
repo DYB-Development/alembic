@@ -40,6 +40,20 @@ class MoveFlowsOntoEasyFlowTest < ActiveSupport::TestCase
       connection.select_rows("SELECT d.slug, v.number, v.status, v.definition FROM easy_flow_versions v JOIN easy_flow_definitions d ON d.id = v.flow_id WHERE d.slug = 'old'")
   end
 
+  def old_run(flow_id, version_id, summary_version_id: "NULL")
+    connection.insert("INSERT INTO alembic_flow_runs (flow_id, definition_version_id, summary_version_id, recorded, label, status, created_at, updated_at) VALUES (#{flow_id}, #{version_id}, #{summary_version_id}, '{\"budget\":\"low\"}', 'Acme', 'finished', '2026-01-01', '2026-01-01')")
+  end
+
+  test "keeps each run against its flow and version of easy_flow's" do
+    migrated do
+      flow = old_flow
+      old_run(flow, old_version(flow))
+    end
+
+    assert_equal [ [ "old", 1, "{\"budget\":\"low\"}", "Acme", "finished" ] ],
+      connection.select_rows("SELECT d.slug, v.number, r.recorded, r.label, r.status FROM easy_flow_runs r JOIN easy_flow_definitions d ON d.id = r.flow_id JOIN easy_flow_versions v ON v.id = r.definition_version_id WHERE d.slug = 'old'")
+  end
+
   test "drops alembic's own flow tables" do
     migrated
 

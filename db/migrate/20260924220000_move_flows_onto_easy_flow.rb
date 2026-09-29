@@ -19,10 +19,19 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
     self.table_name = "easy_flow_versions"
   end
 
+  class OldRun < ActiveRecord::Base
+    self.table_name = "alembic_flow_runs"
+  end
+
+  class Run < ActiveRecord::Base
+    self.table_name = "easy_flow_runs"
+  end
+
   def up
-    [ OldFlow, Definition, OldVersion, Version ].each(&:reset_column_information)
+    [ OldFlow, Definition, OldVersion, Version, OldRun, Run ].each(&:reset_column_information)
     flows = copy_flows
-    copy_versions(flows)
+    versions = copy_versions(flows)
+    copy_runs(flows, versions)
 
     drop_table :alembic_flow_runs
     remove_foreign_key :alembic_flow_summaries, column: :flow_id
@@ -110,6 +119,14 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
     OldVersion.order(:id).to_h do |version|
       copied = version.attributes.slice("number", "definition", "changes_captured", "status", "created_at")
       [ version.id, Version.create!(copied.merge("flow_id" => flows.fetch(version.flow_id))).id ]
+    end
+  end
+
+  def copy_runs(flows, versions)
+    OldRun.order(:id).to_h do |run|
+      copied = run.attributes.slice("owner_type", "owner_id", "recorded", "label", "status", "created_at", "updated_at")
+      moved = copied.merge("flow_id" => flows.fetch(run.flow_id), "definition_version_id" => versions.fetch(run.definition_version_id))
+      [ run.id, Run.create!(moved).id ]
     end
   end
 end
