@@ -7,13 +7,13 @@
 
   <%= ui_form(action: easy_flow.manage_flow_path(@flow), method: :patch) do %>
     <%= ui_section(title: "How this is introduced") do %>
-      <label class="block text-sm font-medium mb-1">Title</label>
+      <label class="ks-label mb-1">Title</label>
       <%= ui_input(name: "flow[title]", value: @flow.title) %>
 
-      <label class="block text-sm font-medium mb-1 mt-4">Summary</label>
+      <label class="ks-label mb-1 mt-4">Summary</label>
       <%= ui_textarea(name: "flow[summary]", value: @summary, rows: 4) %>
 
-      <label class="block text-sm font-medium mb-1 mt-4">Start label</label>
+      <label class="ks-label mb-1 mt-4">Start label</label>
       <%= ui_input(name: "flow[start_label]", value: @flow.start_label) %>
     <% end %>
 
