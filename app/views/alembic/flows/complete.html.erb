@@ -25,7 +25,7 @@
     <ul class="divide-y divide-gray-100 border-y border-gray-100">
       <% @answered.each do |step, value| %>
         <li data-answer="<%= step %>" class="flex items-baseline justify-between gap-6 py-3">
-          <span class="text-gray-600"><%= @guide.question_text(step) %></span>
+          <span class="ks-tone-muted"><%= @guide.question_text(step) %></span>
           <span class="shrink-0 font-medium text-gray-900"><%= @guide.choice_label(step, value) %></span>
         </li>
       <% end %>
