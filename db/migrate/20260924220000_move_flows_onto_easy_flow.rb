@@ -1,8 +1,55 @@
 class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
+  HOST = "alembic"
+  FLOW_COLUMNS = %w[slug title start_label kind status persists document definition_cursor
+    changes_since_version undo_history undone_changes created_at updated_at].freeze
+
+  class OldFlow < ActiveRecord::Base
+    self.table_name = "alembic_flows"
+  end
+
+  class Definition < ActiveRecord::Base
+    self.table_name = "easy_flow_definitions"
+  end
+
+  class OldVersion < ActiveRecord::Base
+    self.table_name = "alembic_flow_versions"
+  end
+
+  class Version < ActiveRecord::Base
+    self.table_name = "easy_flow_versions"
+  end
+
+  class OldRun < ActiveRecord::Base
+    self.table_name = "alembic_flow_runs"
+  end
+
+  class Run < ActiveRecord::Base
+    self.table_name = "easy_flow_runs"
+  end
+
+  class SummaryVersion < ActiveRecord::Base
+    self.table_name = "alembic_flow_summaries"
+  end
+
+  class DefinitionSummary < ActiveRecord::Base
+    self.table_name = "alembic_flow_definition_summaries"
+  end
+
+  class RunSummary < ActiveRecord::Base
+    self.table_name = "alembic_flow_run_summaries"
+  end
+
   def up
+    [ OldFlow, Definition, OldVersion, Version, OldRun, Run, SummaryVersion ].each(&:reset_column_information)
+    flows = copy_flows
+    versions = copy_versions(flows)
+    runs = copy_runs(flows, versions)
+    summaries = OldFlow.pluck(:id, :summary, :summary_cursor)
+    pins = OldRun.where.not(summary_version_id: nil).pluck(:id, :summary_version_id)
+
     drop_table :alembic_flow_runs
     remove_foreign_key :alembic_flow_summaries, column: :flow_id
-    execute "DELETE FROM alembic_flow_summaries"
+    repoint_summary_versions(flows)
     drop_table :alembic_flow_versions
     drop_table :alembic_flows
     add_foreign_key :alembic_flow_summaries, :easy_flow_definitions, column: :flow_id, on_delete: :cascade
@@ -14,6 +61,7 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
       t.integer :summary_cursor
       t.timestamps
     end
+    restore_summaries(summaries, flows)
 
     create_table :alembic_flow_run_summaries do |t|
       t.references :run, null: false, index: { unique: true },
@@ -22,6 +70,7 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
         foreign_key: { to_table: :alembic_flow_summaries, on_delete: :cascade }
       t.timestamps
     end
+    restore_pins(pins, runs)
   end
 
   def down
@@ -72,5 +121,46 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
       t.string :status
       t.timestamps
     end
+  end
+
+  private
+
+  def copy_flows
+    OldFlow.order(:id).to_h do |flow|
+      [ flow.id, Definition.create!(flow.attributes.slice(*FLOW_COLUMNS).merge("host" => HOST)).id ]
+    end
+  end
+
+  def copy_versions(flows)
+    OldVersion.order(:id).to_h do |version|
+      copied = version.attributes.slice("number", "definition", "changes_captured", "status", "created_at")
+      [ version.id, Version.create!(copied.merge("flow_id" => flows.fetch(version.flow_id))).id ]
+    end
+  end
+
+  def copy_runs(flows, versions)
+    OldRun.order(:id).to_h do |run|
+      copied = run.attributes.slice("owner_type", "owner_id", "recorded", "label", "status", "created_at", "updated_at")
+      moved = copied.merge("flow_id" => flows.fetch(run.flow_id), "definition_version_id" => versions.fetch(run.definition_version_id))
+      [ run.id, Run.create!(moved).id ]
+    end
+  end
+
+  def restore_summaries(summaries, flows)
+    DefinitionSummary.reset_column_information
+    summaries.each do |flow_id, summary, cursor|
+      next if summary.nil? && cursor.nil?
+
+      DefinitionSummary.create!(flow_id: flows.fetch(flow_id), summary: summary, summary_cursor: cursor)
+    end
+  end
+
+  def restore_pins(pins, runs)
+    RunSummary.reset_column_information
+    pins.each { |run_id, summary_version_id| RunSummary.create!(run_id: runs.fetch(run_id), summary_version_id: summary_version_id) }
+  end
+
+  def repoint_summary_versions(flows)
+    SummaryVersion.find_each { |version| version.update_columns(flow_id: flows.fetch(version.flow_id)) }
   end
 end

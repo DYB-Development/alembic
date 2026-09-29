@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- **Upgrading keeps flows** — moving flows onto easy_flow copies every flow, version and run into easy_flow's tables under the `alembic` host, and keeps each summary version, summary text and the summary version each run is pinned to. It used to drop them.
+- **Upgrading keeps what was published** — the version a diagnostic had published becomes its live version before the link to it is dropped, so every flow still has a live version after the upgrade.
+
 ### Changed
 - **Looks** — the finished page's questions, answers and dividers, the details editor's labels and back link, and the page list's labels read keystone_ui-styles' `--ks-` variables and `ks-` classes, so they follow the look, palette and dark mode a host, account or user chose.
 - **Flows** — flows, their versions and their runs are easy_flow's, which Alembic now depends on at 0.4. Alembic's own copy of the flow layer, the canvas editor and their tables are gone, and a host that registered step types does so with `EasyFlow.step` in place of `Alembic::Flow.step`.
