@@ -44,6 +44,12 @@ module Alembic
       assert_select "label.ks-label", 3
     end
 
+    test "the details editor draws its back link in the look's link colour" do
+      get easy_flow.edit_manage_flow_path(easy_flow_definitions(:business_scorecard))
+
+      assert_select "a[class~=?]", "text-(color:--ks-color-link)", text: /Back to the flow/
+    end
+
     test "saving the details stores the flow's summary" do
       flow = easy_flow_definitions(:business_scorecard)
 
