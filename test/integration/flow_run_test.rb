@@ -100,6 +100,12 @@ module Alembic
       assert_select "[data-answer=budget] .ks-tone-neutral", text: "Modest"
     end
 
+    test "the finished page weighs each answer with the look's medium weight" do
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
+
+      assert_select "[data-answer=budget] [class~=?]", "font-(weight:--ks-font-weight-medium)", text: "Modest"
+    end
+
     test "the finished page offers to start over at alembic's address for the flow" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
