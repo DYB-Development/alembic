@@ -29,6 +29,17 @@ class MoveFlowsOntoEasyFlowTest < ActiveSupport::TestCase
     assert_equal [ [ "alembic", "Old flow", "guide" ] ], connection.select_rows("SELECT host, title, kind FROM easy_flow_definitions WHERE slug = 'old'")
   end
 
+  def old_version(flow_id, number: 1, status: "live")
+    connection.insert("INSERT INTO alembic_flow_versions (flow_id, number, definition, status, created_at) VALUES (#{flow_id}, #{number}, '{\"headline\":\"Hi\"}', '#{status}', '2026-01-01')")
+  end
+
+  test "keeps each flow's versions against its flow of easy_flow's" do
+    migrated { old_version(old_flow) }
+
+    assert_equal [ [ "old", 1, "live", "{\"headline\":\"Hi\"}" ] ],
+      connection.select_rows("SELECT d.slug, v.number, v.status, v.definition FROM easy_flow_versions v JOIN easy_flow_definitions d ON d.id = v.flow_id WHERE d.slug = 'old'")
+  end
+
   test "drops alembic's own flow tables" do
     migrated
 
