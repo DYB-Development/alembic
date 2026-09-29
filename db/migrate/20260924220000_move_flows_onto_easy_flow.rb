@@ -31,11 +31,16 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
     self.table_name = "alembic_flow_summaries"
   end
 
+  class DefinitionSummary < ActiveRecord::Base
+    self.table_name = "alembic_flow_definition_summaries"
+  end
+
   def up
     [ OldFlow, Definition, OldVersion, Version, OldRun, Run, SummaryVersion ].each(&:reset_column_information)
     flows = copy_flows
     versions = copy_versions(flows)
     copy_runs(flows, versions)
+    summaries = OldFlow.pluck(:id, :summary, :summary_cursor)
 
     drop_table :alembic_flow_runs
     remove_foreign_key :alembic_flow_summaries, column: :flow_id
@@ -51,6 +56,7 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
       t.integer :summary_cursor
       t.timestamps
     end
+    restore_summaries(summaries, flows)
 
     create_table :alembic_flow_run_summaries do |t|
       t.references :run, null: false, index: { unique: true },
@@ -131,6 +137,15 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
       copied = run.attributes.slice("owner_type", "owner_id", "recorded", "label", "status", "created_at", "updated_at")
       moved = copied.merge("flow_id" => flows.fetch(run.flow_id), "definition_version_id" => versions.fetch(run.definition_version_id))
       [ run.id, Run.create!(moved).id ]
+    end
+  end
+
+  def restore_summaries(summaries, flows)
+    DefinitionSummary.reset_column_information
+    summaries.each do |flow_id, summary, cursor|
+      next if summary.nil? && cursor.nil?
+
+      DefinitionSummary.create!(flow_id: flows.fetch(flow_id), summary: summary, summary_cursor: cursor)
     end
   end
 

@@ -54,6 +54,15 @@ class MoveFlowsOntoEasyFlowTest < ActiveSupport::TestCase
       connection.select_rows("SELECT d.slug, v.number, r.recorded, r.label, r.status FROM easy_flow_runs r JOIN easy_flow_definitions d ON d.id = r.flow_id JOIN easy_flow_versions v ON v.id = r.definition_version_id WHERE d.slug = 'old'")
   end
 
+  test "keeps each flow's summary text and summary cursor" do
+    migrated do
+      connection.insert("INSERT INTO alembic_flows (slug, summary, summary_cursor, created_at, updated_at) VALUES ('old', 'What this asks about', 2, '2026-01-01', '2026-01-01')")
+    end
+
+    assert_equal [ [ "old", "What this asks about", 2 ] ],
+      connection.select_rows("SELECT d.slug, s.summary, s.summary_cursor FROM alembic_flow_definition_summaries s JOIN easy_flow_definitions d ON d.id = s.flow_id")
+  end
+
   test "drops alembic's own flow tables" do
     migrated
 
