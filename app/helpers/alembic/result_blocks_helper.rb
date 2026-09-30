@@ -8,6 +8,10 @@ module Alembic
       render "alembic/blocks/band", band: value.to_h, tone: alembic_tone(score)
     end
 
+    def alembic_categories_block(value: nil, heading: "Where you stand, area by area")
+      render "alembic/blocks/categories", shares: value.to_h, heading: heading
+    end
+
     def alembic_tone(percentage)
       return "bg-red-500" if percentage.to_i < 40
       return "bg-amber-500" if percentage.to_i < 70

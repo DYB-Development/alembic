@@ -19,6 +19,10 @@ module Alembic
         "p", text: "Most of it runs on memory."
     end
 
+    test "draws each category as a bar as wide as its score" do
+      assert_select_in alembic_categories_block(value: { "Sales" => 30 }), "span.bg-red-500[style=?]", "width:30%"
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
@@ -29,8 +33,8 @@ module Alembic
 
     private
 
-    def assert_select_in(html, selector, **equality)
-      assert_select Nokogiri::HTML::DocumentFragment.parse(html), selector, equality
+    def assert_select_in(html, *selector, **equality)
+      assert_select Nokogiri::HTML::DocumentFragment.parse(html), *selector, equality
     end
   end
 end
