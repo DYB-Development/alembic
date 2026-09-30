@@ -15,7 +15,7 @@ module Alembic
       def self.covering(config, number)
         ordered = Array(config["bands"]).sort_by { |band| band["ceiling"] || Float::INFINITY }
 
-        ordered.find { |band| band["ceiling"].nil? || number < band["ceiling"] }&.fetch("name", nil)
+        ordered.find { |band| band["ceiling"].nil? || number < band["ceiling"] }&.slice("name", "description")
       end
     end
   end
