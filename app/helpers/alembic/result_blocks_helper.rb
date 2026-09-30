@@ -8,8 +8,10 @@ module Alembic
       render "alembic/blocks/band", band: value.to_h, tone: alembic_tone(score)
     end
 
-    def alembic_tone(_percentage)
-      "bg-red-500"
+    def alembic_tone(percentage)
+      return "bg-red-500" if percentage.to_i < 40
+
+      "bg-amber-500"
     end
   end
 end
