@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-30
+
 ### Fixed
 - **Upgrading keeps flows** — moving flows onto easy_flow copies every flow, version and run into easy_flow's tables under the `alembic` host, and keeps each summary version, summary text and the summary version each run is pinned to. It used to drop them.
 - **Upgrading keeps what was published** — the version a diagnostic had published becomes its live version before the link to it is dropped, so every flow still has a live version after the upgrade.
