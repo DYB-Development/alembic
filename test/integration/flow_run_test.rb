@@ -107,6 +107,12 @@ module Alembic
       assert_select "[data-output=?] span[style^=width]", "areas"
     end
 
+    test "the default summary page draws a panel for each weakest category" do
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?] .ks-panel", "weakest"
+    end
+
     test "the default summary page shows a band by its name alone" do
       get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
 
