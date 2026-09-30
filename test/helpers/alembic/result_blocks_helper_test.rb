@@ -54,6 +54,15 @@ module Alembic
       Alembic.lead_address = nil
     end
 
+    test "sends the result note with a lead" do
+      Alembic.lead_address = ->(slug) { "/labs/#{slug}/interest" }
+
+      assert_select_in alembic_lead_block(slug: "scorecard", note: "64% Partially instrumented"),
+        "input[type=hidden][name=note][value=?]", "64% Partially instrumented"
+    ensure
+      Alembic.lead_address = nil
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
