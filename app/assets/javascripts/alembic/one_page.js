@@ -14,6 +14,11 @@
       question.querySelectorAll("input[type=radio]").forEach((answer) => {
         answer.addEventListener("change", () => show(position + 1))
       })
+      const previous = question.querySelector("[data-one-page-previous]")
+      if (previous) {
+        previous.hidden = false
+        previous.addEventListener("click", () => show(position - 1))
+      }
     })
 
     show(0)

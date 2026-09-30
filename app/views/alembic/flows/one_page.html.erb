@@ -17,6 +17,9 @@
             <i class="block h-full bg-accent-600 rounded-full transition-all" style="width:<%= (index * 100.0 / @questions.size).round %>%"></i>
           </div>
           <%= render "alembic/flows/question", question: question, category: step_category(question), shows_values: shows_answer_values?, sends_on_choice: false %>
+          <% if index.positive? %>
+            <button type="button" data-one-page-previous hidden class="mt-6 cursor-pointer text-sm text-gray-500 underline underline-offset-2 hover:text-gray-900">← Previous</button>
+          <% end %>
         </div>
       <% end %>
 

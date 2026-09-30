@@ -20,6 +20,15 @@ module Alembic
       assert_text "How careful?"
     end
 
+    test "Previous on one page shows the question before with its answer kept" do
+      visit alembic.flow_step_path(straight.slug)
+      choose "Fast", allow_label_click: true
+
+      click_on "← Previous"
+
+      within("[data-one-page-question]:not([hidden])") { assert_checked_field "Fast", visible: :all }
+    end
+
     private
 
     def straight
