@@ -3,6 +3,7 @@ module Alembic
     layout -> { Alembic.layout }
     helper KeystoneUiHelper
     helper ResultBlocksHelper
+    helper ContentBlocksHelper
 
     rescue_from NotPublished, NotPermitted, Withdrawn, with: :refuse
 

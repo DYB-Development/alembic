@@ -7,6 +7,7 @@ module Alembic
       helper ApplicationHelper
       helper PagesHelper
       helper ResultBlocksHelper
+      helper ContentBlocksHelper
       helper KsBlocks::LayoutHelper
       helper_method :flow_summary, :first_step_path, :summary_values
     end

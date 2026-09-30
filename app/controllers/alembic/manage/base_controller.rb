@@ -13,6 +13,7 @@ module Alembic
       helper KsBlocks::ContentHelper
       helper Alembic::PagesHelper
       helper Alembic::ResultBlocksHelper
+      helper Alembic::ContentBlocksHelper
     end
   end
 end
