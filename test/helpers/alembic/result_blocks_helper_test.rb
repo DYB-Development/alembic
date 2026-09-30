@@ -27,6 +27,10 @@ module Alembic
       assert_select_in alembic_categories_block(value: { "Sales" => 0 }), "span.bg-red-500[style=?]", "width:4%"
     end
 
+    test "draws each weakest category in a panel headed by its name" do
+      assert_select_in alembic_weakest_block(value: [ { "name" => "Hiring" } ]), ".ks-panel h3", text: "Hiring"
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end

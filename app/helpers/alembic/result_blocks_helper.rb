@@ -12,6 +12,10 @@ module Alembic
       render "alembic/blocks/categories", shares: value.to_h, heading: heading
     end
 
+    def alembic_weakest_block(value: nil, heading: "Your biggest blind spots", cost_label: "What it likely costs you:")
+      render "alembic/blocks/weakest", categories: Array(value), heading: heading, cost_label: cost_label
+    end
+
     def alembic_tone(percentage)
       return "bg-red-500" if percentage.to_i < 40
       return "bg-amber-500" if percentage.to_i < 70
