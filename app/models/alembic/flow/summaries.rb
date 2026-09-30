@@ -38,6 +38,14 @@ module Alembic
         details.summary_page
       end
 
+      def shows_answer_values?
+        details.shows_answer_values
+      end
+
+      def show_answer_values(shown)
+        details.update!(shows_answer_values: shown)
+      end
+
       def finish_on(page)
         details.update!(summary_page: page)
       end
