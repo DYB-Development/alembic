@@ -211,6 +211,12 @@ module Alembic
       assert_select "fieldset p", text: "money"
     end
 
+    test "the step page counts the question being asked out of every question on its path" do
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
+
+      assert_select "span", text: "Question 2 of 2"
+    end
+
     test "a flow with no summary still shows what was said" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
