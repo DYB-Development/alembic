@@ -110,6 +110,12 @@ module Alembic
       assert_select "input[type=checkbox][name=?]:not([disabled])", "flow[asks_on_one_page]"
     end
 
+    test "the details editor does not let a flow that branches go on one page" do
+      get easy_flow.edit_manage_flow_path(branching_flow)
+
+      assert_select "input[type=checkbox][name=?][disabled]", "flow[asks_on_one_page]"
+    end
+
     test "saving the details stores the page the flow finishes on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Result")
