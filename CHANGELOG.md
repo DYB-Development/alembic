@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Result blocks** — the page builder offers blocks for a flow's score, its band with the band's description, its score per category, its weakest categories with what each one misses and costs, and the answers a visitor gave. Each result block names the output it draws in its Output field.
+- **A lead block** — a host that sets `Alembic.lead_address` to a callable taking a flow's slug is offered a lead block, which posts a visitor's email with the flow's slug and a one-line result note to the path it returns. A host that sets no lead address is offered no lead block.
+- **The default summary page** — a flow with no summary page of its own finishes on a page that draws its score, band, score per category and weakest categories with the result blocks, followed by the lead block when the host set a lead address.
+
+### Changed
+- **The lead partial** — `Alembic.lead_partial` no longer exists, and an app that still sets it is warned at boot to set `Alembic.lead_address` instead.
+- **Results** — each summary result names the type of the output that produced it.
+
 ## [0.2.0] - 2026-09-30
 
 ### Fixed

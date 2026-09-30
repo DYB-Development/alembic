@@ -50,6 +50,7 @@ module Alembic
         Flow::Summaries.new(flow).record(
           "outputs" => [
             { "id" => "score", "type" => "weighted_sum", "label" => "Your score" },
+            { "id" => "share", "type" => "percentage", "label" => "of it answered well" },
             { "id" => "band", "type" => "band", "label" => "Where that puts you", "of" => "score",
               "bands" => [ { "ceiling" => 4, "name" => "Modest" }, { "name" => "Generous" } ] },
             { "id" => "areas", "type" => "grouped", "label" => "By area" },
@@ -86,6 +87,46 @@ module Alembic
       get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
 
       assert_select "[data-output=?]", "band", text: /Generous/
+    end
+
+    test "the default summary page draws a percentage as a large score" do
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?] .text-7xl", "share"
+    end
+
+    test "the default summary page draws a band as a pill" do
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?] .rounded-full", "band", text: "Generous"
+    end
+
+    test "the default summary page draws a bar for each category" do
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?] span[style^=width]", "areas"
+    end
+
+    test "the default summary page draws a panel for each weakest category" do
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?] .ks-panel", "weakest"
+    end
+
+    test "the default summary page takes a lead when the host names a lead address" do
+      Alembic.lead_address = ->(slug) { "/leads/#{slug}" }
+
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "form[action=?]", "/leads/flowed"
+    ensure
+      Alembic.lead_address = nil
+    end
+
+    test "the default summary page takes no lead when the host names no lead address" do
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "input[name=email]", count: 0
     end
 
     test "the default summary page shows a band by its name alone" do
@@ -134,6 +175,14 @@ module Alembic
 
         assert_select "[data-block]", text: "8"
       end
+    end
+
+    test "an answers block on a flow's own page lists each question answered" do
+      Flow::Summaries.new(summarised).finish_on(page_of(:alembic_answers, {}))
+
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-block] li", text: /What is your budget\?\s+Generous/
     end
 
     test "a flow whose own page was never published finishes on the default summary page" do

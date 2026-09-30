@@ -1,0 +1,6 @@
+<div class="text-center">
+  <span class="inline-block mt-5 px-4 py-1.5 rounded-full text-sm font-semibold text-white <%= tone %>"><%= band["name"] %></span>
+  <% if band["description"].present? %>
+    <p class="text-gray-600 leading-relaxed max-w-lg mx-auto mt-4"><%= band["description"] %></p>
+  <% end %>
+</div>

@@ -26,6 +26,12 @@ module Alembic
         assert_equal 2, results.first.value
       end
 
+      test "names the type that produced each result" do
+        results = report([ { "id" => "count", "type" => "tally" } ]).results(Run.new(state: {}))
+
+        assert_equal "tally", results.first.type
+      end
+
       test "labels an output from the type that produced it" do
         results = report([ { "id" => "count", "type" => "tally" } ]).results(Run.new(state: {}))
 

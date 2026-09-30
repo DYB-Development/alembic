@@ -1,0 +1,7 @@
+<div class="text-center">
+  <p class="text-xs font-semibold uppercase tracking-widest text-accent-600 mb-4"><%= kicker %></p>
+  <div class="text-7xl md:text-8xl font-bold tracking-tight text-gray-900"><%= value.nil? ? "—" : "#{value}%" %></div>
+  <% if caption.present? %>
+    <p class="text-sm text-gray-500 mt-1"><%= caption %></p>
+  <% end %>
+</div>

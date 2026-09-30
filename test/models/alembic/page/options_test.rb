@@ -44,6 +44,12 @@ module Alembic
           Page::Options.for(block_of("stat", "label" => "Score", "output" => "score"), values: { "score" => 64 }))
       end
 
+      test "fills an option with the value it always reads" do
+        Page.block(:lead, name: "Lead", width: 12, height: 2, drawn_by: :ui_badge, fields: [], options: { slug: { value: "slug" } })
+
+        assert_equal({ slug: "scorecard" }, Page::Options.for(block_of("lead", {}), values: { "slug" => "scorecard" }))
+      end
+
       test "fills the option of a field's own name when nothing maps it" do
         Page.block(:badge, name: "Badge", width: 3, height: 1, drawn_by: :ui_badge,
           fields: [ { key: :label, label: "Label" } ])

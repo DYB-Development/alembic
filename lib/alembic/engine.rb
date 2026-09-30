@@ -30,5 +30,9 @@ module Alembic
         Alembic::Outputs::Band.register
       end
     end
+
+    initializer "alembic.result_blocks" do |app|
+      app.config.to_prepare { Alembic::ResultBlocks.register }
+    end
   end
 end

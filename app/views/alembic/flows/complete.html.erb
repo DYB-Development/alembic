@@ -11,13 +11,19 @@
 
   <% if @outputs.any? %>
     <%= ui_section do %>
-      <%= ui_grid(cols: { default: 1, sm: 2 }, gap: :lg) do %>
+      <div class="space-y-10">
         <% @outputs.each do |output| %>
           <div data-output="<%= output.id %>">
-            <%= ui_stat_card(label: output.label, value: alembic_output_lines(output.value).join(" · ")) %>
+            <%= alembic_default_result(output, @outputs) %>
           </div>
         <% end %>
-      <% end %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% if Alembic.lead_address %>
+    <%= ui_section do %>
+      <%= alembic_lead_block(slug: summary_values["slug"], note: summary_values["note"]) %>
     <% end %>
   <% end %>
 
