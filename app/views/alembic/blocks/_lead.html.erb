@@ -4,6 +4,7 @@
     <p class="text-gray-600 mb-5"><%= blurb %></p>
   <% end %>
   <%= form_with url: address, method: :post, class: "flex flex-col sm:flex-row gap-3" do %>
+    <%= render Alembic.lead_fields_partial if Alembic.lead_fields_partial %>
     <%= hidden_field_tag "slug", slug %>
     <%= hidden_field_tag "note", note %>
     <div class="flex-1">
