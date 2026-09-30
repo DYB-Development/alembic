@@ -10,5 +10,10 @@ module Alembic
       end
       render "alembic/blocks/facts", facts: facts
     end
+
+    def alembic_table_block
+      heading, *rows = yield.to_s.lines.map(&:strip).compact_blank.map { |line| line.split("|").map(&:strip) }
+      render "alembic/blocks/table", heading: heading.to_a, rows: rows
+    end
   end
 end

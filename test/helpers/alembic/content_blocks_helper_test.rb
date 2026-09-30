@@ -22,6 +22,10 @@ module Alembic
       assert_select_in alembic_facts_block(question_count: 15) { "{question_count} | questions" }, "span b", text: "15"
     end
 
+    test "draws each line after a table's first as a row of cells" do
+      assert_select_in alembic_table_block { "Tier | Setup\nLive query | An index" }, "tbody td", text: "An index"
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
