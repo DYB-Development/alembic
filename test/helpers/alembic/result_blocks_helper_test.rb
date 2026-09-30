@@ -36,6 +36,11 @@ module Alembic
         ".ks-panel p", text: "Hires are a guess."
     end
 
+    test "draws what a weakest category costs after its label" do
+      assert_select_in alembic_weakest_block(value: [ { "name" => "Hiring", "cost" => "Slow hires cost months." } ]),
+        ".ks-panel p", text: "What it likely costs you: Slow hires cost months."
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
