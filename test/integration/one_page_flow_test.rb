@@ -24,6 +24,12 @@ module Alembic
       assert_select "[data-one-page-question]:last-of-type span", text: "Question 3 of 3"
     end
 
+    test "the one-page form ends on a ready state with a button that sends every answer" do
+      get alembic.flow_step_path(straight.slug)
+
+      assert_select "[data-one-page-ready] button[type=submit]"
+    end
+
     private
 
     def straight
