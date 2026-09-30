@@ -3,7 +3,7 @@ module Alembic
     def alembic_output_lines(value)
       case value
       when Hash then value.key?("name") ? [ value["name"] ] : value.map { |name, share| "#{name}: #{share}" }
-      when Array then value
+      when Array then value.map { |item| item.is_a?(Hash) ? item["name"] : item }
       else [ value ]
       end
     end

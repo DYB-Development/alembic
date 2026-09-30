@@ -53,6 +53,7 @@ module Alembic
             { "id" => "band", "type" => "band", "label" => "Where that puts you", "of" => "score",
               "bands" => [ { "ceiling" => 4, "name" => "Modest" }, { "name" => "Generous" } ] },
             { "id" => "areas", "type" => "grouped", "label" => "By area" },
+            { "id" => "weakest", "type" => "lowest", "label" => "Weakest area", "of" => "areas" },
             { "id" => "answered", "type" => "tally", "label" => "Steps answered" }
           ]
         )
@@ -91,6 +92,12 @@ module Alembic
       get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
 
       assert_select "[data-output=?]", "band", text: /name/, count: 0
+    end
+
+    test "the default summary page shows each weakest area by its name alone" do
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?]", "weakest", text: /name/, count: 0
     end
 
     test "an answer stranded on an abandoned branch does not count toward the score" do
