@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **A flow's own intro page** — an owner chooses, on a flow's details page, a published page for the flow to start on, and a visitor opening the flow sees that page's live blocks.
+- **The default intro page** — a flow with no intro page of its own opens on a page with its title, summary, question count and start button, drawn the way dyb_web's scorecard intro is.
+- **Content blocks** — the page builder offers a hero with a small label, headline and text, a row of facts, a table, code and a start button. A fact written as `{question_count}` shows the flow's question count, and the start button starts the flow the page belongs to.
 - **One-page flows** — an owner can set a flow with no branching, on its details page, to ask every question on one page. A visitor sees one question at a time with its category, count and progress bar, moves on by choosing an answer, goes back with Previous, and sends every answer in one request from a ready state at the end. A visitor whose browser runs no script sees every question at once.
 
 ### Added
