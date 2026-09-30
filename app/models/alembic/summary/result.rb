@@ -1,5 +1,5 @@
 module Alembic
   module Summary
-    Result = Data.define(:id, :label, :value)
+    Result = Data.define(:id, :type, :label, :value)
   end
 end

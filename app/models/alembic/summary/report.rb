@@ -13,7 +13,7 @@ module Alembic
           output_type = @registry.fetch(output["type"])
           produced[output["id"]] = output_type.compute(output, run, produced)
 
-          Result.new(id: output["id"], label: label_for(output, output_type), value: produced[output["id"]])
+          Result.new(id: output["id"], type: output["type"], label: label_for(output, output_type), value: produced[output["id"]])
         end
       end
 
