@@ -98,6 +98,14 @@ module Alembic
       assert_select "[data-block]", text: /Here is where you stand/
     end
 
+    test "a flow whose own page was never published finishes on the default summary page" do
+      Flow::Summaries.new(summarised).finish_on(Page.create!(name: "Draft"))
+
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?]", "score"
+    end
+
     test "a flow with no summary still shows what was said" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
