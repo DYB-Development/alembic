@@ -12,6 +12,14 @@ module Alembic
       assert_no_text "How careful?"
     end
 
+    test "choosing an answer on one page shows the next question" do
+      visit alembic.flow_step_path(straight.slug)
+
+      choose "Fast", allow_label_click: true
+
+      assert_text "How careful?"
+    end
+
     private
 
     def straight

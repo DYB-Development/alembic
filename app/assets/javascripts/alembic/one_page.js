@@ -10,6 +10,12 @@
       ready.hidden = index < questions.length
     }
 
+    questions.forEach((question, position) => {
+      question.querySelectorAll("input[type=radio]").forEach((answer) => {
+        answer.addEventListener("change", () => show(position + 1))
+      })
+    })
+
     show(0)
   }
 
