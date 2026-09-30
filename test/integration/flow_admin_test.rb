@@ -124,7 +124,7 @@ module Alembic
     ensure
       Alembic.admin_layout = nil
     end
-  
+
     private
 
     def straight_flow
