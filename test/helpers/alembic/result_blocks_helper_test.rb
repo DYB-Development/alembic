@@ -46,6 +46,14 @@ module Alembic
         "li", text: /What is your budget\?\s+Generous/
     end
 
+    test "posts a lead to the address the host names for the flow" do
+      Alembic.lead_address = ->(slug) { "/labs/#{slug}/interest" }
+
+      assert_select_in alembic_lead_block(slug: "scorecard", note: "64%"), "form[action=?]", "/labs/scorecard/interest"
+    ensure
+      Alembic.lead_address = nil
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end

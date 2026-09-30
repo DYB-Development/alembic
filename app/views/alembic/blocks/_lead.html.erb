@@ -1,0 +1,12 @@
+<%= ui_panel(padding: :lg) do %>
+  <h2 class="text-xl font-semibold text-gray-900 mb-2"><%= heading %></h2>
+  <% if blurb.present? %>
+    <p class="text-gray-600 mb-5"><%= blurb %></p>
+  <% end %>
+  <%= form_with url: address, method: :post, class: "flex flex-col sm:flex-row gap-3" do %>
+    <div class="flex-1">
+      <%= ui_input(name: "email", type: :email, placeholder: placeholder) %>
+    </div>
+    <button type="submit" class="inline-flex items-center justify-center font-semibold rounded-lg bg-accent-600 text-white hover:bg-accent-500 px-6 py-3 cursor-pointer whitespace-nowrap"><%= button %></button>
+  <% end %>
+<% end %>

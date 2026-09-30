@@ -20,6 +20,11 @@ module Alembic
       render "alembic/blocks/answers", answers: Array(value), heading: heading
     end
 
+    def alembic_lead_block(slug:, note: nil, heading: "The next step", blurb: nil, button: "Send", placeholder: "you@example.com")
+      render "alembic/blocks/lead", address: Alembic.lead_address.call(slug), slug: slug, note: note,
+        heading: heading, blurb: blurb, button: button, placeholder: placeholder
+    end
+
     def alembic_tone(percentage)
       return "bg-red-500" if percentage.to_i < 40
       return "bg-amber-500" if percentage.to_i < 70
