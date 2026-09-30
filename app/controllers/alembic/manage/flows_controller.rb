@@ -4,7 +4,10 @@ module Alembic
       hosted_by FLOW_HOST
       def edit
         super
-        @summary = Flow::Summaries.new(@flow).text
+        summaries = Flow::Summaries.new(@flow)
+        @summary = summaries.text
+        @summary_page = summaries.summary_page
+        @published_pages = Page.where(id: Page::Version.live.select(:page_id)).order(:name)
       end
 
       def update

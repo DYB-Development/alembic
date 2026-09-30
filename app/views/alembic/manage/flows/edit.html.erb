@@ -17,6 +17,12 @@
       <%= ui_input(name: "flow[start_label]", value: @flow.start_label) %>
     <% end %>
 
+    <%= ui_section(title: "Where this finishes") do %>
+      <%= ui_select(name: "flow[summary_page_id]", selected: @summary_page&.id,
+            include_blank: "Alembic's default summary page",
+            options: @published_pages.map { |page| [ page.name, page.id ] }) %>
+    <% end %>
+
     <%= ui_section(title: "What this keeps of a run") do %>
       <%= ui_select(name: "flow[persists]", selected: @flow.persists,
             options: [ [ "Nothing", "unsaved" ],
