@@ -1,0 +1,47 @@
+<% content_for(:title, @guide.headline) %>
+
+<section class="py-20 md:py-28">
+  <div class="max-w-2xl mx-auto px-6">
+    <%= link_to "← Start over", flow_start_path(@guide.slug), class: "text-sm text-accent-600 hover:text-accent-700" %>
+
+    <% answered = @answers.size %>
+    <% questions = answered + @guide.questions_left(@answers) %>
+    <div class="mt-6 flex items-center justify-between text-sm text-gray-500 mb-2">
+      <span>Question <%= answered + 1 %> of <%= questions %></span>
+    </div>
+    <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-8">
+      <i class="block h-full bg-accent-600 rounded-full transition-all" style="width:<%= (answered * 100.0 / [ questions, 1 ].max).round %>%"></i>
+    </div>
+
+    <% if flash[:alert] %>
+      <div class="mt-6"><%= ui_alert(message: flash[:alert], type: :error) %></div>
+    <% end %>
+
+    <% if @waiting %>
+      <p class="mt-6 text-gray-700">Waiting for <%= @waiting %>.</p>
+    <% else %>
+      <%= form_with url: step_form[:url], method: step_form[:method], data: { turbo: false }, class: "mt-6" do %>
+        <%= hidden_field_tag :asked, @question.id %>
+        <% if carries_answers? %>
+          <% @answers.each do |key, value| %>
+            <%= hidden_field_tag "answers[#{key}]", value %>
+          <% end %>
+        <% end %>
+
+        <% if @question.respond_to?(:choices) %>
+          <%= render "alembic/flows/question", question: @question, category: step_category(@question),
+                shows_values: shows_answer_values? %>
+        <% else %>
+          <%= render @drawing, step: @question %>
+        <% end %>
+
+        <div class="mt-8 flex items-center gap-4">
+          <%= ui_button(label: "Next", type: :submit) %>
+          <% if @answers.any? %>
+            <button type="submit" name="back" value="1" formnovalidate class="cursor-pointer text-sm text-gray-500 underline underline-offset-2 hover:text-gray-900">← Back</button>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>

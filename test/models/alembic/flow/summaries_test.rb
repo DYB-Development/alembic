@@ -16,6 +16,14 @@ module Alembic
         Summaries.new(flow)
       end
 
+      test "records that a flow shows each answer's value beside its label" do
+        flow = published
+
+        summaries(flow).show_answer_values(true)
+
+        assert summaries(flow).shows_answer_values?
+      end
+
       test "records the page a flow finishes on" do
         flow = published
         page = Page.create!(name: "Result")

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Alembic's own step page** — a question is asked on a page drawn the way dyb_web's labs draw one, with the question's category above its text, "Question N of M" and a progress bar worked out from the questions answered and the questions left.
+- **Moving on when an answer is chosen** — choosing an answer sends it on without pressing Next.
+- **Answer values beside their labels** — an owner can set a flow, on its details page, to show each answer's value beside its label.
+
+### Changed
+- **easy_flow** — alembic requires easy_flow 0.6, which counts the questions left on a flow's path.
+
 ## [0.3.0] - 2026-09-30
 
 ### Added

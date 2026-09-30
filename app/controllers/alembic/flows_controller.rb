@@ -2,8 +2,17 @@ module Alembic
   class FlowsController < EasyFlow::FlowsController
     hosted_by FLOW_HOST
     include Summarizes
+    helper_method :step_category, :shows_answer_values?
 
     private
+
+    def shows_answer_values?
+      Flow::Summaries.new(run&.flow || flow).shows_answer_values?
+    end
+
+    def step_category(question)
+      EasyFlow::Steps::Question.category_of(@guide.step(question.id)&.config)
+    end
 
     def run_location(run)
       alembic.run_path(run)

@@ -74,6 +74,20 @@ module Alembic
       assert_select "select[name=?] option", "flow[summary_page_id]", text: "Draft", count: 0
     end
 
+    test "the details editor offers to show each answer's value beside its label" do
+      get easy_flow.edit_manage_flow_path(easy_flow_definitions(:business_scorecard))
+
+      assert_select "input[type=checkbox][name=?]", "flow[shows_answer_values]"
+    end
+
+    test "saving the details stores that the flow shows each answer's value" do
+      flow = easy_flow_definitions(:business_scorecard)
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { shows_answer_values: "1" } }
+
+      assert Flow::Summaries.new(flow).shows_answer_values?
+    end
+
     test "saving the details stores the page the flow finishes on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Result")

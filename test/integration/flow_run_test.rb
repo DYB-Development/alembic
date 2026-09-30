@@ -7,7 +7,7 @@ module Alembic
         flow.record_definition(flowing(
           "slug" => "flowed", "entry" => "budget",
           "nodes" => [ { "id" => "budget", "type" => "question", "text" => "What is your budget?", "tag" => "money",
-                         "options" => [ { "value" => "low", "label" => "Modest", "weight" => 1 },
+                         "options" => [ { "value" => "low", "label" => "Modest", "hint" => "Under a thousand", "weight" => 1 },
                                         { "value" => "high", "label" => "Generous", "weight" => 5 } ] },
                        { "id" => "gate", "type" => "condition", "step" => "budget", "output" => "answer", "comparison" => "is", "answer" => "high" },
                        { "id" => "posh", "type" => "question", "text" => "Which premium tier?",
@@ -203,6 +203,44 @@ module Alembic
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
 
       assert_select "[data-output=?]", "score"
+    end
+
+    test "a question with a category shows the category above its text" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "fieldset p", text: "money"
+    end
+
+    test "the step page counts the question being asked out of every question on its path" do
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
+
+      assert_select "span", text: "Question 2 of 2"
+    end
+
+    test "the step page's progress bar fills with the share of questions answered" do
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
+
+      assert_select "i.bg-accent-600[style=?]", "width:50%"
+    end
+
+    test "choosing an answer on the step page sends it on without pressing Next" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "input[type=radio][onchange=?]", "this.form.requestSubmit()"
+    end
+
+    test "the step page shows each answer's hint under its label" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "label small", text: "Under a thousand"
+    end
+
+    test "a flow set to show answer values shows each answer's value beside its label" do
+      Flow::Summaries.new(flowed).show_answer_values(true)
+
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "label span.uppercase", text: "low"
     end
 
     test "a flow with no summary still shows what was said" do
