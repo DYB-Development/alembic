@@ -29,6 +29,7 @@ module Alembic
       case output.type
       when "percentage" then alembic_score_block(value: output.value, caption: output.label)
       when "band" then alembic_band_block(value: output.value, score: outputs.find { |other| other.type == "percentage" }&.value)
+      when "grouped" then alembic_categories_block(value: output.value)
       else ui_stat_card(label: output.label, value: alembic_output_lines(output.value).join(" · "))
       end
     end
