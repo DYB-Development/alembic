@@ -2,7 +2,7 @@ module Alembic
   class FlowsController < EasyFlow::FlowsController
     hosted_by FLOW_HOST
     include Summarizes
-    helper_method :step_category, :shows_answer_values?, :intro_values
+    helper_method :step_category, :shows_answer_values?
 
     def step
       return super unless asked_on_one_page?
@@ -13,17 +13,6 @@ module Alembic
     end
 
     private
-
-    def intro_values
-      starts_a_run = @flow.each_step? && !previewing?
-      { "title" => @flow.title.presence || @flow.slug, "summary" => flow_summary(@flow),
-        "question_count" => question_count, "starts_a_run" => starts_a_run,
-        "start_path" => starts_a_run ? alembic.flow_runs_path(@flow.slug) : first_step_path(@flow.slug) }
-    end
-
-    def question_count
-      Array(@flow.live_definition.to_h["nodes"]).count { |node| node["type"] == "question" }
-    end
 
     def asked_on_one_page?
       run.nil? && params[:answers].blank? && Flow::Summaries.new(flow).asks_on_one_page?

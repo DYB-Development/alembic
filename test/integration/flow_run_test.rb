@@ -251,6 +251,12 @@ module Alembic
       assert_select "[data-block]", text: /Before you begin/
     end
 
+    test "the default intro page counts the flow's questions" do
+      get alembic.flow_path(flowed.slug)
+
+      assert_select "span b", text: "3"
+    end
+
     test "a flow with no summary still shows what was said" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 

@@ -7,21 +7,14 @@
 
   <%= drawn_page(intro_page, values: intro_values) %>
 <% else %>
-<% content_for(:title, @flow.title.presence || @flow.slug) %>
+  <% content_for(:title, intro_values["title"]) %>
 
-<%= ui_page(max_width: :md) do %>
-  <%= ui_page_header(title: @flow.title.presence || @flow.slug, subtitle: flow_summary(@flow)) %>
-
-  <%= ui_section do %>
-    <div class="flex flex-wrap items-center gap-3">
-      <% if @flow.each_step? && @flow.definition.present? && !previewing? %>
-        <%= ui_form(action: alembic.flow_runs_path(@flow.slug), method: :post) do %>
-          <%= ui_button(label: @flow.start_label.presence || "Start", type: :submit) %>
-        <% end %>
-      <% else %>
-        <%= ui_button(label: @flow.start_label.presence || "Start", href: first_step_path(@flow.slug)) %>
-      <% end %>
+  <section class="py-20 md:py-28">
+    <div class="max-w-2xl mx-auto px-6">
+      <%= alembic_hero_block(headline: intro_values["title"], text: intro_values["summary"]) %>
+      <%= alembic_facts_block(question_count: intro_values["question_count"]) { "{question_count} | questions" } %>
+      <%= alembic_start_block(label: @flow.start_label.presence || "Start →", start_path: intro_values["start_path"],
+            starts_a_run: intro_values["starts_a_run"]) %>
     </div>
-  <% end %>
-<% end %>
+  </section>
 <% end %>
