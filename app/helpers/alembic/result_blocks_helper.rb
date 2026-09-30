@@ -25,9 +25,10 @@ module Alembic
         heading: heading, blurb: blurb, button: button, placeholder: placeholder
     end
 
-    def alembic_default_result(output)
+    def alembic_default_result(output, outputs = [])
       case output.type
       when "percentage" then alembic_score_block(value: output.value, caption: output.label)
+      when "band" then alembic_band_block(value: output.value, score: outputs.find { |other| other.type == "percentage" }&.value)
       else ui_stat_card(label: output.label, value: alembic_output_lines(output.value).join(" · "))
       end
     end

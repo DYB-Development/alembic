@@ -14,7 +14,7 @@
       <div class="space-y-10">
         <% @outputs.each do |output| %>
           <div data-output="<%= output.id %>">
-            <%= alembic_default_result(output) %>
+            <%= alembic_default_result(output, @outputs) %>
           </div>
         <% end %>
       </div>
