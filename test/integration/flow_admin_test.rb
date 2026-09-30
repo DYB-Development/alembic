@@ -88,6 +88,34 @@ module Alembic
       assert Flow::Summaries.new(flow).shows_answer_values?
     end
 
+    test "saving the details puts a flow with no branching on one page" do
+      flow = straight_flow
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { asks_on_one_page: "1" } }
+
+      assert Flow::Summaries.new(flow).asks_on_one_page?
+    end
+
+    test "saving the details keeps a flow that branches off one page" do
+      flow = branching_flow
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { asks_on_one_page: "1" } }
+
+      assert_not Flow::Summaries.new(flow).asks_on_one_page?
+    end
+
+    test "the details editor offers to ask a flow with no branching on one page" do
+      get easy_flow.edit_manage_flow_path(straight_flow)
+
+      assert_select "input[type=checkbox][name=?]:not([disabled])", "flow[asks_on_one_page]"
+    end
+
+    test "the details editor does not let a flow that branches go on one page" do
+      get easy_flow.edit_manage_flow_path(branching_flow)
+
+      assert_select "input[type=checkbox][name=?][disabled]", "flow[asks_on_one_page]"
+    end
+
     test "saving the details stores the page the flow finishes on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Result")
@@ -115,6 +143,29 @@ module Alembic
       assert_select "meta[http-equiv=Content-Type]"
     ensure
       Alembic.admin_layout = nil
+    end
+
+    private
+
+    def branching_flow
+      EasyFlow::Definition.create!(host: "alembic", slug: "branching").tap do |flow|
+        flow.record_definition(flowing("slug" => "branching", "entry" => "a",
+          "nodes" => [ { "id" => "a", "type" => "question", "text" => "A?", "options" => [ "y", "n" ] },
+                       { "id" => "gate", "type" => "condition", "step" => "a", "output" => "answer", "comparison" => "is", "answer" => "y" },
+                       { "id" => "b", "type" => "question", "text" => "B?", "options" => [ "y" ] } ],
+          "edges" => [ { "from" => "a", "to" => "gate" }, { "from" => "gate", "to" => "b", "on" => true } ]))
+        flow.publish
+      end
+    end
+
+    def straight_flow
+      EasyFlow::Definition.create!(host: "alembic", slug: "straight").tap do |flow|
+        flow.record_definition(flowing("slug" => "straight", "entry" => "a",
+          "nodes" => [ { "id" => "a", "type" => "question", "text" => "A?", "options" => [ { "value" => "y", "weight" => 1 } ] },
+                       { "id" => "b", "type" => "question", "text" => "B?", "options" => [ { "value" => "y", "weight" => 1 } ] } ],
+          "edges" => [ { "from" => "a", "to" => "b" } ]))
+        flow.publish
+      end
     end
   end
 end

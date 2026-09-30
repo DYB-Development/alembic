@@ -4,7 +4,29 @@ module Alembic
     include Summarizes
     helper_method :step_category, :shows_answer_values?
 
+    def step
+      return super unless asked_on_one_page?
+
+      @guide = runner_for(running_definition)
+      @questions = questions_in_order
+      render :one_page
+    end
+
     private
+
+    def asked_on_one_page?
+      run.nil? && params[:answers].blank? && Flow::Summaries.new(flow).asks_on_one_page?
+    end
+
+    def questions_in_order
+      state = {}
+      questions = []
+      while (question = @guide.next_step(state))
+        questions << question
+        state[question.id.to_s] = "asked"
+      end
+      questions
+    end
 
     def shows_answer_values?
       Flow::Summaries.new(run&.flow || flow).shows_answer_values?

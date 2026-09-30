@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_30_230000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_30_233000) do
   create_table "alembic_flow_definition_summaries", force: :cascade do |t|
+    t.boolean "asks_on_one_page", default: false, null: false
     t.datetime "created_at", null: false
     t.integer "flow_id", null: false
     t.boolean "shows_answer_values", default: false, null: false

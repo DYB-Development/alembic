@@ -24,6 +24,14 @@ module Alembic
         assert summaries(flow).shows_answer_values?
       end
 
+      test "records that a flow asks every question on one page" do
+        flow = published
+
+        summaries(flow).ask_on_one_page(true)
+
+        assert summaries(flow).asks_on_one_page?
+      end
+
       test "records the page a flow finishes on" do
         flow = published
         page = Page.create!(name: "Result")

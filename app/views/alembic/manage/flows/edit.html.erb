@@ -23,6 +23,12 @@
         <%= check_box_tag "flow[shows_answer_values]", "1", @shows_answer_values %>
         <span>Show each answer's value beside its label</span>
       </label>
+
+      <%= hidden_field_tag "flow[asks_on_one_page]", "0", id: nil %>
+      <label class="mt-3 flex items-center gap-2">
+        <%= check_box_tag "flow[asks_on_one_page]", "1", @asks_on_one_page, disabled: @branches %>
+        <span>Ask every question on one page</span>
+      </label>
     <% end %>
 
     <%= ui_section(title: "Where this finishes") do %>
