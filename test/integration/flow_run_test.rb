@@ -87,6 +87,12 @@ module Alembic
       assert_select "[data-output=?]", "band", text: /Generous/
     end
 
+    test "the default summary page shows a band by its name alone" do
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?]", "band", text: /name/, count: 0
+    end
+
     test "an answer stranded on an abandoned branch does not count toward the score" do
       get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "low", posh: "a", plain: "b" } }
 
