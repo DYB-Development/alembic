@@ -123,6 +123,12 @@ module Alembic
       Alembic.lead_address = nil
     end
 
+    test "the default summary page takes no lead when the host names no lead address" do
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "input[name=email]", count: 0
+    end
+
     test "the default summary page shows a band by its name alone" do
       get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
 
