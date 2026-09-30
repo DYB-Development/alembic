@@ -35,12 +35,19 @@ module Alembic
       end
 
       def self.fill(built, option, spec, values)
-        value = spec.key?(:value_of) ? values[built.delete(spec[:value_of]).to_s] : built.delete(spec.fetch(:from, option))
+        value = handed(built, option, spec, values)
         built[option] = value.nil? ? spec[:default] : value
         built.delete(option) if built[option].nil?
       end
 
-      private_class_method :filled, :named, :fill
+      def self.handed(built, option, spec, values)
+        return values[spec[:value]] if spec.key?(:value)
+        return values[built.delete(spec[:value_of]).to_s] if spec.key?(:value_of)
+
+        built.delete(spec.fetch(:from, option))
+      end
+
+      private_class_method :filled, :named, :fill, :handed
     end
   end
 end
