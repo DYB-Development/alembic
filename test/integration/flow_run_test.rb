@@ -7,7 +7,7 @@ module Alembic
         flow.record_definition(flowing(
           "slug" => "flowed", "entry" => "budget",
           "nodes" => [ { "id" => "budget", "type" => "question", "text" => "What is your budget?", "tag" => "money",
-                         "options" => [ { "value" => "low", "label" => "Modest", "weight" => 1 },
+                         "options" => [ { "value" => "low", "label" => "Modest", "hint" => "Under a thousand", "weight" => 1 },
                                         { "value" => "high", "label" => "Generous", "weight" => 5 } ] },
                        { "id" => "gate", "type" => "condition", "step" => "budget", "output" => "answer", "comparison" => "is", "answer" => "high" },
                        { "id" => "posh", "type" => "question", "text" => "Which premium tier?",
@@ -227,6 +227,12 @@ module Alembic
       get alembic.flow_step_path(flowed.slug)
 
       assert_select "input[type=radio][onchange=?]", "this.form.requestSubmit()"
+    end
+
+    test "the step page shows each answer's hint under its label" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "label small", text: "Under a thousand"
     end
 
     test "a flow with no summary still shows what was said" do
