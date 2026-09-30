@@ -66,6 +66,14 @@ module Alembic
       assert_select "select[name=?] option", "flow[summary_page_id]", text: "Result"
     end
 
+    test "the details editor does not offer a page that was never published" do
+      Page.create!(name: "Draft")
+
+      get easy_flow.edit_manage_flow_path(easy_flow_definitions(:business_scorecard))
+
+      assert_select "select[name=?] option", "flow[summary_page_id]", text: "Draft", count: 0
+    end
+
     test "saving the details stores the page the flow finishes on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Result")
