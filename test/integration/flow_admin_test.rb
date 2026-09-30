@@ -96,6 +96,14 @@ module Alembic
       assert Flow::Summaries.new(flow).asks_on_one_page?
     end
 
+    test "saving the details keeps a flow that branches off one page" do
+      flow = branching_flow
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { asks_on_one_page: "1" } }
+
+      assert_not Flow::Summaries.new(flow).asks_on_one_page?
+    end
+
     test "saving the details stores the page the flow finishes on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Result")
@@ -126,6 +134,17 @@ module Alembic
     end
 
     private
+
+    def branching_flow
+      EasyFlow::Definition.create!(host: "alembic", slug: "branching").tap do |flow|
+        flow.record_definition(flowing("slug" => "branching", "entry" => "a",
+          "nodes" => [ { "id" => "a", "type" => "question", "text" => "A?", "options" => [ "y", "n" ] },
+                       { "id" => "gate", "type" => "condition", "step" => "a", "output" => "answer", "comparison" => "is", "answer" => "y" },
+                       { "id" => "b", "type" => "question", "text" => "B?", "options" => [ "y" ] } ],
+          "edges" => [ { "from" => "a", "to" => "gate" }, { "from" => "gate", "to" => "b", "on" => true } ]))
+        flow.publish
+      end
+    end
 
     def straight_flow
       EasyFlow::Definition.create!(host: "alembic", slug: "straight").tap do |flow|

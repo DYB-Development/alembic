@@ -51,7 +51,13 @@ module Alembic
       end
 
       def ask_on_one_page(asked)
-        details.update!(asks_on_one_page: asked)
+        details.update!(asks_on_one_page: asked && !branches?)
+      end
+
+      def branches?
+        Array(@flow.definition.to_h["nodes"]).any? do |node|
+          EasyFlow.registry.registered?(node["type"]) && EasyFlow.registry.fetch(node["type"]).routes?
+        end
       end
 
       def finish_on(page)
