@@ -30,6 +30,18 @@ module Alembic
       assert_select "[data-one-page-ready] button[type=submit]"
     end
 
+    test "answers sent without one to a required question return the visitor to that question" do
+      get alembic.flow_step_path(straight.slug), params: { answers: { speed: "fast", cost: "cheap" } }
+
+      assert_select "input[type=hidden][name=asked][value=?]", "care"
+    end
+
+    test "answers sent on one page give the result the step-by-step pages give" do
+      get alembic.flow_step_path(straight.slug), params: { answers: { speed: "fast", care: "high", cost: "dear" } }
+
+      assert_select "[data-output=?] .text-7xl", "share", text: "67%"
+    end
+
     private
 
     def straight
