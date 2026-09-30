@@ -17,6 +17,7 @@ module Alembic
         summaries.describe(details[:summary]) unless details[:summary].nil?
         summaries.finish_on(Page.find_by(id: details[:summary_page_id])) unless details[:summary_page_id].nil?
         summaries.show_answer_values(details[:shows_answer_values] == "1") unless details[:shows_answer_values].nil?
+        summaries.ask_on_one_page(details[:asks_on_one_page] == "1") unless details[:asks_on_one_page].nil?
 
         super
       end
