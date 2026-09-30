@@ -16,6 +16,14 @@ module Alembic
         fields: [ OUTPUT, HEADING, { key: :cost_label, label: "Cost label" } ], options: { value: { value_of: :output } })
       Page.block(:alembic_answers, name: "Answers given", width: 12, height: 4, drawn_by: :alembic_answers_block,
         fields: [ HEADING ], options: { value: { value: "answers" } })
+      register_lead if Alembic.lead_address
     end
+
+    def self.register_lead
+      Page.block(:alembic_lead, name: "Lead", width: 12, height: 3, drawn_by: :alembic_lead_block,
+        fields: [ HEADING, { key: :blurb, label: "Text" }, { key: :button, label: "Button" }, { key: :placeholder, label: "Placeholder" } ],
+        options: { slug: { value: "slug" }, note: { value: "note" } })
+    end
+    private_class_method :register_lead
   end
 end

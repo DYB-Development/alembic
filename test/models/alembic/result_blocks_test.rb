@@ -19,6 +19,16 @@ module Alembic
       assert_equal %i[alembic_score alembic_band alembic_categories alembic_weakest alembic_answers], offered
     end
 
+    test "offers a lead block when the host names a lead address" do
+      Alembic.lead_address = ->(slug) { "/labs/#{slug}/interest" }
+
+      ResultBlocks.register
+
+      assert_includes offered, :alembic_lead
+    ensure
+      Alembic.lead_address = nil
+    end
+
     private
 
     def offered
