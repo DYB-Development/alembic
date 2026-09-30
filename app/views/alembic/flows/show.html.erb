@@ -1,3 +1,12 @@
+<% intro_page = Alembic::Flow::Summaries.new(@flow).intro_page %>
+<% if intro_page&.live_version %>
+  <% content_for(:title, @flow.title.presence || @flow.slug) %>
+  <% content_for :head do %>
+    <%= stylesheet_link_tag "ks_blocks" %>
+  <% end %>
+
+  <%= drawn_page(intro_page, values: intro_values) %>
+<% else %>
 <% content_for(:title, @flow.title.presence || @flow.slug) %>
 
 <%= ui_page(max_width: :md) do %>
@@ -14,4 +23,5 @@
       <% end %>
     </div>
   <% end %>
+<% end %>
 <% end %>

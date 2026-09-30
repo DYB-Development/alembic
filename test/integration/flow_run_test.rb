@@ -243,6 +243,14 @@ module Alembic
       assert_select "label span.uppercase", text: "low"
     end
 
+    test "a visitor opening a flow sees the live blocks of the page it starts on" do
+      Flow::Summaries.new(flowed).start_on(page_titled("Before you begin"))
+
+      get alembic.flow_path(flowed.slug)
+
+      assert_select "[data-block]", text: /Before you begin/
+    end
+
     test "a flow with no summary still shows what was said" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
