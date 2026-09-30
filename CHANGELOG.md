@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **One-page flows** — an owner can set a flow with no branching, on its details page, to ask every question on one page. A visitor sees one question at a time with its category, count and progress bar, moves on by choosing an answer, goes back with Previous, and sends every answer in one request from a ready state at the end. A visitor whose browser runs no script sees every question at once.
+
+### Added
 - **Alembic's own step page** — a question is asked on a page drawn the way dyb_web's labs draw one, with the question's category above its text, "Question N of M" and a progress bar worked out from the questions answered and the questions left.
 - **Moving on when an answer is chosen** — choosing an answer sends it on without pressing Next.
 - **Answer values beside their labels** — an owner can set a flow, on its details page, to show each answer's value beside its label.
