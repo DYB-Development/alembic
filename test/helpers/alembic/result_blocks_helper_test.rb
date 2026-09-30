@@ -63,6 +63,14 @@ module Alembic
       Alembic.lead_address = nil
     end
 
+    test "sends the flow's slug with a lead" do
+      Alembic.lead_address = ->(slug) { "/labs/#{slug}/interest" }
+
+      assert_select_in alembic_lead_block(slug: "scorecard"), "input[type=hidden][name=slug][value=?]", "scorecard"
+    ensure
+      Alembic.lead_address = nil
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
