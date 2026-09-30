@@ -17,6 +17,14 @@
       <%= ui_input(name: "flow[start_label]", value: @flow.start_label) %>
     <% end %>
 
+    <%= ui_section(title: "How each question is asked") do %>
+      <%= hidden_field_tag "flow[shows_answer_values]", "0", id: nil %>
+      <label class="flex items-center gap-2">
+        <%= check_box_tag "flow[shows_answer_values]", "1", @shows_answer_values %>
+        <span>Show each answer's value beside its label</span>
+      </label>
+    <% end %>
+
     <%= ui_section(title: "Where this finishes") do %>
       <%= ui_select(name: "flow[summary_page_id]", selected: @summary_page&.id,
             include_blank: "Alembic's default summary page",

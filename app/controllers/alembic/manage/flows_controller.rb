@@ -7,6 +7,7 @@ module Alembic
         summaries = Flow::Summaries.new(@flow)
         @summary = summaries.text
         @summary_page = summaries.summary_page
+        @shows_answer_values = summaries.shows_answer_values?
         @published_pages = Page.where(id: Page::Version.live.select(:page_id)).order(:name)
       end
 
