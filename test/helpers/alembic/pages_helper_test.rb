@@ -27,6 +27,16 @@ module Alembic
       assert_includes drawn_page(badged_page("New")), "New"
     end
 
+    test "draws a block with the value its field names from the values it is handed" do
+      Page.block(:tag, name: "Tag", width: 3, height: 1, drawn_by: :ui_badge,
+        fields: [ { key: :output, label: "Output" } ], options: { label: { value_of: :output } })
+      page = Page.create!(name: "Result")
+      page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :tag }, x: 0, y: 0)
+      page.fill_block(page.blocks.first["id"], { "output" => "band" })
+
+      assert_includes drawn_page(published(page), values: { "band" => "Well instrumented" }), "Well instrumented"
+    end
+
     test "places a block where the designer put it" do
       page = badged_page("New", x: 3, y: 2)
 

@@ -5,6 +5,8 @@ module Alembic
     included do
       layout -> { Alembic.layout }
       helper ApplicationHelper
+      helper PagesHelper
+      helper KsBlocks::LayoutHelper
       helper_method :flow_summary, :first_step_path
     end
 
@@ -25,7 +27,8 @@ module Alembic
     def finished(answers, finished_run)
       @outputs = outputs_of(answers.transform_keys(&:to_s))
       Flow::Summaries.new(flow).pin(finished_run) if finished_run && run.nil?
-      render template: "alembic/flows/complete"
+      @summary_page = Flow::Summaries.new(run&.flow || flow).summary_page
+      render template: @summary_page&.live_version ? "alembic/flows/summary_page" : "alembic/flows/complete"
     end
 
     def outputs_of(state)

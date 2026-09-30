@@ -34,6 +34,14 @@ module Alembic
         details.update!(summary: text)
       end
 
+      def summary_page
+        details.summary_page
+      end
+
+      def finish_on(page)
+        details.update!(summary_page: page)
+      end
+
       def pin(run)
         RunSummary.create!(run: run, summary_version: current_version) if current_version
       end

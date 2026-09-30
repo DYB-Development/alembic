@@ -11,16 +11,23 @@ module Alembic
         Lowest.output_type.compute(config, Summary::Run.new(state: {}), { "areas" => shares })
       end
 
+      test "gives each category's miss and cost copy along with its name" do
+        copy = { "speed" => { "miss" => "Jobs run late.", "cost" => "Crews sit idle." } }
+
+        assert_equal [ { "name" => "speed", "miss" => "Jobs run late.", "cost" => "Crews sit idle." } ],
+          lowest({ "of" => "areas", "count" => 1, "copy" => copy })
+      end
+
       test "names the weakest of what it reads" do
-        assert_equal [ "speed" ], lowest({ "of" => "areas", "count" => 1 })
+        assert_equal [ "speed" ], lowest({ "of" => "areas", "count" => 1 }).pluck("name")
       end
 
       test "names as many as it is asked for, weakest first" do
-        assert_equal [ "speed", "care" ], lowest({ "of" => "areas", "count" => 2 })
+        assert_equal [ "speed", "care" ], lowest({ "of" => "areas", "count" => 2 }).pluck("name")
       end
 
       test "names one when it is not told how many" do
-        assert_equal [ "speed" ], lowest({ "of" => "areas" })
+        assert_equal [ "speed" ], lowest({ "of" => "areas" }).pluck("name")
       end
 
       test "names nothing when what it reads is empty" do

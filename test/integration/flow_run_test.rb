@@ -22,6 +22,29 @@ module Alembic
       end
     end
 
+    def page_titled(title)
+      page_of(:section, "title" => title)
+    end
+
+    def page_of(block_type, content)
+      Page.create!(name: "Result").tap do |page|
+        page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == block_type }, x: 0, y: 0)
+        page.fill_block(page.blocks.first["id"], content)
+        page.publish
+      end
+    end
+
+    def with_figure_block
+      registry, kept = KsBlocks.registry, declarations
+      KsBlocks.instance_variable_set(:@registry, KsBlocks::Registry.new)
+      Page.block(:figure, name: "Figure", width: 3, height: 1, drawn_by: :ui_badge,
+        fields: [ { key: :output, label: "Output" } ], options: { label: { value_of: :output } })
+      yield
+    ensure
+      KsBlocks.instance_variable_set(:@registry, registry)
+      restore(kept)
+    end
+
     def summarised
       flowed.tap do |flow|
         Flow::Summaries.new(flow).record(
@@ -30,6 +53,7 @@ module Alembic
             { "id" => "band", "type" => "band", "label" => "Where that puts you", "of" => "score",
               "bands" => [ { "ceiling" => 4, "name" => "Modest" }, { "name" => "Generous" } ] },
             { "id" => "areas", "type" => "grouped", "label" => "By area" },
+            { "id" => "weakest", "type" => "lowest", "label" => "Weakest area", "of" => "areas" },
             { "id" => "answered", "type" => "tally", "label" => "Steps answered" }
           ]
         )
@@ -64,6 +88,18 @@ module Alembic
       assert_select "[data-output=?]", "band", text: /Generous/
     end
 
+    test "the default summary page shows a band by its name alone" do
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?]", "band", text: /name/, count: 0
+    end
+
+    test "the default summary page shows each weakest area by its name alone" do
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?]", "weakest", text: /name/, count: 0
+    end
+
     test "an answer stranded on an abandoned branch does not count toward the score" do
       get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "low", posh: "a", plain: "b" } }
 
@@ -80,6 +116,32 @@ module Alembic
       get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
 
       assert_select "[data-output=?]", "answered", text: /2/
+    end
+
+    test "a finished run shows the live blocks of the page its flow finishes on" do
+      Flow::Summaries.new(summarised).finish_on(page_titled("Here is where you stand"))
+
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-block]", text: /Here is where you stand/
+    end
+
+    test "a block naming an output is drawn with that output's value for the finished run" do
+      with_figure_block do
+        Flow::Summaries.new(summarised).finish_on(page_of(:figure, "output" => "score"))
+
+        get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+        assert_select "[data-block]", text: "8"
+      end
+    end
+
+    test "a flow whose own page was never published finishes on the default summary page" do
+      Flow::Summaries.new(summarised).finish_on(Page.create!(name: "Draft"))
+
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?]", "score"
     end
 
     test "a flow with no summary still shows what was said" do

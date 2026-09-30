@@ -58,6 +58,31 @@ module Alembic
       assert_equal "New summary", Flow::Summaries.new(flow).text
     end
 
+    test "the details editor offers each published page to finish on" do
+      Page.create!(name: "Result").publish
+
+      get easy_flow.edit_manage_flow_path(easy_flow_definitions(:business_scorecard))
+
+      assert_select "select[name=?] option", "flow[summary_page_id]", text: "Result"
+    end
+
+    test "the details editor does not offer a page that was never published" do
+      Page.create!(name: "Draft")
+
+      get easy_flow.edit_manage_flow_path(easy_flow_definitions(:business_scorecard))
+
+      assert_select "select[name=?] option", "flow[summary_page_id]", text: "Draft", count: 0
+    end
+
+    test "saving the details stores the page the flow finishes on" do
+      flow = easy_flow_definitions(:business_scorecard)
+      page = Page.create!(name: "Result")
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { summary_page_id: page.id } }
+
+      assert_equal page, Flow::Summaries.new(flow).summary_page
+    end
+
     test "the flow builder runs the admin check the host gave alembic" do
       Alembic.admin_authentication_method = :require_an_admin
 

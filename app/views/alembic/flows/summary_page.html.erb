@@ -1,0 +1,5 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag "ks_blocks" %>
+<% end %>
+
+<%= drawn_page(@summary_page, values: @outputs.to_h { |output| [ output.id, output.value ] }) %>
