@@ -26,6 +26,10 @@ module Alembic
       assert_select_in alembic_table_block { "Tier | Setup\nLive query | An index" }, "tbody td", text: "An index"
     end
 
+    test "draws a code block's body as code" do
+      assert_select_in alembic_code_block { "Order.count" }, "pre code", text: "Order.count"
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
