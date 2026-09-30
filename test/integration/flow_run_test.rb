@@ -50,6 +50,7 @@ module Alembic
         Flow::Summaries.new(flow).record(
           "outputs" => [
             { "id" => "score", "type" => "weighted_sum", "label" => "Your score" },
+            { "id" => "share", "type" => "percentage", "label" => "of it answered well" },
             { "id" => "band", "type" => "band", "label" => "Where that puts you", "of" => "score",
               "bands" => [ { "ceiling" => 4, "name" => "Modest" }, { "name" => "Generous" } ] },
             { "id" => "areas", "type" => "grouped", "label" => "By area" },
@@ -86,6 +87,12 @@ module Alembic
       get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
 
       assert_select "[data-output=?]", "band", text: /Generous/
+    end
+
+    test "the default summary page draws a percentage as a large score" do
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?] .text-7xl", "share"
     end
 
     test "the default summary page shows a band by its name alone" do

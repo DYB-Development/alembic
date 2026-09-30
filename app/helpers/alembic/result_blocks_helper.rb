@@ -25,6 +25,13 @@ module Alembic
         heading: heading, blurb: blurb, button: button, placeholder: placeholder
     end
 
+    def alembic_default_result(output)
+      case output.type
+      when "percentage" then alembic_score_block(value: output.value, caption: output.label)
+      else ui_stat_card(label: output.label, value: alembic_output_lines(output.value).join(" · "))
+      end
+    end
+
     def alembic_tone(percentage)
       return "bg-red-500" if percentage.to_i < 40
       return "bg-amber-500" if percentage.to_i < 70
