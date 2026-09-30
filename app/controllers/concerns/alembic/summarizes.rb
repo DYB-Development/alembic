@@ -8,7 +8,7 @@ module Alembic
       helper PagesHelper
       helper ResultBlocksHelper
       helper KsBlocks::LayoutHelper
-      helper_method :flow_summary, :first_step_path
+      helper_method :flow_summary, :first_step_path, :summary_values
     end
 
     private
@@ -30,6 +30,17 @@ module Alembic
       Flow::Summaries.new(flow).pin(finished_run) if finished_run && run.nil?
       @summary_page = Flow::Summaries.new(run&.flow || flow).summary_page
       render template: @summary_page&.live_version ? "alembic/flows/summary_page" : "alembic/flows/complete"
+    end
+
+    def summary_values
+      @outputs.to_h { |output| [ output.id, output.value ] }
+        .merge("slug" => @guide.slug, "note" => result_note)
+    end
+
+    def result_note
+      finished_flow = run&.flow || flow
+      [ finished_flow.title, *@outputs.map { |output| "#{output.label}: #{helpers.alembic_output_lines(output.value).join(', ')}" } ]
+        .compact_blank.join(". ")
     end
 
     def outputs_of(state)

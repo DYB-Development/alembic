@@ -21,6 +21,12 @@
     <% end %>
   <% end %>
 
+  <% if Alembic.lead_address %>
+    <%= ui_section do %>
+      <%= alembic_lead_block(slug: summary_values["slug"], note: summary_values["note"]) %>
+    <% end %>
+  <% end %>
+
   <%= ui_section(title: @outputs.any? ? "What you told us" : nil) do %>
     <ul class="divide-y divide-(color:--ks-color-divider) border-y border-(color:--ks-color-divider) dark:divide-(color:--ks-color-divider-dark) dark:border-(color:--ks-color-divider-dark)">
       <% @answered.each do |step, value| %>

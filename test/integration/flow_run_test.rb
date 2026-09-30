@@ -113,6 +113,16 @@ module Alembic
       assert_select "[data-output=?] .ks-panel", "weakest"
     end
 
+    test "the default summary page takes a lead when the host names a lead address" do
+      Alembic.lead_address = ->(slug) { "/leads/#{slug}" }
+
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "form[action=?]", "/leads/flowed"
+    ensure
+      Alembic.lead_address = nil
+    end
+
     test "the default summary page shows a band by its name alone" do
       get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
 
