@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **The note a lead carries** — a host that sets `Alembic.lead_note` to a callable taking a flow's title and its results by output id has the lead carry the note it returns. A host that sets none gets the flow's title followed by each result's label and value.
+- **Fields a host adds to the lead form** — a host that sets `Alembic.lead_fields_partial` to one of its own partials has it drawn inside the lead form, so the form can carry the host's spam checks or any other field its lead address reads.
 - **Result blocks** — the page builder offers blocks for a flow's score, its band with the band's description, its score per category, its weakest categories with what each one misses and costs, and the answers a visitor gave. Each result block names the output it draws in its Output field.
 - **A lead block** — a host that sets `Alembic.lead_address` to a callable taking a flow's slug is offered a lead block, which posts a visitor's email with the flow's slug and a one-line result note to the path it returns. A host that sets no lead address is offered no lead block.
 - **The default summary page** — a flow with no summary page of its own finishes on a page that draws its score, band, score per category and weakest categories with the result blocks, followed by the lead block when the host set a lead address.

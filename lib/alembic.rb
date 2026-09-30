@@ -13,7 +13,7 @@ module Alembic
                           visitor_authorization_method refusal_method].freeze
 
   class << self
-    attr_accessor :lead_address
+    attr_accessor :lead_address, :lead_fields_partial, :lead_note
     attr_reader :admin_authentication_method, :visitor_authorization_method, :refusal_method
 
     FLOW_HOST_SETTINGS.each do |name|

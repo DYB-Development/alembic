@@ -123,6 +123,18 @@ module Alembic
       Alembic.lead_address = nil
     end
 
+    test "a lead carries the note the host writes from the flow's results" do
+      Alembic.lead_address = ->(slug) { "/leads/#{slug}" }
+      Alembic.lead_note = ->(_title, results) { "Banded #{results['band']['name']}" }
+
+      get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "input[name=note][value=?]", "Banded Generous"
+    ensure
+      Alembic.lead_address = nil
+      Alembic.lead_note = nil
+    end
+
     test "the default summary page takes no lead when the host names no lead address" do
       get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
 

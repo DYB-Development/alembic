@@ -43,6 +43,8 @@ module Alembic
 
     def result_note
       finished_flow = run&.flow || flow
+      return Alembic.lead_note.call(finished_flow.title, @outputs.to_h { |output| [ output.id, output.value ] }) if Alembic.lead_note
+
       [ finished_flow.title, *@outputs.map { |output| "#{output.label}: #{helpers.alembic_output_lines(output.value).join(', ')}" } ]
         .compact_blank.join(". ")
     end

@@ -71,6 +71,16 @@ module Alembic
       Alembic.lead_address = nil
     end
 
+    test "draws the fields the host names inside the lead form" do
+      Alembic.lead_address = ->(slug) { "/labs/#{slug}/interest" }
+      Alembic.lead_fields_partial = "shared/lead_fields"
+
+      assert_select_in alembic_lead_block(slug: "scorecard"), "form input[name=company_url]"
+    ensure
+      Alembic.lead_address = nil
+      Alembic.lead_fields_partial = nil
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
