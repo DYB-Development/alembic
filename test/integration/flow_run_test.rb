@@ -22,6 +22,14 @@ module Alembic
       end
     end
 
+    def page_titled(title)
+      Page.create!(name: "Result").tap do |page|
+        page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :section }, x: 0, y: 0)
+        page.fill_block(page.blocks.first["id"], { "title" => title })
+        page.publish
+      end
+    end
+
     def summarised
       flowed.tap do |flow|
         Flow::Summaries.new(flow).record(
@@ -80,6 +88,14 @@ module Alembic
       get alembic.flow_step_path(summarised.slug), params: { answers: { budget: "high", posh: "a" } }
 
       assert_select "[data-output=?]", "answered", text: /2/
+    end
+
+    test "a finished run shows the live blocks of the page its flow finishes on" do
+      Flow::Summaries.new(summarised).finish_on(page_titled("Here is where you stand"))
+
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-block]", text: /Here is where you stand/
     end
 
     test "a flow with no summary still shows what was said" do
