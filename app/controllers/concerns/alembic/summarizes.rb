@@ -6,6 +6,7 @@ module Alembic
       layout -> { Alembic.layout }
       helper ApplicationHelper
       helper PagesHelper
+      helper ResultBlocksHelper
       helper KsBlocks::LayoutHelper
       helper_method :flow_summary, :first_step_path
     end
