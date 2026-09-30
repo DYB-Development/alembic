@@ -13,7 +13,6 @@ module Alembic
                           visitor_authorization_method refusal_method].freeze
 
   class << self
-    attr_accessor :lead_partial
     attr_reader :admin_authentication_method, :visitor_authorization_method, :refusal_method
 
     FLOW_HOST_SETTINGS.each do |name|
@@ -27,6 +26,10 @@ module Alembic
       EasyFlow.host(FLOW_HOST) do |host|
         FLOW_HOST_SETTINGS.each { |name| host.public_send(:"#{name}=", public_send(name)) }
       end
+    end
+
+    def lead_partial=(_partial)
+      warn "Alembic.lead_partial no longer exists and draws nothing. Set Alembic.lead_address to where the lead block posts."
     end
 
     def base_controller=(value)
