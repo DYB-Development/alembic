@@ -23,6 +23,10 @@ module Alembic
       assert_select_in alembic_categories_block(value: { "Sales" => 30 }), "span.bg-red-500[style=?]", "width:30%"
     end
 
+    test "keeps a category bar visible when its score is nothing" do
+      assert_select_in alembic_categories_block(value: { "Sales" => 0 }), "span.bg-red-500[style=?]", "width:4%"
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
