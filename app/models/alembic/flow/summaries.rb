@@ -60,6 +60,14 @@ module Alembic
         end
       end
 
+      def intro_page
+        details.intro_page
+      end
+
+      def start_on(page)
+        details.update!(intro_page: page)
+      end
+
       def finish_on(page)
         details.update!(summary_page: page)
       end
