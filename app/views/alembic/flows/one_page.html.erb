@@ -5,8 +5,16 @@
     <%= link_to "← Start over", flow_start_path(@guide.slug), class: "text-sm text-accent-600 hover:text-accent-700" %>
 
     <%= form_with url: flow_step_path(@guide.slug), method: :get, data: { turbo: false }, class: "mt-6" do %>
-      <% @questions.each do |question| %>
-        <%= render "alembic/flows/question", question: question, category: step_category(question), shows_values: shows_answer_values?, sends_on_choice: false %>
+      <% @questions.each_with_index do |question, index| %>
+        <div data-one-page-question>
+          <div class="flex items-center justify-between text-sm text-gray-500 mb-2">
+            <span>Question <%= index + 1 %> of <%= @questions.size %></span>
+          </div>
+          <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-8">
+            <i class="block h-full bg-accent-600 rounded-full transition-all" style="width:<%= (index * 100.0 / @questions.size).round %>%"></i>
+          </div>
+          <%= render "alembic/flows/question", question: question, category: step_category(question), shows_values: shows_answer_values?, sends_on_choice: false %>
+        </div>
       <% end %>
     <% end %>
   </div>

@@ -18,6 +18,12 @@ module Alembic
       assert_select "input[type=radio][onchange]", 0
     end
 
+    test "each question on the one-page form counts itself out of every question" do
+      get alembic.flow_step_path(straight.slug)
+
+      assert_select "[data-one-page-question]:last-of-type span", text: "Question 3 of 3"
+    end
+
     private
 
     def straight
