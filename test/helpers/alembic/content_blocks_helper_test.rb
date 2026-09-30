@@ -35,6 +35,11 @@ module Alembic
         "a[href=?]", "/diagnostics/scorecard/step", text: "Start the scorecard"
     end
 
+    test "draws a start button that posts when starting makes a run" do
+      assert_select_in alembic_start_block(start_path: "/diagnostics/scorecard/runs", starts_a_run: true),
+        "form[method=post][action=?]", "/diagnostics/scorecard/runs"
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
