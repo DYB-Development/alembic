@@ -1,0 +1,16 @@
+<fieldset>
+  <% if category.present? %>
+    <p class="text-xs font-semibold uppercase tracking-wider text-accent-600 mb-2"><%= category %></p>
+  <% end %>
+  <legend class="text-xl font-semibold text-gray-900 mb-5 leading-snug"><%= question.text %></legend>
+  <div class="space-y-3">
+    <% question.choices.each do |choice| %>
+      <label class="block cursor-pointer">
+        <%= radio_button_tag "answers[#{question.id}]", choice.value, false, class: "peer sr-only" %>
+        <span class="flex items-start gap-3 rounded-lg border-2 border-gray-200 bg-white px-4 py-3 transition hover:border-gray-400 peer-checked:border-accent-500 peer-checked:bg-accent-50">
+          <span class="text-gray-900"><%= choice.label.presence || choice.value %></span>
+        </span>
+      </label>
+    <% end %>
+  </div>
+</fieldset>

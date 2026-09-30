@@ -205,6 +205,12 @@ module Alembic
       assert_select "[data-output=?]", "score"
     end
 
+    test "a question with a category shows the category above its text" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "fieldset p", text: "money"
+    end
+
     test "a flow with no summary still shows what was said" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
