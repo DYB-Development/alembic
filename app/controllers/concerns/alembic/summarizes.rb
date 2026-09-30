@@ -34,7 +34,11 @@ module Alembic
 
     def summary_values
       @outputs.to_h { |output| [ output.id, output.value ] }
-        .merge("slug" => @guide.slug, "note" => result_note)
+        .merge("slug" => @guide.slug, "note" => result_note, "answers" => answers_given)
+    end
+
+    def answers_given
+      @answered.map { |step, value| [ @guide.question_text(step), @guide.choice_label(step, value) ] }
     end
 
     def result_note

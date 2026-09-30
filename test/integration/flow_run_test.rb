@@ -177,6 +177,14 @@ module Alembic
       end
     end
 
+    test "an answers block on a flow's own page lists each question answered" do
+      Flow::Summaries.new(summarised).finish_on(page_of(:alembic_answers, {}))
+
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-block] li", text: /What is your budget\?\s+Generous/
+    end
+
     test "a flow whose own page was never published finishes on the default summary page" do
       Flow::Summaries.new(summarised).finish_on(Page.create!(name: "Draft"))
 
