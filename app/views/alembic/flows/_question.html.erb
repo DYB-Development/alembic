@@ -8,6 +8,9 @@
       <label class="block cursor-pointer">
         <%= radio_button_tag "answers[#{question.id}]", choice.value, false, class: "peer sr-only", onchange: "this.form.requestSubmit()" %>
         <span class="flex items-start gap-3 rounded-lg border-2 border-gray-200 bg-white px-4 py-3 transition hover:border-gray-400 peer-checked:border-accent-500 peer-checked:bg-accent-50">
+          <% if shows_values %>
+            <span class="text-xs font-semibold uppercase tracking-wider text-accent-600 border border-accent-200 rounded px-2 py-0.5 shrink-0 mt-0.5"><%= choice.value %></span>
+          <% end %>
           <span class="text-gray-900">
             <%= choice.label.presence || choice.value %>
             <% if choice.hint.present? %>

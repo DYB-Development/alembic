@@ -29,7 +29,8 @@
         <% end %>
 
         <% if @question.respond_to?(:choices) %>
-          <%= render "alembic/flows/question", question: @question, category: step_category(@question) %>
+          <%= render "alembic/flows/question", question: @question, category: step_category(@question),
+                shows_values: shows_answer_values? %>
         <% else %>
           <%= render @drawing, step: @question %>
         <% end %>

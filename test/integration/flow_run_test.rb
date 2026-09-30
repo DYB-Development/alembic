@@ -235,6 +235,14 @@ module Alembic
       assert_select "label small", text: "Under a thousand"
     end
 
+    test "a flow set to show answer values shows each answer's value beside its label" do
+      Flow::Summaries.new(flowed).show_answer_values(true)
+
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "label span.uppercase", text: "low"
+    end
+
     test "a flow with no summary still shows what was said" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
