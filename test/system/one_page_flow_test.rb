@@ -39,6 +39,16 @@ module Alembic
       assert_selector ".text-7xl", text: "100%"
     end
 
+    test "Previous on the ready state shows the last question again" do
+      visit alembic.flow_step_path(straight.slug)
+      choose "Fast", allow_label_click: true
+      choose "High", allow_label_click: true
+
+      within("[data-one-page-ready]") { click_on "← Previous" }
+
+      assert_text "How careful?"
+    end
+
     private
 
     def straight

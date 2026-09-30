@@ -21,6 +21,10 @@
       }
     })
 
+    const back = ready.querySelector("[data-one-page-previous]")
+    back.hidden = false
+    back.addEventListener("click", () => show(questions.length - 1))
+
     show(0)
   }
 
