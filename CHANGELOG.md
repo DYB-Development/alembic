@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-30
+
 ### Added
+- **A flow's own summary page** — an owner chooses, on a flow's details page, a published page for the flow to finish on, and a visitor who finishes the flow sees that page's live blocks. A flow with no published page of its own finishes on the default summary page.
+- **Blocks drawn from a run's results** — a page block type can fill an option from a value the page is drawn with, named by one of the block's fields or fixed by the block type, so a block on a summary page shows the finished run's output.
 - **The note a lead carries** — a host that sets `Alembic.lead_note` to a callable taking a flow's title and its results by output id has the lead carry the note it returns. A host that sets none gets the flow's title followed by each result's label and value.
 - **Fields a host adds to the lead form** — a host that sets `Alembic.lead_fields_partial` to one of its own partials has it drawn inside the lead form, so the form can carry the host's spam checks or any other field its lead address reads.
 - **Result blocks** — the page builder offers blocks for a flow's score, its band with the band's description, its score per category, its weakest categories with what each one misses and costs, and the answers a visitor gave. Each result block names the output it draws in its Output field.
@@ -14,6 +18,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - **The lead partial** — `Alembic.lead_partial` no longer exists, and an app that still sets it is warned at boot to set `Alembic.lead_address` instead.
 - **Results** — each summary result names the type of the output that produced it.
+- **The band output** — a band output gives the band's name and description together, where it gave the name alone.
+- **The weakest-categories output** — a weakest-categories output gives each category's name with the miss and cost copy its settings hold for that category, where it gave the names alone.
 
 ## [0.2.0] - 2026-09-30
 
