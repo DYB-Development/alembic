@@ -23,11 +23,26 @@ module Alembic
     end
 
     def page_titled(title)
+      page_of(:section, "title" => title)
+    end
+
+    def page_of(block_type, content)
       Page.create!(name: "Result").tap do |page|
-        page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == :section }, x: 0, y: 0)
-        page.fill_block(page.blocks.first["id"], { "title" => title })
+        page.add_block(KsBlocks.registry.block_types(kind: :pages).find { |type| type.key == block_type }, x: 0, y: 0)
+        page.fill_block(page.blocks.first["id"], content)
         page.publish
       end
+    end
+
+    def with_figure_block
+      registry, kept = KsBlocks.registry, declarations
+      KsBlocks.instance_variable_set(:@registry, KsBlocks::Registry.new)
+      Page.block(:figure, name: "Figure", width: 3, height: 1, drawn_by: :ui_badge,
+        fields: [ { key: :output, label: "Output" } ], options: { label: { value_of: :output } })
+      yield
+    ensure
+      KsBlocks.instance_variable_set(:@registry, registry)
+      restore(kept)
     end
 
     def summarised
@@ -96,6 +111,16 @@ module Alembic
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
 
       assert_select "[data-block]", text: /Here is where you stand/
+    end
+
+    test "a block naming an output is drawn with that output's value for the finished run" do
+      with_figure_block do
+        Flow::Summaries.new(summarised).finish_on(page_of(:figure, "output" => "score"))
+
+        get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+        assert_select "[data-block]", text: "8"
+      end
     end
 
     test "a flow whose own page was never published finishes on the default summary page" do
