@@ -31,6 +31,11 @@ module Alembic
       assert_select_in alembic_weakest_block(value: [ { "name" => "Hiring" } ]), ".ks-panel h3", text: "Hiring"
     end
 
+    test "draws what a weakest category misses under its name" do
+      assert_select_in alembic_weakest_block(value: [ { "name" => "Hiring", "miss" => "Hires are a guess." } ]),
+        ".ks-panel p", text: "Hires are a guess."
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
