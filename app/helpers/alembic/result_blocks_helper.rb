@@ -10,8 +10,9 @@ module Alembic
 
     def alembic_tone(percentage)
       return "bg-red-500" if percentage.to_i < 40
+      return "bg-amber-500" if percentage.to_i < 70
 
-      "bg-amber-500"
+      "bg-emerald-500"
     end
   end
 end

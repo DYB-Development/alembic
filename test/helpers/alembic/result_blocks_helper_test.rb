@@ -18,6 +18,10 @@ module Alembic
       assert_equal "bg-amber-500", alembic_tone(40)
     end
 
+    test "colours a strong score green" do
+      assert_equal "bg-emerald-500", alembic_tone(70)
+    end
+
     private
 
     def assert_select_in(html, selector, **equality)
