@@ -31,6 +31,12 @@
       </label>
     <% end %>
 
+    <%= ui_section(title: "Where this starts") do %>
+      <%= ui_select(name: "flow[intro_page_id]", selected: @intro_page&.id,
+            include_blank: "Alembic's default intro page",
+            options: @published_pages.map { |page| [ page.name, page.id ] }) %>
+    <% end %>
+
     <%= ui_section(title: "Where this finishes") do %>
       <%= ui_select(name: "flow[summary_page_id]", selected: @summary_page&.id,
             include_blank: "Alembic's default summary page",

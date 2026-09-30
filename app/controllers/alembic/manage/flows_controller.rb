@@ -7,6 +7,7 @@ module Alembic
         summaries = Flow::Summaries.new(@flow)
         @summary = summaries.text
         @summary_page = summaries.summary_page
+        @intro_page = summaries.intro_page
         @shows_answer_values = summaries.shows_answer_values?
         @asks_on_one_page = summaries.asks_on_one_page?
         @branches = summaries.branches?
