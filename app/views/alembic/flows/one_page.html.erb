@@ -6,7 +6,7 @@
 
     <%= form_with url: flow_step_path(@guide.slug), method: :get, data: { turbo: false }, class: "mt-6" do %>
       <% @questions.each do |question| %>
-        <%= render "alembic/flows/question", question: question, category: step_category(question), shows_values: shows_answer_values? %>
+        <%= render "alembic/flows/question", question: question, category: step_category(question), shows_values: shows_answer_values?, sends_on_choice: false %>
       <% end %>
     <% end %>
   </div>

@@ -12,6 +12,12 @@ module Alembic
       assert_select "form fieldset", 3
     end
 
+    test "choosing an answer on the one-page form does not send the form" do
+      get alembic.flow_step_path(straight.slug)
+
+      assert_select "input[type=radio][onchange]", 0
+    end
+
     private
 
     def straight
