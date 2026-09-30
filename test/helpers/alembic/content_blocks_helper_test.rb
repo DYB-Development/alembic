@@ -18,6 +18,10 @@ module Alembic
       assert_select_in alembic_hero_block(headline: "Seeing?", text: "A three-minute check."), "p.text-lg", text: "A three-minute check."
     end
 
+    test "fills a fact written as the question count with the count it is handed" do
+      assert_select_in alembic_facts_block(question_count: 15) { "{question_count} | questions" }, "span b", text: "15"
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
