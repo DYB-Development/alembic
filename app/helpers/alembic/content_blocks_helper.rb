@@ -11,6 +11,10 @@ module Alembic
       render "alembic/blocks/facts", facts: facts
     end
 
+    def alembic_start_block(start_path:, label: "Start →")
+      link_to label, start_path, class: "inline-flex items-center justify-center font-semibold rounded-lg bg-accent-600 text-white hover:bg-accent-500 px-6 py-3 cursor-pointer"
+    end
+
     def alembic_code_block
       render "alembic/blocks/code", code: yield.to_s
     end

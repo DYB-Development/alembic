@@ -30,6 +30,11 @@ module Alembic
       assert_select_in alembic_code_block { "Order.count" }, "pre code", text: "Order.count"
     end
 
+    test "draws a start button that links to where the flow starts" do
+      assert_select_in alembic_start_block(label: "Start the scorecard", start_path: "/diagnostics/scorecard/step"),
+        "a[href=?]", "/diagnostics/scorecard/step", text: "Start the scorecard"
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
