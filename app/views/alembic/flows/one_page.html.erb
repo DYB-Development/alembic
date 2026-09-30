@@ -1,0 +1,13 @@
+<% content_for(:title, @guide.headline) %>
+
+<section class="py-20 md:py-28">
+  <div class="max-w-2xl mx-auto px-6">
+    <%= link_to "← Start over", flow_start_path(@guide.slug), class: "text-sm text-accent-600 hover:text-accent-700" %>
+
+    <%= form_with url: flow_step_path(@guide.slug), method: :get, data: { turbo: false }, class: "mt-6" do %>
+      <% @questions.each do |question| %>
+        <%= render "alembic/flows/question", question: question, category: step_category(question), shows_values: shows_answer_values? %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
