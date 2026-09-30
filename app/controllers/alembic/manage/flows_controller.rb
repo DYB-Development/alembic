@@ -15,6 +15,7 @@ module Alembic
         summaries = Flow::Summaries.new(flow_host.flows.find(params[:id]))
         summaries.describe(details[:summary]) unless details[:summary].nil?
         summaries.finish_on(Page.find_by(id: details[:summary_page_id])) unless details[:summary_page_id].nil?
+        summaries.show_answer_values(details[:shows_answer_values] == "1") unless details[:shows_answer_values].nil?
 
         super
       end
