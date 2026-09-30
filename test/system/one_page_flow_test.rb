@@ -29,6 +29,16 @@ module Alembic
       within("[data-one-page-question]:not([hidden])") { assert_checked_field "Fast", visible: :all }
     end
 
+    test "answering every question on one page sends them all in one request" do
+      visit alembic.flow_step_path(straight.slug)
+      choose "Fast", allow_label_click: true
+      choose "High", allow_label_click: true
+
+      click_on "See my results"
+
+      assert_selector ".text-7xl", text: "100%"
+    end
+
     private
 
     def straight
