@@ -223,6 +223,12 @@ module Alembic
       assert_select "i.bg-accent-600[style=?]", "width:50%"
     end
 
+    test "choosing an answer on the step page sends it on without pressing Next" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "input[type=radio][onchange=?]", "this.form.requestSubmit()"
+    end
+
     test "a flow with no summary still shows what was said" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
