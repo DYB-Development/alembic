@@ -6,8 +6,8 @@ module Alembic
         bodies[key.to_sym] = body
       end
 
-      def self.for(block)
-        named(filled(block).except(bodies[block["type"].to_sym]), declared.fetch(block["type"].to_sym, {}))
+      def self.for(block, values: {})
+        named(filled(block).except(bodies[block["type"].to_sym]), declared.fetch(block["type"].to_sym, {}), values)
       end
 
       def self.body_for(block)
@@ -28,14 +28,14 @@ module Alembic
         block.fetch("content", {}).reject { |_key, value| value == "" }.symbolize_keys
       end
 
-      def self.named(filled, options)
+      def self.named(filled, options, values)
         options.each_with_object(filled) do |(option, spec), built|
-          spec.is_a?(Hash) ? fill(built, option, spec) : built[option] = spec
+          spec.is_a?(Hash) ? fill(built, option, spec, values) : built[option] = spec
         end
       end
 
-      def self.fill(built, option, spec)
-        value = built.delete(spec.fetch(:from, option))
+      def self.fill(built, option, spec, values)
+        value = spec.key?(:value_of) ? values[built.delete(spec[:value_of]).to_s] : built.delete(spec.fetch(:from, option))
         built[option] = value.nil? ? spec[:default] : value
         built.delete(option) if built[option].nil?
       end

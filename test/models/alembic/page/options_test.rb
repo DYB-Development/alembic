@@ -36,6 +36,14 @@ module Alembic
         assert_equal "split", Page::Options.for(block_of("hero", "title" => "Welcome"))[:layout]
       end
 
+      test "fills an option with the value its field names" do
+        Page.block(:stat, name: "Stat", width: 3, height: 1, drawn_by: :ui_stat_card,
+          fields: [ { key: :label, label: "Label" }, { key: :output, label: "Output" } ], options: { value: { value_of: :output } })
+
+        assert_equal({ label: "Score", value: 64 },
+          Page::Options.for(block_of("stat", "label" => "Score", "output" => "score"), values: { "score" => 64 }))
+      end
+
       test "fills the option of a field's own name when nothing maps it" do
         Page.block(:badge, name: "Badge", width: 3, height: 1, drawn_by: :ui_badge,
           fields: [ { key: :label, label: "Label" } ])
