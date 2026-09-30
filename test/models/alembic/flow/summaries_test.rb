@@ -16,6 +16,15 @@ module Alembic
         Summaries.new(flow)
       end
 
+      test "records the page a flow finishes on" do
+        flow = published
+        page = Page.create!(name: "Result")
+
+        summaries(flow).finish_on(page)
+
+        assert_equal page, summaries(flow).summary_page
+      end
+
       test "records a summary template as a numbered version" do
         flow = published
 

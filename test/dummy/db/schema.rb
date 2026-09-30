@@ -10,14 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_24_224005) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_30_120000) do
   create_table "alembic_flow_definition_summaries", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "flow_id", null: false
     t.text "summary"
     t.integer "summary_cursor"
+    t.integer "summary_page_id"
     t.datetime "updated_at", null: false
     t.index ["flow_id"], name: "index_alembic_flow_definition_summaries_on_flow_id", unique: true
+    t.index ["summary_page_id"], name: "index_alembic_flow_definition_summaries_on_summary_page_id"
   end
 
   create_table "alembic_flow_run_summaries", force: :cascade do |t|
@@ -104,6 +106,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_224005) do
     t.index ["flow_id"], name: "index_easy_flow_versions_on_one_live_per_flow", unique: true, where: "status = 'live'"
   end
 
+  add_foreign_key "alembic_flow_definition_summaries", "alembic_pages", column: "summary_page_id", on_delete: :nullify
   add_foreign_key "alembic_flow_definition_summaries", "easy_flow_definitions", column: "flow_id", on_delete: :cascade
   add_foreign_key "alembic_flow_run_summaries", "alembic_flow_summaries", column: "summary_version_id", on_delete: :cascade
   add_foreign_key "alembic_flow_run_summaries", "easy_flow_runs", column: "run_id", on_delete: :cascade
