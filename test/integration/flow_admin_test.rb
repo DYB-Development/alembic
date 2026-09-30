@@ -104,6 +104,12 @@ module Alembic
       assert_not Flow::Summaries.new(flow).asks_on_one_page?
     end
 
+    test "the details editor offers to ask a flow with no branching on one page" do
+      get easy_flow.edit_manage_flow_path(straight_flow)
+
+      assert_select "input[type=checkbox][name=?]:not([disabled])", "flow[asks_on_one_page]"
+    end
+
     test "saving the details stores the page the flow finishes on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Result")

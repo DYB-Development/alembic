@@ -8,6 +8,8 @@ module Alembic
         @summary = summaries.text
         @summary_page = summaries.summary_page
         @shows_answer_values = summaries.shows_answer_values?
+        @asks_on_one_page = summaries.asks_on_one_page?
+        @branches = summaries.branches?
         @published_pages = Page.where(id: Page::Version.live.select(:page_id)).order(:name)
       end
 
