@@ -46,6 +46,14 @@ module Alembic
         details.update!(shows_answer_values: shown)
       end
 
+      def asks_on_one_page?
+        details.asks_on_one_page
+      end
+
+      def ask_on_one_page(asked)
+        details.update!(asks_on_one_page: asked)
+      end
+
       def finish_on(page)
         details.update!(summary_page: page)
       end
