@@ -217,6 +217,12 @@ module Alembic
       assert_select "span", text: "Question 2 of 2"
     end
 
+    test "the step page's progress bar fills with the share of questions answered" do
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
+
+      assert_select "i.bg-accent-600[style=?]", "width:50%"
+    end
+
     test "a flow with no summary still shows what was said" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
