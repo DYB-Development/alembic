@@ -10,6 +10,14 @@ module Alembic
       assert_select_in alembic_hero_block(headline: "What is your business not seeing?"), "h1", text: "What is your business not seeing?"
     end
 
+    test "draws a hero's small label above its headline" do
+      assert_select_in alembic_hero_block(headline: "Seeing?", kicker: "Business diagnostic"), "p.uppercase", text: "Business diagnostic"
+    end
+
+    test "draws a hero's text under its headline" do
+      assert_select_in alembic_hero_block(headline: "Seeing?", text: "A three-minute check."), "p.text-lg", text: "A three-minute check."
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
