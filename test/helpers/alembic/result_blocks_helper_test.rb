@@ -41,6 +41,11 @@ module Alembic
         ".ks-panel p", text: "What it likely costs you: Slow hires cost months."
     end
 
+    test "draws each answer given beside its question" do
+      assert_select_in alembic_answers_block(value: [ [ "What is your budget?", "Generous" ] ]),
+        "li", text: /What is your budget\?\s+Generous/
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
