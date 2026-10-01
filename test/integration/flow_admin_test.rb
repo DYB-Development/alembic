@@ -149,6 +149,15 @@ module Alembic
       assert_select "input[name=?][value=?]", "flow[outputs][0][label]", "Captured"
     end
 
+    test "saving the details records the outputs as a new summary version" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "share", "type" => "percentage", "label" => "Captured" } ])
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "share", type: "percentage", label: "Measured" } } } }
+
+      assert_equal [ 2, "Measured" ], Flow::Summaries.new(flow).current_version.then { |version| [ version.number, version.summary["outputs"].first["label"] ] }
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")

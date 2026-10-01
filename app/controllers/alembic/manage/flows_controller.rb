@@ -23,8 +23,19 @@ module Alembic
         summaries.finish_on(Page.find_by(id: details[:summary_page_id])) unless details[:summary_page_id].nil?
         summaries.show_answer_values(details[:shows_answer_values] == "1") unless details[:shows_answer_values].nil?
         summaries.ask_on_one_page(details[:asks_on_one_page] == "1") unless details[:asks_on_one_page].nil?
+        record_outputs(summaries, details[:outputs]) if details[:outputs]
 
         super
+      end
+
+      private
+
+      def record_outputs(summaries, submitted)
+        current = Array(summaries.document.to_h["outputs"])
+        edited = submitted.permit!.to_h.sort_by { |index, _| index.to_i }.map do |index, output|
+          current.fetch(index.to_i, {}).merge(output)
+        end
+        summaries.record(summaries.document.to_h.merge("outputs" => edited))
       end
     end
   end
