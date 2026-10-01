@@ -112,6 +112,12 @@ module Alembic
       assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "pre code", text: "add_index :orders, :status"
     end
 
+    test "draws every outcome entry with a link target for each" do
+      entries = [ { "key" => "live", "name" => "Live query" }, { "key" => "rollup", "name" => "Rollup" } ]
+
+      assert_select_in alembic_outcomes_block(value: { "chosen" => nil, "entries" => entries }), "details[id=?]", "outcome-rollup"
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
