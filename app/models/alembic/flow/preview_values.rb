@@ -1,12 +1,17 @@
 module Alembic
   module Flow
     module PreviewValues
-      def self.values(page, _choice)
+      def self.values(page, choice)
         flow = flow_for(page)
         return {} if flow.nil?
 
         summaries = Summaries.new(flow)
-        introduced(flow, summaries).merge(summaries.of(sample_state(flow)).to_h { |result| [ result.id, result.value ] })
+        state = finished_runs(flow).find { |run| run.id.to_s == choice.to_s }&.recorded || sample_state(flow)
+        introduced(flow, summaries).merge(summaries.of(state).to_h { |result| [ result.id, result.value ] })
+      end
+
+      def self.finished_runs(flow)
+        EasyFlow::Run.where(flow: flow).order(created_at: :desc).limit(20).select { |run| run.next_step(run.recorded).nil? }
       end
 
       def self.introduced(flow, summaries)
@@ -29,7 +34,7 @@ module Alembic
         end.to_h
       end
 
-      private_class_method :flow_for, :sample_state, :introduced
+      private_class_method :flow_for, :sample_state, :introduced, :finished_runs
     end
   end
 end

@@ -17,6 +17,14 @@ module Alembic
         assert_equal 2, PreviewValues.values(page, nil)["question_count"]
       end
 
+      test "previews with the results of a finished run chosen for the page" do
+        page = Page.create!(name: "Result")
+        Summaries.new(scored_flow).finish_on(page)
+        run = EasyFlow::Run.start(scored_flow).tap { |kept| kept.record("a", "y") && kept.record("b", "y") }
+
+        assert_equal 100, PreviewValues.values(page, run.id.to_s)["share"]
+      end
+
       private
 
       def scored_flow
