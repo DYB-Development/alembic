@@ -1,5 +1,6 @@
 module Alembic
   class PagesController < ApplicationController
+    include OwnedPages
     helper PagesHelper
     helper KsBlocks::LayoutHelper
 
@@ -10,7 +11,7 @@ module Alembic
     private
 
     def shown_page
-      page = Page.find_by(slug: params[:slug])
+      page = owned_pages.find_by(slug: params[:slug])
       raise NotPublished if page.nil? || page.live_version.nil?
 
       page

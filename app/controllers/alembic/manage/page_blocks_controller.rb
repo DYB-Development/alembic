@@ -8,7 +8,7 @@ module Alembic
       private
 
       def block_layout_record
-        Page.find(params[:page_id])
+        owned_pages.find(params[:page_id])
       end
 
       def block_content(block)

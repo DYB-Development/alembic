@@ -20,4 +20,8 @@ class ApplicationController < ActionController::Base
   def alembic_visitor_permitted?(diagnostic)
     diagnostic.present?
   end
+
+  def current_customer
+    Customer.find_by(id: request.headers["X-Customer"])
+  end
 end

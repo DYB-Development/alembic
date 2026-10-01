@@ -2,6 +2,7 @@ module Alembic
   module Manage
     class FlowsController < EasyFlow::Manage::FlowsController
       hosted_by FLOW_HOST
+      include OwnedPages
       helper Alembic::ApplicationHelper
       def edit
         super
@@ -15,15 +16,15 @@ module Alembic
         @shows_answer_values = summaries.shows_answer_values?
         @asks_on_one_page = summaries.asks_on_one_page?
         @branches = summaries.branches?
-        @published_pages = Page.where(id: Page::Version.live.select(:page_id)).order(:name)
+        @published_pages = owned_pages.where(id: Page::Version.live.select(:page_id)).order(:name)
       end
 
       def update
         details = params.require(:flow)
         summaries = Flow::Summaries.new(flow_host.flows.find(params[:id]))
         summaries.describe(details[:summary]) unless details[:summary].nil?
-        summaries.start_on(Page.find_by(id: details[:intro_page_id])) unless details[:intro_page_id].nil?
-        summaries.finish_on(Page.find_by(id: details[:summary_page_id])) unless details[:summary_page_id].nil?
+        summaries.start_on(owned_pages.find_by(id: details[:intro_page_id])) unless details[:intro_page_id].nil?
+        summaries.finish_on(owned_pages.find_by(id: details[:summary_page_id])) unless details[:summary_page_id].nil?
         summaries.show_answer_values(details[:shows_answer_values] == "1") unless details[:shows_answer_values].nil?
         summaries.ask_on_one_page(details[:asks_on_one_page] == "1") unless details[:asks_on_one_page].nil?
         record_outputs(summaries, details[:outputs]) if details[:outputs]
