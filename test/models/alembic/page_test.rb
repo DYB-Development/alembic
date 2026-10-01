@@ -2,6 +2,13 @@ require "test_helper"
 
 module Alembic
   class PageTest < ActiveSupport::TestCase
+    test "lets two owners each hold a page at the same address" do
+      first, second = Customer.create!(name: "First"), Customer.create!(name: "Second")
+      Page.create!(name: "Welcome", slug: "welcome", owner: first)
+
+      assert Page.create!(name: "Welcome", slug: "welcome", owner: second).persisted?
+    end
+
     test "is invalid without a name" do
       assert_not Page.new(name: "").valid?
     end
