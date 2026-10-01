@@ -52,4 +52,10 @@
       <% end %>
     </div>
   <% end %>
+  <% field = "flow[outputs][#{outputs.size}]" %>
+  <div data-new-outcome class="mt-6">
+    <label class="ks-label mb-1">Add an outcome</label>
+    <%= hidden_field_tag "#{field}[type]", "outcome", id: nil %>
+    <%= ui_input(name: "#{field}[id]", placeholder: "The new outcome's id") %>
+  </div>
 <% end %>
