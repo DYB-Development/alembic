@@ -1,0 +1,5 @@
+<div class="flex flex-wrap gap-2 mb-8">
+  <% facts.each do |value, label| %>
+    <span class="text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-md px-3 py-1.5"><% if label %><b class="text-gray-900"><%= value %></b> <%= label %><% else %><%= value %><% end %></span>
+  <% end %>
+</div>

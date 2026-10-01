@@ -32,6 +32,15 @@ module Alembic
         assert summaries(flow).asks_on_one_page?
       end
 
+      test "records the page a flow starts on" do
+        flow = published
+        page = Page.create!(name: "Welcome")
+
+        summaries(flow).start_on(page)
+
+        assert_equal page, summaries(flow).intro_page
+      end
+
       test "records the page a flow finishes on" do
         flow = published
         page = Page.create!(name: "Result")

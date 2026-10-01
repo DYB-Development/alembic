@@ -32,7 +32,10 @@ module Alembic
     end
 
     initializer "alembic.result_blocks" do |app|
-      app.config.to_prepare { Alembic::ResultBlocks.register }
+      app.config.to_prepare do
+        Alembic::Page::ContentBlocks.register
+        Alembic::ResultBlocks.register
+      end
     end
   end
 end

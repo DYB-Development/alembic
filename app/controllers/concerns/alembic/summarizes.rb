@@ -7,8 +7,9 @@ module Alembic
       helper ApplicationHelper
       helper PagesHelper
       helper ResultBlocksHelper
+      helper ContentBlocksHelper
       helper KsBlocks::LayoutHelper
-      helper_method :flow_summary, :first_step_path, :summary_values
+      helper_method :flow_summary, :first_step_path, :summary_values, :intro_values
     end
 
     private
@@ -30,6 +31,17 @@ module Alembic
       Flow::Summaries.new(flow).pin(finished_run) if finished_run && run.nil?
       @summary_page = Flow::Summaries.new(run&.flow || flow).summary_page
       render template: @summary_page&.live_version ? "alembic/flows/summary_page" : "alembic/flows/complete"
+    end
+
+    def intro_values
+      starts_a_run = @flow.each_step? && !previewing?
+      { "title" => @flow.title.presence || @flow.slug, "summary" => flow_summary(@flow),
+        "question_count" => question_count, "starts_a_run" => starts_a_run,
+        "start_path" => starts_a_run ? alembic.flow_runs_path(@flow.slug) : first_step_path(@flow.slug) }
+    end
+
+    def question_count
+      Array(@flow.live_definition.to_h["nodes"]).count { |node| node["type"] == "question" }
     end
 
     def summary_values

@@ -18,6 +18,10 @@ class EngineBootTest < ActiveSupport::TestCase
     assert_includes KsBlocks.registry.block_types(kind: :pages).map(&:key), :alembic_score
   end
 
+  test "offers the page builder alembic's content blocks once the app boots" do
+    assert_includes KsBlocks.registry.block_types(kind: :pages).map(&:key), :alembic_hero
+  end
+
   private
 
   def boot_with_root(root)

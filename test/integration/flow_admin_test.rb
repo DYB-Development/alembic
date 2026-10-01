@@ -116,6 +116,23 @@ module Alembic
       assert_select "input[type=checkbox][name=?][disabled]", "flow[asks_on_one_page]"
     end
 
+    test "the details editor offers each published page to start on" do
+      Page.create!(name: "Welcome").publish
+
+      get easy_flow.edit_manage_flow_path(easy_flow_definitions(:business_scorecard))
+
+      assert_select "select[name=?] option", "flow[intro_page_id]", text: "Welcome"
+    end
+
+    test "saving the details stores the page the flow starts on" do
+      flow = easy_flow_definitions(:business_scorecard)
+      page = Page.create!(name: "Welcome")
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { intro_page_id: page.id } }
+
+      assert_equal page, Flow::Summaries.new(flow).intro_page
+    end
+
     test "saving the details stores the page the flow finishes on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Result")
