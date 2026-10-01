@@ -199,6 +199,16 @@ module Alembic
       assert_equal [ "Low" ], Flow::Summaries.new(flow).document["outputs"].first["bands"].pluck("name")
     end
 
+    test "the details editor offers each category's miss copy for a weakest-categories output" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "weakest", "type" => "lowest", "of" => "areas",
+        "copy" => { "Pace" => { "miss" => "You run late.", "cost" => "Crews wait." } } } ])
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "input[name=?][value=?]", "flow[outputs][0][copy][Pace][miss]", "You run late."
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")
@@ -253,7 +263,7 @@ module Alembic
     def straight_flow
       EasyFlow::Definition.create!(host: "alembic", slug: "straight").tap do |flow|
         flow.record_definition(flowing("slug" => "straight", "entry" => "a",
-          "nodes" => [ { "id" => "a", "type" => "question", "text" => "A?", "options" => [ { "value" => "y", "weight" => 1 } ] },
+          "nodes" => [ { "id" => "a", "type" => "question", "text" => "A?", "category" => "Pace", "options" => [ { "value" => "y", "weight" => 1 } ] },
                        { "id" => "b", "type" => "question", "text" => "B?", "options" => [ { "value" => "y", "weight" => 1 } ] } ],
           "edges" => [ { "from" => "a", "to" => "b" } ]))
         flow.publish

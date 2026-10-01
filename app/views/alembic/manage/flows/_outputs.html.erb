@@ -15,6 +15,17 @@
           </div>
         <% end %>
       <% end %>
+      <% if output["type"] == "lowest" %>
+        <label class="ks-label mb-1 mt-3">How many to name</label>
+        <%= ui_input(name: "#{field}[count]", value: output["count"], type: :number) %>
+        <% categories.each do |category| %>
+          <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3" data-category-copy>
+            <p class="text-sm"><%= category %></p>
+            <%= ui_input(name: "#{field}[copy][#{category}][miss]", value: output.dig("copy", category, "miss"), placeholder: "What it misses") %>
+            <%= ui_input(name: "#{field}[copy][#{category}][cost]", value: output.dig("copy", category, "cost"), placeholder: "What it costs") %>
+          </div>
+        <% end %>
+      <% end %>
     </div>
   <% end %>
 <% end %>
