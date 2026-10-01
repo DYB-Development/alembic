@@ -26,6 +26,10 @@ module Alembic
 
         assert_equal "Rollup", Outcome.output_type.compute(rules, Summary::Run.new(state: { "need" => "rates" }), {})["chosen"]["name"]
       end
+
+      test "is registered when the app boots" do
+        assert Summary.registry.registered?("outcome")
+      end
     end
   end
 end

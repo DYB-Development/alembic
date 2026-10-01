@@ -28,6 +28,7 @@ module Alembic
         Alembic::Outputs::Lowest.register
         Alembic::Outputs::Tally.register
         Alembic::Outputs::Band.register
+        Alembic::Outputs::Outcome.register
       end
     end
 
