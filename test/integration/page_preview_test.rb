@@ -13,7 +13,27 @@ module Alembic
       assert_includes response.body, "64%"
     end
 
+    test "the page builder previews a page a flow finishes on with that flow's sample results" do
+      page = scored_page
+      Flow::Summaries.new(scored_flow).finish_on(page)
+
+      get alembic.manage_page_path(page)
+
+      assert_includes response.body, "50%"
+    end
+
     private
+
+    def scored_flow
+      EasyFlow::Definition.create!(host: "alembic", slug: "scored").tap do |flow|
+        flow.record_definition(flowing("slug" => "scored", "entry" => "a",
+          "nodes" => [ { "id" => "a", "type" => "question", "text" => "A?", "options" => [ { "value" => "y", "weight" => 2 }, { "value" => "n", "weight" => 0 } ] },
+                       { "id" => "b", "type" => "question", "text" => "B?", "options" => [ { "value" => "y", "weight" => 2 }, { "value" => "n", "weight" => 0 } ] } ],
+          "edges" => [ { "from" => "a", "to" => "b" } ]))
+        flow.publish
+        Flow::Summaries.new(flow).record("outputs" => [ { "id" => "share", "type" => "percentage" } ])
+      end
+    end
 
     def scored_page
       Page.create!(name: "Result").tap do |page|
