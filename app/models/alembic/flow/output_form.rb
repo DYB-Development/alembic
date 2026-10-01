@@ -12,7 +12,18 @@ module Alembic
         return {} unless output["entries"].is_a?(Hash)
 
         entries = output["entries"].sort_by { |position, _| position.to_i }.map(&:last).select { |entry| entry["key"].present? }
-        { "entries" => entries.map { |entry| entry.except("facts_text").merge("facts" => pairs(entry["facts_text"])) } }
+        { "entries" => entries.map { |entry| entry_from(entry) } }
+      end
+
+      def self.entry_from(entry)
+        entry.except("facts_text", "sections_text").merge("facts" => pairs(entry["facts_text"]), "sections" => sections(entry["sections_text"]))
+      end
+
+      def self.sections(text)
+        text.to_s.lines.map(&:strip).compact_blank.map do |line|
+          heading, body, note = line.split("|", 3).map(&:strip)
+          { "heading" => heading, "text" => body, "note" => note }
+        end
       end
 
       def self.pairs(text)
@@ -48,7 +59,7 @@ module Alembic
         { "bands" => named.map { |band| band.merge("ceiling" => band["ceiling"].presence&.to_i) } }
       end
 
-      private_class_method :counted, :listed_bands, :ruled, :condition_from, :listed_entries, :pairs
+      private_class_method :counted, :listed_bands, :ruled, :condition_from, :listed_entries, :pairs, :entry_from, :sections
     end
   end
 end

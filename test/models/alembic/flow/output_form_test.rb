@@ -19,6 +19,13 @@ module Alembic
 
         assert_equal [ [ "Setup", "An index" ], [ "Maintenance", "none" ] ], entry["facts"]
       end
+
+      test "reads an outcome entry's sections one per line as a heading, text and result note" do
+        entry = edited("entries" => { "0" => { "key" => "live", "sections_text" => "Why it works | Always correct.\nAvoiding it | Cache it. | Stale numbers." } })["entries"].first
+
+        assert_equal [ { "heading" => "Why it works", "text" => "Always correct.", "note" => nil },
+                       { "heading" => "Avoiding it", "text" => "Cache it.", "note" => "Stale numbers." } ], entry["sections"]
+      end
     end
   end
 end
