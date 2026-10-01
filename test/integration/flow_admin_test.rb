@@ -179,6 +179,16 @@ module Alembic
         Flow::Summaries.new(flow).document["outputs"].first["bands"]
     end
 
+    test "the details editor offers an empty row to add a band" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "band", "type" => "band", "of" => "share",
+        "bands" => [ { "ceiling" => 40, "name" => "Low", "description" => "Room to grow." } ] } ])
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "input[name=?]:not([value])", "flow[outputs][0][bands][1][name]"
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")
