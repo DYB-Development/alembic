@@ -10,6 +10,13 @@ module Alembic
         assert_equal 50, PreviewValues.values(page, nil)["share"]
       end
 
+      test "previews a page a flow starts on with the flow's question count" do
+        page = Page.create!(name: "Welcome")
+        Summaries.new(scored_flow).start_on(page)
+
+        assert_equal 2, PreviewValues.values(page, nil)["question_count"]
+      end
+
       private
 
       def scored_flow

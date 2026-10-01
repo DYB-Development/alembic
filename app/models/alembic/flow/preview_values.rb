@@ -5,7 +5,14 @@ module Alembic
         flow = flow_for(page)
         return {} if flow.nil?
 
-        Summaries.new(flow).of(sample_state(flow)).to_h { |result| [ result.id, result.value ] }
+        summaries = Summaries.new(flow)
+        introduced(flow, summaries).merge(summaries.of(sample_state(flow)).to_h { |result| [ result.id, result.value ] })
+      end
+
+      def self.introduced(flow, summaries)
+        questions = Array(flow.live_definition.to_h["nodes"]).count { |node| node["type"] == "question" }
+        { "title" => flow.title.presence || flow.slug, "summary" => summaries.text, "question_count" => questions,
+          "slug" => flow.slug, "start_path" => "#", "starts_a_run" => false }
       end
 
       def self.flow_for(page)
@@ -22,7 +29,7 @@ module Alembic
         end.to_h
       end
 
-      private_class_method :flow_for, :sample_state
+      private_class_method :flow_for, :sample_state, :introduced
     end
   end
 end
