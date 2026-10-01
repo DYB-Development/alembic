@@ -124,6 +124,14 @@ module Alembic
       assert_select "select[name=?] option", "flow[intro_page_id]", text: "Welcome"
     end
 
+    test "the details editor links to a preview of the flow's intro page" do
+      flow = straight_flow
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "a[href=?]", alembic.manage_flow_preview_path(flow)
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")
