@@ -32,6 +32,10 @@ module Alembic
 
         assert_equal [ { "title" => "Add an index", "code" => "add_index :orders, :status" }, { "title" => "Query it", "code" => "Order.count" } ], entry["steps"]
       end
+
+      test "leaves out a new output saved without an id" do
+        assert_empty OutputForm.edited([], { "0" => { "id" => "", "type" => "outcome" } })
+      end
     end
   end
 end

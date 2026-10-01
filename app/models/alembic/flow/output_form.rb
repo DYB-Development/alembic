@@ -2,10 +2,11 @@ module Alembic
   module Flow
     module OutputForm
       def self.edited(current, submitted)
-        submitted.sort_by { |index, _| index.to_i }.map do |index, output|
+        edited = submitted.sort_by { |index, _| index.to_i }.map do |index, output|
           current.fetch(index.to_i, {}).merge(output.except("rules_text")).merge(listed_bands(output)).merge(counted(output))
             .merge(ruled(output)).merge(listed_entries(output))
         end
+        edited.select { |output| output["id"].present? }
       end
 
       def self.listed_entries(output)
