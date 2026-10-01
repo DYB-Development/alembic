@@ -25,6 +25,14 @@ module Alembic
         assert_equal 100, PreviewValues.values(page, run.id.to_s)["share"]
       end
 
+      test "lists each finished run of the page's flow as a preview choice" do
+        page = Page.create!(name: "Result")
+        Summaries.new(scored_flow).finish_on(page)
+        run = EasyFlow::Run.start(scored_flow).tap { |kept| kept.record("a", "y") && kept.record("b", "n") }
+
+        assert_equal [ run.id.to_s ], PreviewValues.choices(page).map(&:last)
+      end
+
       private
 
       def scored_flow

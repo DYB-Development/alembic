@@ -20,6 +20,13 @@ module Alembic
           "slug" => flow.slug, "start_path" => "#", "starts_a_run" => false }
       end
 
+      def self.choices(page)
+        flow = flow_for(page)
+        return [] if flow.nil?
+
+        finished_runs(flow).map { |run| [ "Run of #{I18n.l(run.created_at, format: :short)}", run.id.to_s ] }
+      end
+
       def self.flow_for(page)
         DefinitionSummary.where(summary_page: page).or(DefinitionSummary.where(intro_page: page)).first&.flow
       end
