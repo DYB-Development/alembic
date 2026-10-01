@@ -37,7 +37,8 @@ module Alembic
       starts_a_run = @flow.each_step? && !previewing?
       { "title" => @flow.title.presence || @flow.slug, "summary" => flow_summary(@flow),
         "question_count" => question_count, "starts_a_run" => starts_a_run,
-        "start_path" => starts_a_run ? alembic.flow_runs_path(@flow.slug) : first_step_path(@flow.slug) }
+        "start_path" => starts_a_run ? alembic.flow_runs_path(@flow.slug) : first_step_path(@flow.slug), "slug" => @flow.slug }
+        .merge(Flow::Summaries.new(@flow).of({}).to_h { |result| [ result.id, result.value ] })
     end
 
     def question_count
