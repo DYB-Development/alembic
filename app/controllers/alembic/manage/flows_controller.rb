@@ -41,7 +41,8 @@ module Alembic
       def listed_bands(output)
         return {} unless output["bands"].is_a?(Hash)
 
-        bands = output["bands"].sort_by { |position, _| position.to_i }.map do |_position, band|
+        named = output["bands"].sort_by { |position, _| position.to_i }.map(&:last).select { |band| band["name"].present? }
+        bands = named.map do |band|
           band.merge("ceiling" => band["ceiling"].presence&.to_i)
         end
         { "bands" => bands }

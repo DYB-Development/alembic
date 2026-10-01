@@ -189,6 +189,16 @@ module Alembic
       assert_select "input[name=?]:not([value])", "flow[outputs][0][bands][1][name]"
     end
 
+    test "saving the details leaves out a band row left without a name" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "band", "type" => "band", "of" => "share", "bands" => [] } ])
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "band", type: "band",
+        bands: { "0" => { name: "Low", ceiling: "40", description: "" }, "1" => { name: "", ceiling: "", description: "" } } } } } }
+
+      assert_equal [ "Low" ], Flow::Summaries.new(flow).document["outputs"].first["bands"].pluck("name")
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")
