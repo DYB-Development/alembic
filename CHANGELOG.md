@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-01
+
 ### Changed
 - **Built intro and summary pages** — a flow's own intro or summary page is drawn in the same centred column, with the same padding, as the default pages and the step page.
 
