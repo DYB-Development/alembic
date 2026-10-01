@@ -28,6 +28,8 @@ module Alembic
         record_outputs(summaries, details[:outputs]) if details[:outputs]
 
         super
+      rescue Summary::UnknownOutputType => refused
+        redirect_to easy_flow.edit_manage_flow_path(params[:id]), alert: refused.message
       end
 
       private

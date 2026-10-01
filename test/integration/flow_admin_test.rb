@@ -227,6 +227,15 @@ module Alembic
       assert_select "[data-problem]", text: /B\?/
     end
 
+    test "saving an output that names a type nobody registered is refused with the type's name" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "share", "type" => "percentage" } ])
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "share", type: "vibes" } } } }
+
+      assert_match "vibes", flash[:alert]
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")
