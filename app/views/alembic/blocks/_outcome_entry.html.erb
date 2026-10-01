@@ -19,6 +19,13 @@
           <% end %>
         </dl>
       <% end %>
+
+      <% Array(entry["sections"]).each do |section| %>
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-accent-600 mb-1"><%= section["heading"] %></h4>
+          <p class="text-gray-700"><%= section["text"] %></p>
+        </div>
+      <% end %>
     </div>
   </details>
 <% end %>

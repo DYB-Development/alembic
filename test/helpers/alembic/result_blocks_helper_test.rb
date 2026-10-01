@@ -93,6 +93,12 @@ module Alembic
       assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "dl dd", text: "An index"
     end
 
+    test "draws each of an outcome entry's sections under its heading" do
+      chosen = { "key" => "live", "name" => "Live query", "sections" => [ { "heading" => "Why it works", "text" => "Always correct." } ] }
+
+      assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "h4 + p", text: "Always correct."
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
