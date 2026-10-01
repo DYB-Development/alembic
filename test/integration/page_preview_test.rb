@@ -30,6 +30,16 @@ module Alembic
       assert_select "select[name=choice] option", text: "Run of 1 Oct"
     end
 
+    test "choosing a preview draws the page builder's blocks with that choice" do
+      Page::Preview.provider = ->(_page, choice) { { "share" => choice == "7" ? 99 : 1 } }
+      page = scored_page
+
+      patch alembic.preview_manage_page_path(page), params: { choice: "7" }
+      get alembic.manage_page_path(page)
+
+      assert_includes response.body, "99%"
+    end
+
     private
 
     def scored_flow
