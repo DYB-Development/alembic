@@ -16,7 +16,15 @@ module Alembic
       end
 
       def self.entry_from(entry)
-        entry.except("facts_text", "sections_text").merge("facts" => pairs(entry["facts_text"]), "sections" => sections(entry["sections_text"]))
+        entry.except("facts_text", "sections_text", "steps_text")
+          .merge("facts" => pairs(entry["facts_text"]), "sections" => sections(entry["sections_text"]), "steps" => steps(entry["steps_text"]))
+      end
+
+      def self.steps(text)
+        text.to_s.split(/^---\s*$/).map(&:strip).compact_blank.map do |block|
+          title, code = block.split("\n", 2)
+          { "title" => title.strip, "code" => code.to_s.strip }
+        end
       end
 
       def self.sections(text)
@@ -59,7 +67,7 @@ module Alembic
         { "bands" => named.map { |band| band.merge("ceiling" => band["ceiling"].presence&.to_i) } }
       end
 
-      private_class_method :counted, :listed_bands, :ruled, :condition_from, :listed_entries, :pairs, :entry_from, :sections
+      private_class_method :counted, :listed_bands, :ruled, :condition_from, :listed_entries, :pairs, :entry_from, :sections, :steps
     end
   end
 end

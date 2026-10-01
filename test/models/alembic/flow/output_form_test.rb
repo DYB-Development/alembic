@@ -26,6 +26,12 @@ module Alembic
         assert_equal [ { "heading" => "Why it works", "text" => "Always correct.", "note" => nil },
                        { "heading" => "Avoiding it", "text" => "Cache it.", "note" => "Stale numbers." } ], entry["sections"]
       end
+
+      test "reads an outcome entry's steps as a title line and code, split by a line of three dashes" do
+        entry = edited("entries" => { "0" => { "key" => "live", "steps_text" => "Add an index\nadd_index :orders, :status\n---\nQuery it\nOrder.count" } })["entries"].first
+
+        assert_equal [ { "title" => "Add an index", "code" => "add_index :orders, :status" }, { "title" => "Query it", "code" => "Order.count" } ], entry["steps"]
+      end
     end
   end
 end
