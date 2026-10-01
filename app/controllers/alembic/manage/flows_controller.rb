@@ -8,6 +8,9 @@ module Alembic
         @summary = summaries.text
         @summary_page = summaries.summary_page
         @intro_page = summaries.intro_page
+        @outputs = Array(summaries.document.to_h["outputs"])
+        @uncategorised = scored_by_category?(@outputs) ? questions_of(@flow).reject { |node| EasyFlow::Steps::Question.category_of(node).present? } : []
+        @categories = questions_of(@flow).filter_map { |node| EasyFlow::Steps::Question.category_of(node) }.uniq
         @shows_answer_values = summaries.shows_answer_values?
         @asks_on_one_page = summaries.asks_on_one_page?
         @branches = summaries.branches?
@@ -22,8 +25,43 @@ module Alembic
         summaries.finish_on(Page.find_by(id: details[:summary_page_id])) unless details[:summary_page_id].nil?
         summaries.show_answer_values(details[:shows_answer_values] == "1") unless details[:shows_answer_values].nil?
         summaries.ask_on_one_page(details[:asks_on_one_page] == "1") unless details[:asks_on_one_page].nil?
+        record_outputs(summaries, details[:outputs]) if details[:outputs]
 
         super
+      rescue Summary::UnknownOutputType => refused
+        redirect_to easy_flow.edit_manage_flow_path(params[:id]), alert: refused.message
+      end
+
+      private
+
+      def scored_by_category?(outputs)
+        outputs.any? { |output| %w[grouped lowest].include?(output["type"]) }
+      end
+
+      def questions_of(flow)
+        Array(flow.definition.to_h["nodes"]).select { |node| node["type"] == "question" }
+      end
+
+      def record_outputs(summaries, submitted)
+        current = Array(summaries.document.to_h["outputs"])
+        edited = submitted.permit!.to_h.sort_by { |index, _| index.to_i }.map do |index, output|
+          current.fetch(index.to_i, {}).merge(output).merge(listed_bands(output)).merge(counted(output))
+        end
+        summaries.record(summaries.document.to_h.merge("outputs" => edited))
+      end
+
+      def counted(output)
+        output.key?("count") ? { "count" => output["count"].presence&.to_i } : {}
+      end
+
+      def listed_bands(output)
+        return {} unless output["bands"].is_a?(Hash)
+
+        named = output["bands"].sort_by { |position, _| position.to_i }.map(&:last).select { |band| band["name"].present? }
+        bands = named.map do |band|
+          band.merge("ceiling" => band["ceiling"].presence&.to_i)
+        end
+        { "bands" => bands }
       end
     end
   end

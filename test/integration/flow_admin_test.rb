@@ -140,6 +140,102 @@ module Alembic
       assert_select "a[href=?]", alembic.step_manage_flow_preview_path(flow, answers: { "a" => "y", "b" => "y" })
     end
 
+    test "the details editor offers each output's label for editing" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "share", "type" => "percentage", "label" => "Captured" } ])
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "input[name=?][value=?]", "flow[outputs][0][label]", "Captured"
+    end
+
+    test "saving the details records the outputs as a new summary version" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "share", "type" => "percentage", "label" => "Captured" } ])
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "share", type: "percentage", label: "Measured" } } } }
+
+      assert_equal [ 2, "Measured" ], Flow::Summaries.new(flow).current_version.then { |version| [ version.number, version.summary["outputs"].first["label"] ] }
+    end
+
+    test "the details editor offers each band's description for editing" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "band", "type" => "band", "of" => "share",
+        "bands" => [ { "ceiling" => 40, "name" => "Low", "description" => "Room to grow." } ] } ])
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "input[name=?][value=?]", "flow[outputs][0][bands][0][description]", "Room to grow."
+    end
+
+    test "saving the details stores each band with its ceiling as a number" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "band", "type" => "band", "of" => "share", "bands" => [] } ])
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "band", type: "band",
+        bands: { "0" => { name: "Low", ceiling: "40", description: "Room to grow." }, "1" => { name: "High", ceiling: "", description: "" } } } } } }
+
+      assert_equal [ { "name" => "Low", "ceiling" => 40, "description" => "Room to grow." }, { "name" => "High", "ceiling" => nil, "description" => "" } ],
+        Flow::Summaries.new(flow).document["outputs"].first["bands"]
+    end
+
+    test "the details editor offers an empty row to add a band" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "band", "type" => "band", "of" => "share",
+        "bands" => [ { "ceiling" => 40, "name" => "Low", "description" => "Room to grow." } ] } ])
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "input[name=?]:not([value])", "flow[outputs][0][bands][1][name]"
+    end
+
+    test "saving the details leaves out a band row left without a name" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "band", "type" => "band", "of" => "share", "bands" => [] } ])
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "band", type: "band",
+        bands: { "0" => { name: "Low", ceiling: "40", description: "" }, "1" => { name: "", ceiling: "", description: "" } } } } } }
+
+      assert_equal [ "Low" ], Flow::Summaries.new(flow).document["outputs"].first["bands"].pluck("name")
+    end
+
+    test "the details editor offers each category's miss copy for a weakest-categories output" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "weakest", "type" => "lowest", "of" => "areas",
+        "copy" => { "Pace" => { "miss" => "You run late.", "cost" => "Crews wait." } } } ])
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "input[name=?][value=?]", "flow[outputs][0][copy][Pace][miss]", "You run late."
+    end
+
+    test "saving the details stores how many weakest categories to name as a number" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "weakest", "type" => "lowest", "of" => "areas" } ])
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "weakest", type: "lowest", count: "3" } } } }
+
+      assert_equal 3, Flow::Summaries.new(flow).document["outputs"].first["count"]
+    end
+
+    test "the details editor lists a question with no category as a problem in a flow scored by category" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "areas", "type" => "grouped" } ])
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "[data-problem]", text: /B\?/
+    end
+
+    test "saving an output that names a type nobody registered is refused with the type's name" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "share", "type" => "percentage" } ])
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "share", type: "vibes" } } } }
+
+      assert_match "vibes", flash[:alert]
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")
@@ -194,7 +290,7 @@ module Alembic
     def straight_flow
       EasyFlow::Definition.create!(host: "alembic", slug: "straight").tap do |flow|
         flow.record_definition(flowing("slug" => "straight", "entry" => "a",
-          "nodes" => [ { "id" => "a", "type" => "question", "text" => "A?", "options" => [ { "value" => "y", "weight" => 1 } ] },
+          "nodes" => [ { "id" => "a", "type" => "question", "text" => "A?", "category" => "Pace", "options" => [ { "value" => "y", "weight" => 1 } ] },
                        { "id" => "b", "type" => "question", "text" => "B?", "options" => [ { "value" => "y", "weight" => 1 } ] } ],
           "edges" => [ { "from" => "a", "to" => "b" } ]))
         flow.publish
