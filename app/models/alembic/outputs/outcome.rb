@@ -20,7 +20,13 @@ module Alembic
       end
 
       def self.holds?(rule, state)
-        Array(rule["when"]).all? { |condition| state[condition["step"]].to_s == condition["is"].to_s }
+        Array(rule["when"]).all? { |condition| met?(condition, state[condition["step"]].to_s) }
+      end
+
+      def self.met?(condition, answer)
+        return answer != condition["is_not"].to_s if condition.key?("is_not")
+
+        answer == condition["is"].to_s
       end
     end
   end
