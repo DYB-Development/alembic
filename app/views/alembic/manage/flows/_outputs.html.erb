@@ -23,6 +23,21 @@
       <% if output["type"] == "outcome" %>
         <label class="ks-label mb-1 mt-3">Rules, first that holds wins</label>
         <%= ui_textarea(name: "#{field}[rules_text]", value: alembic_rules_text(output["rules"]), rows: 4) %>
+        <% (Array(output["entries"]) + [ {} ]).each_with_index do |entry, position| %>
+          <% place = "#{field}[entries][#{position}]" %>
+          <% texts = alembic_entry_texts(entry) %>
+          <div class="mt-4 space-y-2 border-t border-(color:--ks-color-divider) pt-4" data-outcome-entry>
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <%= ui_input(name: "#{place}[key]", value: entry["key"], placeholder: "Key the rules name") %>
+              <%= ui_input(name: "#{place}[label]", value: entry["label"], placeholder: "Label, such as Tier 1") %>
+              <%= ui_input(name: "#{place}[name]", value: entry["name"], placeholder: "Name") %>
+              <%= ui_input(name: "#{place}[tagline]", value: entry["tagline"], placeholder: "Tagline") %>
+            </div>
+            <%= ui_textarea(name: "#{place}[facts_text]", value: texts["facts_text"], rows: 3, placeholder: "Facts, one per line: Label | value") %>
+            <%= ui_textarea(name: "#{place}[sections_text]", value: texts["sections_text"], rows: 4, placeholder: "Sections, one per line: Heading | text | result note") %>
+            <%= ui_textarea(name: "#{place}[steps_text]", value: texts["steps_text"], rows: 6, placeholder: "Steps: a title line, then code, with --- between steps") %>
+          </div>
+        <% end %>
       <% end %>
       <% if output["type"] == "lowest" %>
         <label class="ks-label mb-1 mt-3">How many to name</label>
