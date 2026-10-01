@@ -282,6 +282,16 @@ module Alembic
       assert_select "section.py-20 .max-w-2xl [data-block]"
     end
 
+    test "an outcome block on a flow's own intro page lists every entry" do
+      Flow::Summaries.new(flowed).record("outputs" => [ { "id" => "tier", "type" => "outcome", "rules" => [],
+        "entries" => [ { "key" => "live", "name" => "Live query" }, { "key" => "rollup", "name" => "Rollup" } ] } ])
+      Flow::Summaries.new(flowed).start_on(page_of(:alembic_outcomes, { "output" => "tier" }))
+
+      get alembic.flow_path(flowed.slug)
+
+      assert_select "details[id=?]", "outcome-rollup"
+    end
+
     test "a flow with no summary still shows what was said" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 

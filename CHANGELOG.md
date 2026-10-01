@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-10-01
+
+### Changed
+- **Intro page values** — a flow's own intro page is drawn with each output's result for no answers yet and the flow's slug, so an outcome block on an intro page lists every entry.
+
 ## [0.4.1] - 2026-10-01
 
 ### Changed
