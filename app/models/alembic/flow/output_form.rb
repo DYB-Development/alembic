@@ -4,8 +4,19 @@ module Alembic
       def self.edited(current, submitted)
         submitted.sort_by { |index, _| index.to_i }.map do |index, output|
           current.fetch(index.to_i, {}).merge(output.except("rules_text")).merge(listed_bands(output)).merge(counted(output))
-            .merge(ruled(output))
+            .merge(ruled(output)).merge(listed_entries(output))
         end
+      end
+
+      def self.listed_entries(output)
+        return {} unless output["entries"].is_a?(Hash)
+
+        entries = output["entries"].sort_by { |position, _| position.to_i }.map(&:last).select { |entry| entry["key"].present? }
+        { "entries" => entries.map { |entry| entry.except("facts_text").merge("facts" => pairs(entry["facts_text"])) } }
+      end
+
+      def self.pairs(text)
+        text.to_s.lines.map(&:strip).compact_blank.map { |line| line.split("|", 2).map(&:strip) }
       end
 
       def self.ruled(output)
@@ -37,7 +48,7 @@ module Alembic
         { "bands" => named.map { |band| band.merge("ceiling" => band["ceiling"].presence&.to_i) } }
       end
 
-      private_class_method :counted, :listed_bands, :ruled, :condition_from
+      private_class_method :counted, :listed_bands, :ruled, :condition_from, :listed_entries, :pairs
     end
   end
 end
