@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Editing results** — a flow's details page edits each output's label, a band output's bands with their names, ceilings and descriptions, and a weakest-categories output's count and each category's miss and cost copy. Saving records a new summary version, and a run pinned to an earlier version keeps its earlier results.
+- **Questions with no category** — the details page of a flow scored by category lists each question with no category as a problem.
+
+### Changed
+- **Unregistered output types** — recording a summary version refuses an output that names a type nobody registered, and the refusal names the type.
+
+### Added
 - **Previewing a page with results** — while laying out a page a flow starts or finishes on, an owner sees each block drawn with that flow's values. The values come from sample results worked out from the flow's own outputs, or from a finished run the owner picks.
 - **Previewing the default pages** — a flow's details page links to a preview of its intro page and of its summary page with sample results.
 - **A preview hook** — the page builder asks `Alembic::Page::Preview` for the values and choices to preview a page with, and the flow side answers. The page builder itself never names a flow or a run.
