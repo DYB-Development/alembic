@@ -41,7 +41,7 @@ module Alembic
     test "the details editor labels its fields with the look's label style" do
       get easy_flow.edit_manage_flow_path(easy_flow_definitions(:business_scorecard))
 
-      assert_select "label.ks-label", 3
+      assert_select "label.ks-label", 4
     end
 
     test "the details editor draws its back link in the look's link colour" do
@@ -234,6 +234,42 @@ module Alembic
       patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "share", type: "vibes" } } } }
 
       assert_match "vibes", flash[:alert]
+    end
+
+    test "the details editor offers an outcome's rules for editing in order" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "tier", "type" => "outcome", "entries" => [],
+        "rules" => [ { "entry" => "rollup", "when" => [ { "step" => "a", "is" => "y" }, { "step" => "b", "is_not" => "n" } ] } ] } ])
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "textarea[name=?]", "flow[outputs][0][rules_text]", text: "rollup: a is y, b is not n"
+    end
+
+    test "the details editor offers each outcome entry's name for editing" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "tier", "type" => "outcome", "rules" => [],
+        "entries" => [ { "key" => "live", "name" => "Live query" } ] } ])
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "input[name=?][value=?]", "flow[outputs][0][entries][0][name]", "Live query"
+    end
+
+    test "the details editor offers to add an outcome to a flow with no outputs" do
+      get easy_flow.edit_manage_flow_path(straight_flow)
+
+      assert_select "[data-new-outcome] input[name=?]", "flow[outputs][0][id]"
+    end
+
+    test "saving an added outcome records its entries and rules" do
+      flow = straight_flow
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "tier", type: "outcome", rules_text: "live:",
+        entries: { "0" => { key: "live", name: "Live query", facts_text: "", sections_text: "", steps_text: "" } } } } } }
+
+      assert_equal "Live query", Flow::Summaries.new(flow).of({})
+        .find { |result| result.id == "tier" }.value["chosen"]["name"]
     end
 
     test "saving the details stores the page the flow starts on" do

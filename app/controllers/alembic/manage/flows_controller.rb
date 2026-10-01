@@ -2,6 +2,7 @@ module Alembic
   module Manage
     class FlowsController < EasyFlow::Manage::FlowsController
       hosted_by FLOW_HOST
+      helper Alembic::ApplicationHelper
       def edit
         super
         summaries = Flow::Summaries.new(@flow)
@@ -43,25 +44,8 @@ module Alembic
       end
 
       def record_outputs(summaries, submitted)
-        current = Array(summaries.document.to_h["outputs"])
-        edited = submitted.permit!.to_h.sort_by { |index, _| index.to_i }.map do |index, output|
-          current.fetch(index.to_i, {}).merge(output).merge(listed_bands(output)).merge(counted(output))
-        end
+        edited = Flow::OutputForm.edited(Array(summaries.document.to_h["outputs"]), submitted.permit!.to_h)
         summaries.record(summaries.document.to_h.merge("outputs" => edited))
-      end
-
-      def counted(output)
-        output.key?("count") ? { "count" => output["count"].presence&.to_i } : {}
-      end
-
-      def listed_bands(output)
-        return {} unless output["bands"].is_a?(Hash)
-
-        named = output["bands"].sort_by { |position, _| position.to_i }.map(&:last).select { |band| band["name"].present? }
-        bands = named.map do |band|
-          band.merge("ceiling" => band["ceiling"].presence&.to_i)
-        end
-        { "bands" => bands }
       end
     end
   end

@@ -31,8 +31,20 @@ module Alembic
       when "band" then alembic_band_block(value: output.value, score: outputs.find { |other| other.type == "percentage" }&.value)
       when "grouped" then alembic_categories_block(value: output.value)
       when "lowest" then alembic_weakest_block(value: output.value)
+      when "outcome" then alembic_outcome_block(value: output.value)
       else ui_stat_card(label: output.label, value: alembic_output_lines(output.value).join(" · "))
       end
+    end
+
+    def alembic_outcome_block(value: nil)
+      chosen = value.to_h["chosen"]
+      return "" if chosen.nil?
+
+      render "alembic/blocks/outcome_entry", entry: chosen, open: true
+    end
+
+    def alembic_outcomes_block(value: nil, heading: nil)
+      render "alembic/blocks/outcomes", entries: Array(value.to_h["entries"]), heading: heading
     end
 
     def alembic_tone(percentage)

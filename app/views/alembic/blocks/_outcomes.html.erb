@@ -1,0 +1,10 @@
+<div>
+  <% if heading.present? %>
+    <h2 class="text-2xl font-bold tracking-tight text-gray-900 mb-6"><%= heading %></h2>
+  <% end %>
+  <div class="space-y-3">
+    <% entries.each do |entry| %>
+      <%= render "alembic/blocks/outcome_entry", entry: entry, open: false %>
+    <% end %>
+  </div>
+</div>

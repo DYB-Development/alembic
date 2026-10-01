@@ -257,6 +257,15 @@ module Alembic
       assert_select "span b", text: "3"
     end
 
+    test "the default summary page shows each outcome's chosen entry" do
+      Flow::Summaries.new(flowed).record("outputs" => [ { "id" => "tier", "type" => "outcome",
+        "entries" => [ { "key" => "posh", "name" => "Premium" } ], "rules" => [ { "entry" => "posh", "when" => [ { "step" => "budget", "is" => "high" } ] } ] } ])
+
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "[data-output=?] summary", "tier", text: /Premium/
+    end
+
     test "a flow with no summary still shows what was said" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Outcomes** — an outcome output holds a list of entries and an ordered list of rules on a visitor's answers, and chooses the entry named by the first rule whose conditions all hold. A condition can say an answer is a value or is not one, and a flow can hold several outcome outputs.
+- **Outcome entries** — each entry carries a label, a name, a tagline, facts, sections with an optional result note drawn as a warning, and titled steps with code.
+- **Outcome blocks** — the page builder offers a block that draws the chosen entry and a block that draws every entry with a link target for each, drawn the way the stats ladder's tier explorer is. The default summary page shows each outcome's chosen entry.
+- **Editing outcomes** — an owner adds an outcome on a flow's details page and edits its rules, one per line, and its entries' facts, sections and steps in text boxes.
+
+### Added
 - **Editing results** — a flow's details page edits each output's label, a band output's bands with their names, ceilings and descriptions, and a weakest-categories output's count and each category's miss and cost copy. Saving records a new summary version, and a run pinned to an earlier version keeps its earlier results.
 - **Questions with no category** — the details page of a flow scored by category lists each question with no category as a problem.
 

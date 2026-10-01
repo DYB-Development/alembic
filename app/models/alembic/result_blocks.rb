@@ -16,6 +16,10 @@ module Alembic
         fields: [ OUTPUT, HEADING, { key: :cost_label, label: "Cost label" } ], options: { value: { value_of: :output } })
       Page.block(:alembic_answers, name: "Answers given", width: 12, height: 4, drawn_by: :alembic_answers_block,
         fields: [ HEADING ], options: { value: { value: "answers" } })
+      Page.block(:alembic_outcome, name: "Chosen outcome", width: 12, height: 4, drawn_by: :alembic_outcome_block,
+        fields: [ OUTPUT ], options: { value: { value_of: :output } })
+      Page.block(:alembic_outcomes, name: "Every outcome", width: 12, height: 6, drawn_by: :alembic_outcomes_block,
+        fields: [ OUTPUT, HEADING ], options: { value: { value_of: :output } })
       register_lead if Alembic.lead_address
     end
 

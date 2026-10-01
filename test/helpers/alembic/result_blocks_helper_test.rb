@@ -81,6 +81,43 @@ module Alembic
       Alembic.lead_fields_partial = nil
     end
 
+    test "draws the chosen outcome entry with its name" do
+      chosen = { "key" => "live", "label" => "Tier 1", "name" => "Live query", "tagline" => "Compute it now." }
+
+      assert_select_in alembic_outcome_block(value: { "chosen" => chosen, "entries" => [ chosen ] }), "summary", text: /Live query/
+    end
+
+    test "draws each of an outcome entry's facts as a labelled value" do
+      chosen = { "key" => "live", "name" => "Live query", "facts" => [ [ "Setup", "An index" ] ] }
+
+      assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "dl dd", text: "An index"
+    end
+
+    test "draws each of an outcome entry's sections under its heading" do
+      chosen = { "key" => "live", "name" => "Live query", "sections" => [ { "heading" => "Why it works", "text" => "Always correct." } ] }
+
+      assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "h4 + p", text: "Always correct."
+    end
+
+    test "draws a section's result note as a warning" do
+      chosen = { "key" => "live", "name" => "Live query",
+                 "sections" => [ { "heading" => "What people do to avoid it", "text" => "Cache it.", "note" => "Stale numbers." } ] }
+
+      assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "p.text-red-700", text: "Result: Stale numbers."
+    end
+
+    test "draws each of an outcome entry's steps as titled code" do
+      chosen = { "key" => "live", "name" => "Live query", "steps" => [ { "title" => "Add an index", "code" => "add_index :orders, :status" } ] }
+
+      assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "pre code", text: "add_index :orders, :status"
+    end
+
+    test "draws every outcome entry with a link target for each" do
+      entries = [ { "key" => "live", "name" => "Live query" }, { "key" => "rollup", "name" => "Rollup" } ]
+
+      assert_select_in alembic_outcomes_block(value: { "chosen" => nil, "entries" => entries }), "details[id=?]", "outcome-rollup"
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
