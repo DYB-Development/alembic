@@ -266,6 +266,22 @@ module Alembic
       assert_select "[data-output=?] summary", "tier", text: /Premium/
     end
 
+    test "a flow's own summary page is drawn in the lab column" do
+      Flow::Summaries.new(summarised).finish_on(page_titled("Here is where you stand"))
+
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "section.py-20 .max-w-2xl [data-block]"
+    end
+
+    test "a flow's own intro page is drawn in the lab column" do
+      Flow::Summaries.new(flowed).start_on(page_titled("Before you begin"))
+
+      get alembic.flow_path(flowed.slug)
+
+      assert_select "section.py-20 .max-w-2xl [data-block]"
+    end
+
     test "a flow with no summary still shows what was said" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
