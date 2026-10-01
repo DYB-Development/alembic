@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Previewing a page with results** — while laying out a page a flow starts or finishes on, an owner sees each block drawn with that flow's values. The values come from sample results worked out from the flow's own outputs, or from a finished run the owner picks.
+- **Previewing the default pages** — a flow's details page links to a preview of its intro page and of its summary page with sample results.
+- **A preview hook** — the page builder asks `Alembic::Page::Preview` for the values and choices to preview a page with, and the flow side answers. The page builder itself never names a flow or a run.
+
+### Added
 - **A flow's own intro page** — an owner chooses, on a flow's details page, a published page for the flow to start on, and a visitor opening the flow sees that page's live blocks.
 - **The default intro page** — a flow with no intro page of its own opens on a page with its title, summary, question count and start button, drawn the way dyb_web's scorecard intro is.
 - **Content blocks** — the page builder offers a hero with a small label, headline and text, a row of facts, a table, code and a start button. A fact written as `{question_count}` shows the flow's question count, and the start button starts the flow the page belongs to.

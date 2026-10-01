@@ -35,6 +35,8 @@ module Alembic
       app.config.to_prepare do
         Alembic::Page::ContentBlocks.register
         Alembic::ResultBlocks.register
+        Alembic::Page::Preview.provider = ->(page, choice) { Alembic::Flow::PreviewValues.values(page, choice) }
+        Alembic::Page::Preview.chooser = ->(page) { Alembic::Flow::PreviewValues.choices(page) }
       end
     end
   end

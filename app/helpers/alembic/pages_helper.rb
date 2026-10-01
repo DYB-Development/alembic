@@ -25,8 +25,8 @@ module Alembic
       nil
     end
 
-    def shown_block(block)
-      drawn_block(block) || undrawn_block(block)
+    def shown_block(block, values: {})
+      drawn_block(block, values: values) || undrawn_block(block)
     end
 
     private
