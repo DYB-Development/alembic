@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    alembic (0.4.2)
+    alembic (0.5.0)
       easy_flow (~> 0.8)
       keystone_ui-blocks (>= 0.7.0)
       keystone_ui-react (>= 0.1.2)
