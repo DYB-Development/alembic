@@ -8,6 +8,15 @@
   <%= ui_button(label: "Publish", type: :submit, variant: :secondary) %>
 <% end %>
 
+<% choices = Alembic::Page::Preview.choices_for(@page) %>
+<% if choices.any? %>
+  <%= ui_form(action: alembic.preview_manage_page_path(@page), method: :patch) do %>
+    <label class="ks-label mb-1">Preview with</label>
+    <%= ui_select(name: "choice", options: choices, selected: session.dig(:alembic_preview, @page.id.to_s), include_blank: "Sample results") %>
+    <%= ui_button(label: "Show", type: :submit, variant: :secondary) %>
+  <% end %>
+<% end %>
+
 <%= ui_panel do %>
   <%= react_ui("alembic/page-builder", @payload.merge(token: form_authenticity_token)) %>
 <% end %>

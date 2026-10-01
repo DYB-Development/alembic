@@ -2,8 +2,8 @@ require "test_helper"
 
 module Alembic
   class PagePreviewTest < ActionDispatch::IntegrationTest
-    setup { @kept_provider = Page::Preview.provider }
-    teardown { Page::Preview.provider = @kept_provider }
+    setup { @kept = [ Page::Preview.provider, Page::Preview.chooser ] }
+    teardown { Page::Preview.provider, Page::Preview.chooser = @kept }
 
     test "the page builder draws each block with the preview values the provider gives" do
       Page::Preview.provider = ->(_page, _choice) { { "share" => 64 } }
@@ -20,6 +20,14 @@ module Alembic
       get alembic.manage_page_path(page)
 
       assert_includes response.body, "50%"
+    end
+
+    test "the page builder offers the preview choices the flow side lists" do
+      Page::Preview.chooser = ->(_page) { [ [ "Run of 1 Oct", "7" ] ] }
+
+      get alembic.manage_page_path(scored_page)
+
+      assert_select "select[name=choice] option", text: "Run of 1 Oct"
     end
 
     private
