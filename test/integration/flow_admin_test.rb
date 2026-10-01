@@ -236,6 +236,16 @@ module Alembic
       assert_match "vibes", flash[:alert]
     end
 
+    test "the details editor offers an outcome's rules for editing in order" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "tier", "type" => "outcome", "entries" => [],
+        "rules" => [ { "entry" => "rollup", "when" => [ { "step" => "a", "is" => "y" }, { "step" => "b", "is_not" => "n" } ] } ] } ])
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "textarea[name=?]", "flow[outputs][0][rules_text]", text: "rollup: a is y, b is not n"
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")

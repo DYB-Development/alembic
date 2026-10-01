@@ -20,6 +20,10 @@
           </div>
         <% end %>
       <% end %>
+      <% if output["type"] == "outcome" %>
+        <label class="ks-label mb-1 mt-3">Rules, first that holds wins</label>
+        <%= ui_textarea(name: "#{field}[rules_text]", value: alembic_rules_text(output["rules"]), rows: 4) %>
+      <% end %>
       <% if output["type"] == "lowest" %>
         <label class="ks-label mb-1 mt-3">How many to name</label>
         <%= ui_input(name: "#{field}[count]", value: output["count"], type: :number) %>
