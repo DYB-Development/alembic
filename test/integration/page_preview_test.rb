@@ -40,6 +40,17 @@ module Alembic
       assert_includes response.body, "99%"
     end
 
+    test "the page builder lists a finished run of the page's flow as a preview choice" do
+      page = scored_page
+      flow = scored_flow
+      Flow::Summaries.new(flow).finish_on(page)
+      EasyFlow::Run.start(flow).tap { |kept| kept.record("a", "y") && kept.record("b", "y") }
+
+      get alembic.manage_page_path(page)
+
+      assert_select "select[name=choice] option", 2
+    end
+
     private
 
     def scored_flow
