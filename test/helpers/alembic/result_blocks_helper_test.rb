@@ -87,6 +87,12 @@ module Alembic
       assert_select_in alembic_outcome_block(value: { "chosen" => chosen, "entries" => [ chosen ] }), "summary", text: /Live query/
     end
 
+    test "draws each of an outcome entry's facts as a labelled value" do
+      chosen = { "key" => "live", "name" => "Live query", "facts" => [ [ "Setup", "An index" ] ] }
+
+      assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "dl dd", text: "An index"
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
