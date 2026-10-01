@@ -10,11 +10,11 @@ module Alembic
 
   FLOW_HOST = :alembic
   FLOW_HOST_SETTINGS = %i[layout admin_layout admin_authentication_method
-                          visitor_authorization_method refusal_method].freeze
+                          visitor_authorization_method refusal_method owner_method].freeze
 
   class << self
     attr_accessor :lead_address, :lead_fields_partial, :lead_note
-    attr_reader :admin_authentication_method, :visitor_authorization_method, :refusal_method
+    attr_reader :admin_authentication_method, :visitor_authorization_method, :refusal_method, :owner_method
 
     FLOW_HOST_SETTINGS.each do |name|
       define_method(:"#{name}=") do |value|

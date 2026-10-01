@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-01
+
+### Upgrading
+- Run `bin/rails alembic:install:migrations` and `bin/rails easy_flow:install:migrations`, then `bin/rails db:migrate`. Pages and flows gain an owner.
+- Take easy_flow 0.8 or later, which alembic now requires.
+
+### Added
+- **Owners** — a host that sets `Alembic.owner_method` to a controller method returning the owner for the current request keeps each owner's flows and pages apart. The page builder and the flow builder list, open and edit only that owner's flows and pages, and a page or flow made there belongs to that owner. A flow can start or finish only on that owner's pages, and a visitor opens a page's address only for that owner's pages. Two owners can each hold a page at the same address. A host that sets no owner method keeps every flow and page shared, as before.
+
+### Changed
+- **The intro page migration** — its version is now 20261001120002, so it no longer shares a version with easy_flow's owner migration. A host that copied it is unaffected.
+
 ## [0.4.2] - 2026-10-01
 
 ### Changed

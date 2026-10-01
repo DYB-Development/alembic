@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_01_170001) do
   create_table "alembic_flow_definition_summaries", force: :cascade do |t|
     t.boolean "asks_on_one_page", default: false, null: false
     t.datetime "created_at", null: false
@@ -60,9 +60,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
     t.json "blocks", default: [], null: false
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.integer "owner_id"
+    t.string "owner_type"
     t.string "slug"
     t.datetime "updated_at", null: false
-    t.index ["slug"], name: "index_alembic_pages_on_slug", unique: true
+    t.index ["owner_type", "owner_id", "slug"], name: "index_alembic_pages_on_owner_and_slug", unique: true, where: "owner_id IS NOT NULL"
+    t.index ["slug"], name: "index_alembic_pages_on_slug", unique: true, where: "owner_id IS NULL"
+  end
+
+  create_table "customers", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.datetime "updated_at", null: false
   end
 
   create_table "easy_flow_definitions", force: :cascade do |t|
@@ -72,6 +81,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
     t.json "document"
     t.string "host", null: false
     t.string "kind"
+    t.integer "owner_id"
+    t.string "owner_type"
     t.string "persists", default: "unsaved", null: false
     t.string "slug"
     t.string "start_label"
@@ -80,7 +91,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_120000) do
     t.json "undo_history"
     t.json "undone_changes"
     t.datetime "updated_at", null: false
-    t.index ["host", "slug"], name: "index_easy_flow_definitions_on_host_and_slug", unique: true
+    t.index ["host", "owner_type", "owner_id", "slug"], name: "index_easy_flow_definitions_on_host_owner_and_slug", unique: true, where: "owner_id IS NOT NULL"
+    t.index ["host", "slug"], name: "index_easy_flow_definitions_on_host_and_slug", unique: true, where: "owner_id IS NULL"
   end
 
   create_table "easy_flow_runs", force: :cascade do |t|

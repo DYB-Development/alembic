@@ -9,7 +9,9 @@ module Alembic
     has_many :versions, class_name: "Alembic::Page::Version", dependent: :destroy, inverse_of: :page
 
     validates :name, presence: true
-    validates :slug, uniqueness: true, allow_nil: true
+    belongs_to :owner, polymorphic: true, optional: true
+
+    validates :slug, uniqueness: { scope: [ :owner_type, :owner_id ] }, allow_nil: true
 
     def publish
       transaction do
