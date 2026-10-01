@@ -106,6 +106,12 @@ module Alembic
       assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "p.text-red-700", text: "Result: Stale numbers."
     end
 
+    test "draws each of an outcome entry's steps as titled code" do
+      chosen = { "key" => "live", "name" => "Live query", "steps" => [ { "title" => "Add an index", "code" => "add_index :orders, :status" } ] }
+
+      assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "pre code", text: "add_index :orders, :status"
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end

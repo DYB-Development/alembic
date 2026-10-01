@@ -29,6 +29,16 @@
           <% end %>
         </div>
       <% end %>
+
+      <% if Array(entry["steps"]).any? %>
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-accent-600 mb-2">How to build it</h4>
+          <% Array(entry["steps"]).each_with_index do |step, index| %>
+            <p class="text-sm font-semibold text-gray-900 mt-3"><%= index + 1 %>. <%= step["title"] %></p>
+            <pre class="mt-1 overflow-x-auto rounded-lg bg-gray-900 p-4 text-xs leading-relaxed text-gray-100"><code><%= step["code"] %></code></pre>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   </details>
 <% end %>
