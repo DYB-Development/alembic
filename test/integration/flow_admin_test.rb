@@ -209,6 +209,15 @@ module Alembic
       assert_select "input[name=?][value=?]", "flow[outputs][0][copy][Pace][miss]", "You run late."
     end
 
+    test "saving the details stores how many weakest categories to name as a number" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "weakest", "type" => "lowest", "of" => "areas" } ])
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "weakest", type: "lowest", count: "3" } } } }
+
+      assert_equal 3, Flow::Summaries.new(flow).document["outputs"].first["count"]
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")

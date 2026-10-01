@@ -38,9 +38,13 @@ module Alembic
       def record_outputs(summaries, submitted)
         current = Array(summaries.document.to_h["outputs"])
         edited = submitted.permit!.to_h.sort_by { |index, _| index.to_i }.map do |index, output|
-          current.fetch(index.to_i, {}).merge(output).merge(listed_bands(output))
+          current.fetch(index.to_i, {}).merge(output).merge(listed_bands(output)).merge(counted(output))
         end
         summaries.record(summaries.document.to_h.merge("outputs" => edited))
+      end
+
+      def counted(output)
+        output.key?("count") ? { "count" => output["count"].presence&.to_i } : {}
       end
 
       def listed_bands(output)
