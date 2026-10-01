@@ -41,7 +41,7 @@ module Alembic
         end.to_h
       end
 
-      private_class_method :flow_for, :sample_state, :introduced, :finished_runs
+      private_class_method :flow_for, :introduced, :finished_runs
     end
   end
 end

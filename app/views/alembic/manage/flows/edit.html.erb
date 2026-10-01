@@ -39,6 +39,7 @@
     <% end %>
 
     <%= ui_section(title: "Where this finishes") do %>
+      <p class="mb-3"><%= link_to "Preview the summary page with sample results", alembic.step_manage_flow_preview_path(@flow, answers: Alembic::Flow::PreviewValues.sample_state(@flow)), class: "text-sm text-(color:--ks-color-link) hover:text-(color:--ks-color-link-hover) dark:text-(color:--ks-color-link-dark) dark:hover:text-(color:--ks-color-link-hover-dark)" %></p>
       <%= ui_select(name: "flow[summary_page_id]", selected: @summary_page&.id,
             include_blank: "Alembic's default summary page",
             options: @published_pages.map { |page| [ page.name, page.id ] }) %>
