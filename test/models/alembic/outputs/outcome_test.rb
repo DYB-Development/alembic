@@ -30,6 +30,16 @@ module Alembic
       test "is registered when the app boots" do
         assert Summary.registry.registered?("outcome")
       end
+
+      test "a flow's outcome outputs each choose by their own rules" do
+        tier = config.merge("id" => "tier", "type" => "outcome")
+        level = { "id" => "level", "type" => "outcome", "entries" => [ { "key" => "queue", "name" => "Queue" } ],
+                  "rules" => [ { "entry" => "queue", "when" => [ { "step" => "loss", "is" => "never" } ] } ] }
+
+        results = Summary::Report.new({ "outputs" => [ tier, level ] }).results(Summary::Run.new(state: { "need" => "now", "loss" => "never" }))
+
+        assert_equal [ "Live query", "Queue" ], results.map { |result| result.value["chosen"]["name"] }
+      end
     end
   end
 end
