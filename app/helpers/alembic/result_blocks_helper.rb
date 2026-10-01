@@ -31,6 +31,7 @@ module Alembic
       when "band" then alembic_band_block(value: output.value, score: outputs.find { |other| other.type == "percentage" }&.value)
       when "grouped" then alembic_categories_block(value: output.value)
       when "lowest" then alembic_weakest_block(value: output.value)
+      when "outcome" then alembic_outcome_block(value: output.value)
       else ui_stat_card(label: output.label, value: alembic_output_lines(output.value).join(" · "))
       end
     end
