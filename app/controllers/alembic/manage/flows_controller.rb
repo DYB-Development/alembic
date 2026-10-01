@@ -9,6 +9,7 @@ module Alembic
         @summary_page = summaries.summary_page
         @intro_page = summaries.intro_page
         @outputs = Array(summaries.document.to_h["outputs"])
+        @uncategorised = scored_by_category?(@outputs) ? questions_of(@flow).reject { |node| EasyFlow::Steps::Question.category_of(node).present? } : []
         @categories = questions_of(@flow).filter_map { |node| EasyFlow::Steps::Question.category_of(node) }.uniq
         @shows_answer_values = summaries.shows_answer_values?
         @asks_on_one_page = summaries.asks_on_one_page?
@@ -30,6 +31,10 @@ module Alembic
       end
 
       private
+
+      def scored_by_category?(outputs)
+        outputs.any? { |output| %w[grouped lowest].include?(output["type"]) }
+      end
 
       def questions_of(flow)
         Array(flow.definition.to_h["nodes"]).select { |node| node["type"] == "question" }

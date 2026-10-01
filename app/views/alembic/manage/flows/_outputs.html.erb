@@ -1,4 +1,9 @@
 <%= ui_section(title: "What it works out") do %>
+  <% uncategorised.each do |question| %>
+    <div class="mb-4" data-problem>
+      <%= ui_alert(type: :warning, message: "#{EasyFlow::Steps::Question.asked(question)} has no category, so it counts toward no category's score.") %>
+    </div>
+  <% end %>
   <% outputs.each_with_index do |output, index| %>
     <% field = "flow[outputs][#{index}]" %>
     <div data-output-editor="<%= output["id"] %>" class="mb-6">
