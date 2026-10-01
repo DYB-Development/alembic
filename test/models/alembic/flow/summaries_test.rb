@@ -50,6 +50,14 @@ module Alembic
         assert_equal page, summaries(flow).summary_page
       end
 
+      test "refuses an output that names a type nobody registered, naming the type" do
+        error = assert_raises(Summary::UnknownOutputType) do
+          summaries(published).record("outputs" => [ { "id" => "mood", "type" => "vibes" } ])
+        end
+
+        assert_match "vibes", error.message
+      end
+
       test "records a summary template as a numbered version" do
         flow = published
 

@@ -14,6 +14,7 @@ module Alembic
       end
 
       def record(payload)
+        Array(payload.to_h["outputs"]).each { |output| Summary.registry.fetch(output["type"]) if output["type"].present? }
         versions.create!(number: next_number, summary: payload)
           .tap { |version| details.update!(summary_cursor: version.number) }
       end
