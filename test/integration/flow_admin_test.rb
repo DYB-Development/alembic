@@ -262,6 +262,16 @@ module Alembic
       assert_select "[data-new-outcome] input[name=?]", "flow[outputs][0][id]"
     end
 
+    test "saving an added outcome records its entries and rules" do
+      flow = straight_flow
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "tier", type: "outcome", rules_text: "live:",
+        entries: { "0" => { key: "live", name: "Live query", facts_text: "", sections_text: "", steps_text: "" } } } } } }
+
+      assert_equal "Live query", Flow::Summaries.new(flow).of({})
+        .find { |result| result.id == "tier" }.value["chosen"]["name"]
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")
