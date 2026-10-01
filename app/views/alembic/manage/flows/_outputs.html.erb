@@ -6,6 +6,15 @@
       <%= hidden_field_tag "#{field}[type]", output["type"], id: nil %>
       <p class="mb-1 text-sm ks-tone-muted"><%= output["type"] %></p>
       <%= ui_input(name: "#{field}[label]", value: output["label"]) %>
+      <% if output["type"] == "band" %>
+        <% Array(output["bands"]).each_with_index do |band, position| %>
+          <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3" data-band>
+            <%= ui_input(name: "#{field}[bands][#{position}][name]", value: band["name"], placeholder: "Name") %>
+            <%= ui_input(name: "#{field}[bands][#{position}][ceiling]", value: band["ceiling"], type: :number, placeholder: "Up to, below") %>
+            <%= ui_input(name: "#{field}[bands][#{position}][description]", value: band["description"], placeholder: "Description") %>
+          </div>
+        <% end %>
+      <% end %>
     </div>
   <% end %>
 <% end %>

@@ -158,6 +158,16 @@ module Alembic
       assert_equal [ 2, "Measured" ], Flow::Summaries.new(flow).current_version.then { |version| [ version.number, version.summary["outputs"].first["label"] ] }
     end
 
+    test "the details editor offers each band's description for editing" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "band", "type" => "band", "of" => "share",
+        "bands" => [ { "ceiling" => 40, "name" => "Low", "description" => "Room to grow." } ] } ])
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "input[name=?][value=?]", "flow[outputs][0][bands][0][description]", "Room to grow."
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")
