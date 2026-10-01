@@ -1,0 +1,14 @@
+<%= ui_panel(padding: :lg) do %>
+  <details id="outcome-<%= entry["key"] %>" class="group" <%= "open" if open %>>
+    <summary class="flex items-start gap-3 cursor-pointer list-none">
+      <% if entry["label"].present? %>
+        <span class="text-xs font-semibold uppercase tracking-wider text-accent-600 border border-accent-200 rounded px-2 py-1 shrink-0"><%= entry["label"] %></span>
+      <% end %>
+      <span class="flex-1">
+        <span class="block text-lg font-semibold text-gray-900"><%= entry["name"] %></span>
+        <span class="block text-sm text-gray-500"><%= entry["tagline"] %></span>
+      </span>
+      <span class="text-gray-400 transition group-open:rotate-90">&#9656;</span>
+    </summary>
+  </details>
+<% end %>

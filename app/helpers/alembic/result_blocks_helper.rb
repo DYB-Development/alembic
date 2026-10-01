@@ -35,6 +35,13 @@ module Alembic
       end
     end
 
+    def alembic_outcome_block(value: nil)
+      chosen = value.to_h["chosen"]
+      return "" if chosen.nil?
+
+      render "alembic/blocks/outcome_entry", entry: chosen, open: true
+    end
+
     def alembic_tone(percentage)
       return "bg-red-500" if percentage.to_i < 40
       return "bg-amber-500" if percentage.to_i < 70

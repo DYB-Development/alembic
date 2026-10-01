@@ -81,6 +81,12 @@ module Alembic
       Alembic.lead_fields_partial = nil
     end
 
+    test "draws the chosen outcome entry with its name" do
+      chosen = { "key" => "live", "label" => "Tier 1", "name" => "Live query", "tagline" => "Compute it now." }
+
+      assert_select_in alembic_outcome_block(value: { "chosen" => chosen, "entries" => [ chosen ] }), "summary", text: /Live query/
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
