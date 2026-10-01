@@ -16,7 +16,7 @@ module Alembic
     test "offers the page builder a block for each kind of result" do
       ResultBlocks.register
 
-      assert_equal %i[alembic_score alembic_band alembic_categories alembic_weakest alembic_answers], offered
+      assert_equal %i[alembic_score alembic_band alembic_categories alembic_weakest alembic_answers alembic_outcome alembic_outcomes], offered
     end
 
     test "offers a lead block when the host names a lead address" do
