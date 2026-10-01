@@ -22,8 +22,11 @@
 
       <% Array(entry["sections"]).each do |section| %>
         <div>
-          <h4 class="text-xs font-semibold uppercase tracking-wider text-accent-600 mb-1"><%= section["heading"] %></h4>
+          <h4 class="text-xs font-semibold uppercase tracking-wider <%= section["note"].present? ? "text-red-600" : "text-accent-600" %> mb-1"><%= section["heading"] %></h4>
           <p class="text-gray-700"><%= section["text"] %></p>
+          <% if section["note"].present? %>
+            <p class="mt-1 text-sm text-red-700"><span class="font-semibold">Result:</span> <%= section["note"] %></p>
+          <% end %>
         </div>
       <% end %>
     </div>

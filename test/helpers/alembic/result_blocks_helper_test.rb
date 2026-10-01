@@ -99,6 +99,13 @@ module Alembic
       assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "h4 + p", text: "Always correct."
     end
 
+    test "draws a section's result note as a warning" do
+      chosen = { "key" => "live", "name" => "Live query",
+                 "sections" => [ { "heading" => "What people do to avoid it", "text" => "Cache it.", "note" => "Stale numbers." } ] }
+
+      assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "p.text-red-700", text: "Result: Stale numbers."
+    end
+
     test "colours a middling score amber" do
       assert_equal "bg-amber-500", alembic_tone(40)
     end
