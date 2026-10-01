@@ -13,5 +13,5 @@
 <% end %>
 
 <%= block_contents(@page.blocks) do |block| %>
-  <%= render "alembic/manage/pages/block_content", block: block %>
+  <%= render "alembic/manage/pages/block_content", block: block, page: @page %>
 <% end %>

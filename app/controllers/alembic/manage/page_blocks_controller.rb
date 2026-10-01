@@ -12,7 +12,7 @@ module Alembic
       end
 
       def block_content(block)
-        render_to_string(partial: "alembic/manage/pages/block_content", locals: { block: block }, formats: [ :html ])
+        render_to_string(partial: "alembic/manage/pages/block_content", locals: { block: block, page: block_layout_record }, formats: [ :html ])
       end
     end
   end
