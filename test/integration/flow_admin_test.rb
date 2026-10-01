@@ -168,6 +168,17 @@ module Alembic
       assert_select "input[name=?][value=?]", "flow[outputs][0][bands][0][description]", "Room to grow."
     end
 
+    test "saving the details stores each band with its ceiling as a number" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "band", "type" => "band", "of" => "share", "bands" => [] } ])
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "band", type: "band",
+        bands: { "0" => { name: "Low", ceiling: "40", description: "Room to grow." }, "1" => { name: "High", ceiling: "", description: "" } } } } } }
+
+      assert_equal [ { "name" => "Low", "ceiling" => 40, "description" => "Room to grow." }, { "name" => "High", "ceiling" => nil, "description" => "" } ],
+        Flow::Summaries.new(flow).document["outputs"].first["bands"]
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")

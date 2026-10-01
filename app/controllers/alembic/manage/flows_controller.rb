@@ -33,9 +33,18 @@ module Alembic
       def record_outputs(summaries, submitted)
         current = Array(summaries.document.to_h["outputs"])
         edited = submitted.permit!.to_h.sort_by { |index, _| index.to_i }.map do |index, output|
-          current.fetch(index.to_i, {}).merge(output)
+          current.fetch(index.to_i, {}).merge(output).merge(listed_bands(output))
         end
         summaries.record(summaries.document.to_h.merge("outputs" => edited))
+      end
+
+      def listed_bands(output)
+        return {} unless output["bands"].is_a?(Hash)
+
+        bands = output["bands"].sort_by { |position, _| position.to_i }.map do |_position, band|
+          band.merge("ceiling" => band["ceiling"].presence&.to_i)
+        end
+        { "bands" => bands }
       end
     end
   end
