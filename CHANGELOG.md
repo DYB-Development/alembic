@@ -4,36 +4,33 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-01
+
+### Upgrading
+- Run `bin/rails alembic:install:migrations` and then `bin/rails db:migrate`. Since 0.2.0 alembic has added columns for a flow's intro page, its summary page, showing answer values and asking on one page.
+- Replace `Alembic.lead_partial` with `Alembic.lead_address`, and optionally `Alembic.lead_fields_partial` and `Alembic.lead_note`.
+- Take easy_flow 0.6 or later, which alembic now requires.
+
 ### Added
 - **Outcomes** — an outcome output holds a list of entries and an ordered list of rules on a visitor's answers, and chooses the entry named by the first rule whose conditions all hold. A condition can say an answer is a value or is not one, and a flow can hold several outcome outputs.
 - **Outcome entries** — each entry carries a label, a name, a tagline, facts, sections with an optional result note drawn as a warning, and titled steps with code.
 - **Outcome blocks** — the page builder offers a block that draws the chosen entry and a block that draws every entry with a link target for each, drawn the way the stats ladder's tier explorer is. The default summary page shows each outcome's chosen entry.
 - **Editing outcomes** — an owner adds an outcome on a flow's details page and edits its rules, one per line, and its entries' facts, sections and steps in text boxes.
-
-### Added
 - **Editing results** — a flow's details page edits each output's label, a band output's bands with their names, ceilings and descriptions, and a weakest-categories output's count and each category's miss and cost copy. Saving records a new summary version, and a run pinned to an earlier version keeps its earlier results.
 - **Questions with no category** — the details page of a flow scored by category lists each question with no category as a problem.
-
-### Changed
-- **Unregistered output types** — recording a summary version refuses an output that names a type nobody registered, and the refusal names the type.
-
-### Added
 - **Previewing a page with results** — while laying out a page a flow starts or finishes on, an owner sees each block drawn with that flow's values. The values come from sample results worked out from the flow's own outputs, or from a finished run the owner picks.
 - **Previewing the default pages** — a flow's details page links to a preview of its intro page and of its summary page with sample results.
 - **A preview hook** — the page builder asks `Alembic::Page::Preview` for the values and choices to preview a page with, and the flow side answers. The page builder itself never names a flow or a run.
-
-### Added
 - **A flow's own intro page** — an owner chooses, on a flow's details page, a published page for the flow to start on, and a visitor opening the flow sees that page's live blocks.
 - **The default intro page** — a flow with no intro page of its own opens on a page with its title, summary, question count and start button, drawn the way dyb_web's scorecard intro is.
 - **Content blocks** — the page builder offers a hero with a small label, headline and text, a row of facts, a table, code and a start button. A fact written as `{question_count}` shows the flow's question count, and the start button starts the flow the page belongs to.
 - **One-page flows** — an owner can set a flow with no branching, on its details page, to ask every question on one page. A visitor sees one question at a time with its category, count and progress bar, moves on by choosing an answer, goes back with Previous, and sends every answer in one request from a ready state at the end. A visitor whose browser runs no script sees every question at once.
-
-### Added
 - **Alembic's own step page** — a question is asked on a page drawn the way dyb_web's labs draw one, with the question's category above its text, "Question N of M" and a progress bar worked out from the questions answered and the questions left.
 - **Moving on when an answer is chosen** — choosing an answer sends it on without pressing Next.
 - **Answer values beside their labels** — an owner can set a flow, on its details page, to show each answer's value beside its label.
 
 ### Changed
+- **Unregistered output types** — recording a summary version refuses an output that names a type nobody registered, and the refusal names the type.
 - **easy_flow** — alembic requires easy_flow 0.6, which counts the questions left on a flow's path.
 
 ## [0.3.0] - 2026-09-30
