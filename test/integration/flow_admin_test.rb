@@ -140,6 +140,15 @@ module Alembic
       assert_select "a[href=?]", alembic.step_manage_flow_preview_path(flow, answers: { "a" => "y", "b" => "y" })
     end
 
+    test "the details editor offers each output's label for editing" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "share", "type" => "percentage", "label" => "Captured" } ])
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "input[name=?][value=?]", "flow[outputs][0][label]", "Captured"
+    end
+
     test "saving the details stores the page the flow starts on" do
       flow = easy_flow_definitions(:business_scorecard)
       page = Page.create!(name: "Welcome")

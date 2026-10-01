@@ -45,6 +45,8 @@
             options: @published_pages.map { |page| [ page.name, page.id ] }) %>
     <% end %>
 
+    <%= render "alembic/manage/flows/outputs", outputs: @outputs if @outputs.any? %>
+
     <%= ui_section(title: "What this keeps of a run") do %>
       <%= ui_select(name: "flow[persists]", selected: @flow.persists,
             options: [ [ "Nothing", "unsaved" ],

@@ -1,0 +1,11 @@
+<%= ui_section(title: "What it works out") do %>
+  <% outputs.each_with_index do |output, index| %>
+    <% field = "flow[outputs][#{index}]" %>
+    <div data-output-editor="<%= output["id"] %>" class="mb-6">
+      <%= hidden_field_tag "#{field}[id]", output["id"], id: nil %>
+      <%= hidden_field_tag "#{field}[type]", output["type"], id: nil %>
+      <p class="mb-1 text-sm ks-tone-muted"><%= output["type"] %></p>
+      <%= ui_input(name: "#{field}[label]", value: output["label"]) %>
+    </div>
+  <% end %>
+<% end %>

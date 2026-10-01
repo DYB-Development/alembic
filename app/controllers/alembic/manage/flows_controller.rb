@@ -8,6 +8,7 @@ module Alembic
         @summary = summaries.text
         @summary_page = summaries.summary_page
         @intro_page = summaries.intro_page
+        @outputs = Array(summaries.document.to_h["outputs"])
         @shows_answer_values = summaries.shows_answer_values?
         @asks_on_one_page = summaries.asks_on_one_page?
         @branches = summaries.branches?
