@@ -227,6 +227,15 @@ module Alembic
       assert_select "[data-problem]", text: /B\?/
     end
 
+    test "a refused flow edit sends the admin back to the flow's edit page at its code" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "share", "type" => "percentage" } ])
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "share", type: "vibes" } } } }
+
+      assert_redirected_to "/alembic/manage/flows/#{flow.public_code}/edit"
+    end
+
     test "saving an output that names a type nobody registered is refused with the type's name" do
       flow = straight_flow
       Flow::Summaries.new(flow).record("outputs" => [ { "id" => "share", "type" => "percentage" } ])
