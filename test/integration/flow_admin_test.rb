@@ -227,6 +227,12 @@ module Alembic
       assert_select "[data-problem]", text: /B\?/
     end
 
+    test "a numbered flow details address is not found where the app has flow codes" do
+      get "/alembic/manage/flows/#{straight_flow.id}/edit"
+
+      assert_response :not_found
+    end
+
     test "a refused flow edit sends the admin back to the flow's edit page at its code" do
       flow = straight_flow
       Flow::Summaries.new(flow).record("outputs" => [ { "id" => "share", "type" => "percentage" } ])
