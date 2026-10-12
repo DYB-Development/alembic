@@ -11,7 +11,7 @@ module Alembic
     test "the flow builder links each flow under alembic's address" do
       get easy_flow.manage_flows_path
 
-      assert_select "a[href=?]", "/alembic/manage/flows/#{easy_flow_definitions(:business_scorecard).id}"
+      assert_select "a[href=?]", "/alembic/manage/flows/#{easy_flow_definitions(:business_scorecard).public_code}"
     end
 
     test "the flow builder creates a flow" do
@@ -26,7 +26,7 @@ module Alembic
       get easy_flow.manage_flow_path(flow)
 
       drawn = JSON.parse(css_select("[data-flow-canvas]").first["data-props"])
-      assert_equal "/alembic/manage/flows/#{flow.id}/canvas", drawn["base"]
+      assert_equal "/alembic/manage/flows/#{flow.public_code}/canvas", drawn["base"]
     end
 
     test "the details editor offers the flow's summary for editing" do
@@ -225,6 +225,21 @@ module Alembic
       get easy_flow.edit_manage_flow_path(flow)
 
       assert_select "[data-problem]", text: /B\?/
+    end
+
+    test "a numbered flow details address is not found where the app has flow codes" do
+      get "/alembic/manage/flows/#{straight_flow.id}/edit"
+
+      assert_response :not_found
+    end
+
+    test "a refused flow edit sends the admin back to the flow's edit page at its code" do
+      flow = straight_flow
+      Flow::Summaries.new(flow).record("outputs" => [ { "id" => "share", "type" => "percentage" } ])
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { outputs: { "0" => { id: "share", type: "vibes" } } } }
+
+      assert_redirected_to "/alembic/manage/flows/#{flow.public_code}/edit"
     end
 
     test "saving an output that names a type nobody registered is refused with the type's name" do

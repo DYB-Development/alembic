@@ -2,6 +2,7 @@ _fixture:
   model_class: EasyFlow::Definition
 
 business_scorecard:
+  public_code: <%= PublicCode.generate %>
   host: alembic
   slug: business-scorecard
   title: Business Blind-Spot Scorecard
@@ -9,6 +10,7 @@ business_scorecard:
   status: active
 
 stats_ladder:
+  public_code: <%= PublicCode.generate %>
   host: alembic
   slug: stats-system-ladder
   title: The Stats System Ladder
@@ -16,6 +18,7 @@ stats_ladder:
   status: active
 
 db_guide:
+  public_code: <%= PublicCode.generate %>
   host: alembic
   slug: db-guide
   title: Database Guide Record

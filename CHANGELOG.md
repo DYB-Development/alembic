@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-12
+
+### Changed
+- Alembic's flow pages find a flow by the address it carries: its random code in an app whose flows have codes, and its id in one whose flows do not.
+- A refused flow edit sends the admin back to the flow's edit page at that same address.
+
+### Upgrading
+- Take easy_flow 0.24 or later, which alembic now requires, and release both to an app together.
+- Run `bin/rails easy_flow:install:migrations`, then `bin/rails db:migrate`, to give flows, flow versions and runs their codes.
+
 ## [0.5.0] - 2026-10-01
 
 ### Upgrading

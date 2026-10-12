@@ -21,7 +21,7 @@ module Alembic
 
       def update
         details = params.require(:flow)
-        summaries = Flow::Summaries.new(flow_host.flows.find(params[:id]))
+        summaries = Flow::Summaries.new(flow_host.flows.find_by_public_code!(params[:id]))
         summaries.describe(details[:summary]) unless details[:summary].nil?
         summaries.start_on(owned_pages.find_by(id: details[:intro_page_id])) unless details[:intro_page_id].nil?
         summaries.finish_on(owned_pages.find_by(id: details[:summary_page_id])) unless details[:summary_page_id].nil?

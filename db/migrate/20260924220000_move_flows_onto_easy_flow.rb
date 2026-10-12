@@ -9,6 +9,7 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
 
   class Definition < ActiveRecord::Base
     self.table_name = "easy_flow_definitions"
+    has_public_code
   end
 
   class OldVersion < ActiveRecord::Base
@@ -17,6 +18,7 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
 
   class Version < ActiveRecord::Base
     self.table_name = "easy_flow_versions"
+    has_public_code
   end
 
   class OldRun < ActiveRecord::Base
@@ -25,6 +27,7 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
 
   class Run < ActiveRecord::Base
     self.table_name = "easy_flow_runs"
+    has_public_code
   end
 
   class SummaryVersion < ActiveRecord::Base

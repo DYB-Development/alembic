@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_01_170001) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_12_204544) do
   create_table "alembic_flow_definition_summaries", force: :cascade do |t|
     t.boolean "asks_on_one_page", default: false, null: false
     t.datetime "created_at", null: false
@@ -91,8 +91,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_170001) do
     t.json "undo_history"
     t.json "undone_changes"
     t.datetime "updated_at", null: false
+    t.string "public_code", null: false
     t.index ["host", "owner_type", "owner_id", "slug"], name: "index_easy_flow_definitions_on_host_owner_and_slug", unique: true, where: "owner_id IS NOT NULL"
     t.index ["host", "slug"], name: "index_easy_flow_definitions_on_host_and_slug", unique: true, where: "owner_id IS NULL"
+    t.index ["public_code"], name: "index_easy_flow_definitions_on_public_code", unique: true
   end
 
   create_table "easy_flow_runs", force: :cascade do |t|
@@ -105,9 +107,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_170001) do
     t.json "recorded"
     t.string "status"
     t.datetime "updated_at", null: false
+    t.integer "parent_run_id"
+    t.string "parent_step"
+    t.string "public_code", null: false
     t.index ["definition_version_id"], name: "index_easy_flow_runs_on_definition_version_id"
     t.index ["flow_id"], name: "index_easy_flow_runs_on_flow_id"
     t.index ["owner_type", "owner_id"], name: "index_easy_flow_runs_on_owner"
+    t.index ["parent_run_id"], name: "index_easy_flow_runs_on_parent_run_id"
+    t.index ["public_code"], name: "index_easy_flow_runs_on_public_code", unique: true
   end
 
   create_table "easy_flow_versions", force: :cascade do |t|
@@ -117,9 +124,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_170001) do
     t.integer "flow_id", null: false
     t.integer "number", null: false
     t.string "status", default: "draft", null: false
+    t.string "public_code", null: false
     t.index ["flow_id", "number"], name: "index_easy_flow_versions_on_flow_id_and_number", unique: true
     t.index ["flow_id"], name: "index_easy_flow_versions_on_flow_id"
     t.index ["flow_id"], name: "index_easy_flow_versions_on_one_live_per_flow", unique: true, where: "status = 'live'"
+    t.index ["public_code"], name: "index_easy_flow_versions_on_public_code", unique: true
   end
 
   add_foreign_key "alembic_flow_definition_summaries", "alembic_pages", column: "intro_page_id", on_delete: :nullify
@@ -130,6 +139,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_01_170001) do
   add_foreign_key "alembic_flow_summaries", "easy_flow_definitions", column: "flow_id", on_delete: :cascade
   add_foreign_key "alembic_page_versions", "alembic_pages", column: "page_id"
   add_foreign_key "easy_flow_runs", "easy_flow_definitions", column: "flow_id"
+  add_foreign_key "easy_flow_runs", "easy_flow_runs", column: "parent_run_id"
   add_foreign_key "easy_flow_runs", "easy_flow_versions", column: "definition_version_id"
   add_foreign_key "easy_flow_versions", "easy_flow_definitions", column: "flow_id"
 end
