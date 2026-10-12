@@ -124,7 +124,7 @@ GEM
     keystone_ui (0.27.0)
       keystone_ui-styles (>= 0.8.0)
       view_component (>= 2.0, < 5)
-    keystone_ui-blocks (0.7.0)
+    keystone_ui-blocks (0.7.1)
       actionview (>= 7.0)
       activesupport (>= 7.0)
       keystone_ui-react (>= 0.1.2)
