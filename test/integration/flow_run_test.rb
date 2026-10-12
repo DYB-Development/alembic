@@ -353,5 +353,13 @@ module Alembic
 
       assert_select "legend", text: /Which premium tier\?/
     end
+
+    test "a run's page opens at the run's code" do
+      run = EasyFlow::Run.start(flowed)
+
+      get "/alembic/runs/#{run.public_code}"
+
+      assert_select "form[action=?]", "/alembic/runs/#{run.public_code}"
+    end
   end
 end
