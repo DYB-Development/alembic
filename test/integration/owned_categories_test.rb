@@ -32,6 +32,15 @@ module Alembic
       assert_response :not_found
     end
 
+    test "the builder cannot add a question to another owner's category" do
+      theirs = Category.create!(name: "Their rivers", owner: @theirs)
+
+      post alembic.manage_category_questions_path(theirs),
+        params: { question: { kind: "true_false", text: "The Nile flows north.", right: "True" } }, headers: as(@ours)
+
+      assert_not theirs.questions.exists?
+    end
+
     private
 
     def as(customer)
