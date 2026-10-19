@@ -5,9 +5,13 @@
 
   <%= ui_page_header(title: "New category") %>
 
+  <% @category.errors.full_messages.each do |message| %>
+    <%= ui_alert(message: message, type: :error, class: "mb-4") %>
+  <% end %>
+
   <%= ui_form(action: alembic.manage_categories_path, method: :post) do %>
     <label class="ks-label mb-1">Name</label>
-    <%= ui_input(name: "category[name]", placeholder: "e.g. Rivers of the world") %>
+    <%= ui_input(name: "category[name]", value: @category.name, placeholder: "e.g. Rivers of the world") %>
 
     <%= ui_button(label: "Create", type: :submit) %>
   <% end %>

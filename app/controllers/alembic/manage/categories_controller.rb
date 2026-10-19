@@ -2,11 +2,14 @@ module Alembic
   module Manage
     class CategoriesController < BaseController
       def new
+        @category = Category.new
       end
 
       def create
-        category = Category.create!(category_params)
-        redirect_to manage_category_path(category)
+        @category = Category.new(category_params)
+        return render :new, status: :unprocessable_content unless @category.save
+
+        redirect_to manage_category_path(@category)
       end
 
       private
