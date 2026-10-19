@@ -2,7 +2,7 @@ module Alembic
   module Manage
     class CategoriesController < BaseController
       def index
-        @categories = Category.order(:name)
+        @categories = owned_categories.order(:name)
       end
 
       def show
