@@ -53,6 +53,12 @@ module Alembic
       assert_selector "li", text: /Which river is longest\?\s+Right answer: Nile/
     end
 
+    test "the new multiple choice question page fits a phone without scrolling sideways" do
+      visit alembic.new_manage_category_question_path(@category, kind: "multiple_choice")
+
+      assert_fits_the_screen
+    end
+
     private
 
     def assert_fits_the_screen
