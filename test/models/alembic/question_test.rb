@@ -34,5 +34,11 @@ module Alembic
 
       assert_equal [ { "label" => "Nile", "right" => false }, { "label" => "Amazon", "right" => true } ], question.options
     end
+
+    test "a true/false question offers True and False with the chosen one right" do
+      question = @category.questions.true_or_false(text: "The Nile flows north.", right: "True")
+
+      assert_equal [ { "label" => "True", "right" => true }, { "label" => "False", "right" => false } ], question.options
+    end
   end
 end
