@@ -1,6 +1,11 @@
 module Alembic
   module Manage
     class QuestionsController < BaseController
+      def new
+        @category = owned_categories.find(params[:category_id])
+        @question = @category.questions.new(kind: :true_false)
+      end
+
       def create
         category = owned_categories.find(params[:category_id])
         written(category.questions, params.require(:question)).save!

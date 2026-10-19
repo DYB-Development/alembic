@@ -17,5 +17,11 @@ module Alembic
 
       assert_equal [ { "label" => "Amazon", "right" => false }, { "label" => "Nile", "right" => true } ], @category.questions.sole.options
     end
+
+    test "the new true/false question page offers True and False to mark as right" do
+      get alembic.new_manage_category_question_path(@category, kind: "true_false")
+
+      assert_select "form[action=?] input[type=radio][name=?]", alembic.manage_category_questions_path(@category), "question[right]", 2
+    end
   end
 end
