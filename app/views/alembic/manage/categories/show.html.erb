@@ -6,7 +6,8 @@
   <%= ui_page_header(title: @category.name) do |header| %>
     <% header.action do
          tag.div(class: "flex flex-wrap gap-2") do
-           ui_button(label: "Add a true/false question", href: alembic.new_manage_category_question_path(@category, kind: "true_false"), variant: :secondary)
+           ui_button(label: "Add a true/false question", href: alembic.new_manage_category_question_path(@category, kind: "true_false"), variant: :secondary) +
+             ui_button(label: "Add a multiple choice question", href: alembic.new_manage_category_question_path(@category, kind: "multiple_choice"), variant: :secondary)
          end
        end %>
   <% end %>

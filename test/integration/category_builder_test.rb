@@ -56,5 +56,13 @@ module Alembic
 
       assert_select "a[href=?]", alembic.new_manage_category_question_path(category, kind: "true_false")
     end
+
+    test "a category's page links to adding a multiple choice question" do
+      category = Category.create!(name: "Rivers")
+
+      get alembic.manage_category_path(category)
+
+      assert_select "a[href=?]", alembic.new_manage_category_question_path(category, kind: "multiple_choice")
+    end
   end
 end
