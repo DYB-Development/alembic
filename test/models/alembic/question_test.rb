@@ -19,5 +19,14 @@ module Alembic
 
       assert_includes question.errors.full_messages, "A question needs exactly one right option"
     end
+
+    test "a multiple choice question with two right options is refused with the reason" do
+      question = @category.questions.new(kind: :multiple_choice, text: "Longest river?",
+        options: [ { "label" => "Nile", "right" => true }, { "label" => "Amazon", "right" => true } ])
+
+      question.validate
+
+      assert_includes question.errors.full_messages, "A question needs exactly one right option"
+    end
   end
 end
