@@ -14,7 +14,7 @@ module Alembic
       end
 
       def create
-        @category = Category.new(category_params)
+        @category = owned_categories.new(category_params)
         return render :new, status: :unprocessable_content unless @category.save
 
         redirect_to manage_category_path(@category)

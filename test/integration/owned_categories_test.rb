@@ -18,6 +18,12 @@ module Alembic
       assert_no_match "Their rivers", response.body
     end
 
+    test "a category created in the builder belongs to the owner" do
+      post alembic.manage_categories_path, params: { category: { name: "Rivers" } }, headers: as(@ours)
+
+      assert_equal @ours, Category.find_by!(name: "Rivers").owner
+    end
+
     private
 
     def as(customer)
