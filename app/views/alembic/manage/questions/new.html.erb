@@ -5,6 +5,10 @@
 
   <%= ui_page_header(title: @question.multiple_choice? ? "New multiple choice question" : "New true/false question", subtitle: @category.name) %>
 
+  <% @question.errors.full_messages.each do |message| %>
+    <%= ui_alert(message: message, type: :error, class: "mb-4") %>
+  <% end %>
+
   <%= ui_form(action: alembic.manage_category_questions_path(@category), method: :post) do %>
     <%= hidden_field_tag "question[kind]", @question.kind, id: nil %>
 
