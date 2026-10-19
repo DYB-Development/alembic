@@ -28,5 +28,11 @@ module Alembic
 
       assert_includes question.errors.full_messages, "A question needs exactly one right option"
     end
+
+    test "a multiple choice question leaves out options left blank" do
+      question = @category.questions.choice_of(text: "Longest river?", labels: [ "Nile", "", "Amazon", " " ], right: 2)
+
+      assert_equal [ { "label" => "Nile", "right" => false }, { "label" => "Amazon", "right" => true } ], question.options
+    end
   end
 end

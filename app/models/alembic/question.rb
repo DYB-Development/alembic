@@ -8,8 +8,8 @@ module Alembic
     validate :one_right_option
 
     def self.choice_of(text:, labels:, right:)
-      options = labels.each_with_index.map { |label, index| { "label" => label, "right" => index.to_s == right.to_s } }
-      new(kind: :multiple_choice, text: text, options: options)
+      options = labels.each_with_index.map { |label, index| { "label" => label.to_s.strip, "right" => index.to_s == right.to_s } }
+      new(kind: :multiple_choice, text: text, options: options.reject { |option| option["label"].empty? })
     end
 
     private
