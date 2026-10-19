@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_19_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_19_120100) do
   create_table "alembic_categories", force: :cascade do |t|
     t.string "name", null: false
     t.string "owner_type"
@@ -75,6 +75,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_19_120000) do
     t.datetime "updated_at", null: false
     t.index ["owner_type", "owner_id", "slug"], name: "index_alembic_pages_on_owner_and_slug", unique: true, where: "owner_id IS NOT NULL"
     t.index ["slug"], name: "index_alembic_pages_on_slug", unique: true, where: "owner_id IS NULL"
+  end
+
+  create_table "alembic_questions", force: :cascade do |t|
+    t.integer "category_id", null: false
+    t.string "kind", null: false
+    t.string "text", null: false
+    t.json "options", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_alembic_questions_on_category_id"
   end
 
   create_table "customers", force: :cascade do |t|
@@ -147,6 +157,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_19_120000) do
   add_foreign_key "alembic_flow_run_summaries", "easy_flow_runs", column: "run_id", on_delete: :cascade
   add_foreign_key "alembic_flow_summaries", "easy_flow_definitions", column: "flow_id", on_delete: :cascade
   add_foreign_key "alembic_page_versions", "alembic_pages", column: "page_id"
+  add_foreign_key "alembic_questions", "alembic_categories", column: "category_id"
   add_foreign_key "easy_flow_runs", "easy_flow_definitions", column: "flow_id"
   add_foreign_key "easy_flow_runs", "easy_flow_runs", column: "parent_run_id"
   add_foreign_key "easy_flow_runs", "easy_flow_versions", column: "definition_version_id"
