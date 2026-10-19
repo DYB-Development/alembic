@@ -23,6 +23,12 @@ module Alembic
       assert_selector "h1", text: "Rivers"
     end
 
+    test "a phone offers a new category from the category list" do
+      visit alembic.manage_categories_path
+
+      assert_link "New category", href: alembic.new_manage_category_path
+    end
+
     private
 
     def assert_fits_the_screen
