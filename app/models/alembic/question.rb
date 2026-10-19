@@ -6,6 +6,8 @@ module Alembic
 
     belongs_to :category
 
+    validates :text, presence: true
+
     validate :two_options_or_more, if: :multiple_choice?
     validate :one_right_option
 

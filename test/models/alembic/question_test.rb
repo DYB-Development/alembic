@@ -40,5 +40,9 @@ module Alembic
 
       assert_equal [ { "label" => "True", "right" => true }, { "label" => "False", "right" => false } ], question.options
     end
+
+    test "a question needs its text" do
+      assert_not @category.questions.true_or_false(text: "", right: "True").valid?
+    end
   end
 end
