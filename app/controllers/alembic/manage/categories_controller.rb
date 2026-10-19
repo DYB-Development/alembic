@@ -1,6 +1,10 @@
 module Alembic
   module Manage
     class CategoriesController < BaseController
+      def index
+        @categories = Category.order(:name)
+      end
+
       def new
         @category = Category.new
       end
