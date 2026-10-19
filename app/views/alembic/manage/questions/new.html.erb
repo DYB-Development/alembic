@@ -3,7 +3,8 @@
     <%= link_to "← #{@category.name}", alembic.manage_category_path(@category), class: "text-sm text-(color:--ks-color-link) hover:text-(color:--ks-color-link-hover) dark:text-(color:--ks-color-link-dark) dark:hover:text-(color:--ks-color-link-hover-dark)" %>
   </p>
 
-  <%= ui_page_header(title: @question.multiple_choice? ? "New multiple choice question" : "New true/false question", subtitle: @category.name) %>
+  <%= render "alembic/manage/shared/heading", title: @question.multiple_choice? ? "New multiple choice question" : "New true/false question",
+        subtitle: @category.name %>
 
   <% @question.errors.full_messages.each do |message| %>
     <%= ui_alert(message: message, type: :error, class: "mb-4") %>

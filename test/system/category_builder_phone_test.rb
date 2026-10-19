@@ -29,6 +29,12 @@ module Alembic
       assert_link "New category", href: alembic.new_manage_category_path
     end
 
+    test "a phone shows which kind of question is being written" do
+      visit alembic.new_manage_category_question_path(@category, kind: "multiple_choice")
+
+      assert_selector "h1", text: "New multiple choice question"
+    end
+
     private
 
     def assert_fits_the_screen
