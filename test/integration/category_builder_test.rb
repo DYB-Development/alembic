@@ -7,5 +7,11 @@ module Alembic
 
       assert Category.exists?(name: "Rivers")
     end
+
+    test "the new category page offers a form to name the category" do
+      get alembic.new_manage_category_path
+
+      assert_select "form[action=?] input[name=?]", alembic.manage_categories_path, "category[name]"
+    end
   end
 end

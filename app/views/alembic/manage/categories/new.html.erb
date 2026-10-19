@@ -1,0 +1,14 @@
+<%= ui_page(max_width: :lg) do %>
+  <p class="mb-4">
+    <%= link_to "← All categories", alembic.manage_categories_path, class: "text-sm text-(color:--ks-color-link) hover:text-(color:--ks-color-link-hover) dark:text-(color:--ks-color-link-dark) dark:hover:text-(color:--ks-color-link-hover-dark)" %>
+  </p>
+
+  <%= ui_page_header(title: "New category") %>
+
+  <%= ui_form(action: alembic.manage_categories_path, method: :post) do %>
+    <label class="ks-label mb-1">Name</label>
+    <%= ui_input(name: "category[name]", placeholder: "e.g. Rivers of the world") %>
+
+    <%= ui_button(label: "Create", type: :submit) %>
+  <% end %>
+<% end %>
