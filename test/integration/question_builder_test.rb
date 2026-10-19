@@ -23,5 +23,11 @@ module Alembic
 
       assert_select "form[action=?] input[type=radio][name=?]", alembic.manage_category_questions_path(@category), "question[right]", 2
     end
+
+    test "the new multiple choice question page offers four options to fill in" do
+      get alembic.new_manage_category_question_path(@category, kind: "multiple_choice")
+
+      assert_select "form[action=?] input[name=?]", alembic.manage_category_questions_path(@category), "question[labels][]", 4
+    end
   end
 end

@@ -3,7 +3,7 @@ module Alembic
     class QuestionsController < BaseController
       def new
         @category = owned_categories.find(params[:category_id])
-        @question = @category.questions.new(kind: :true_false)
+        @question = @category.questions.new(kind: params[:kind] == "multiple_choice" ? :multiple_choice : :true_false)
       end
 
       def create
