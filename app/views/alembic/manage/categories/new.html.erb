@@ -3,7 +3,7 @@
     <%= link_to "← All categories", alembic.manage_categories_path, class: "text-sm text-(color:--ks-color-link) hover:text-(color:--ks-color-link-hover) dark:text-(color:--ks-color-link-dark) dark:hover:text-(color:--ks-color-link-hover-dark)" %>
   </p>
 
-  <%= ui_page_header(title: "New category") %>
+  <%= render "alembic/manage/shared/heading", title: "New category" %>
 
   <% @category.errors.full_messages.each do |message| %>
     <%= ui_alert(message: message, type: :error, class: "mb-4") %>

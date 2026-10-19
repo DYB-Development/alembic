@@ -35,6 +35,12 @@ module Alembic
       assert_selector "h1", text: "New multiple choice question"
     end
 
+    test "a phone shows the new category page's title" do
+      visit alembic.new_manage_category_path
+
+      assert_selector "h1", text: "New category"
+    end
+
     private
 
     def assert_fits_the_screen
