@@ -1,0 +1,27 @@
+<%= ui_page(max_width: :xl) do %>
+  <p class="mb-4">
+    <%= link_to "← All categories", alembic.manage_categories_path, class: "text-sm text-(color:--ks-color-link) hover:text-(color:--ks-color-link-hover) dark:text-(color:--ks-color-link-dark) dark:hover:text-(color:--ks-color-link-hover-dark)" %>
+  </p>
+
+  <%= render "alembic/manage/shared/heading", title: @category.name, actions: capture {
+        ui_button(label: "Add a true/false question", href: alembic.new_manage_category_question_path(@category, kind: "true_false"), variant: :secondary) +
+          ui_button(label: "Add a multiple choice question", href: alembic.new_manage_category_question_path(@category, kind: "multiple_choice"), variant: :secondary)
+      } %>
+
+  <%= ui_section(title: "Questions") do %>
+    <% if @category.questions.any? %>
+      <ul class="flex flex-col gap-3">
+        <% @category.questions.order(:created_at).each do |question| %>
+          <li>
+            <%= ui_panel(padding: :sm) do %>
+              <p class="break-words"><%= question.text %></p>
+              <p class="mt-1 text-sm">Right answer: <%= question.options.find { |option| option["right"] }&.dig("label") %></p>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-sm">No questions yet.</p>
+    <% end %>
+  <% end %>
+<% end %>

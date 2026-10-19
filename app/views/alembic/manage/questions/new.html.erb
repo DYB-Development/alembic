@@ -1,0 +1,23 @@
+<%= ui_page(max_width: :lg) do %>
+  <p class="mb-4">
+    <%= link_to "← #{@category.name}", alembic.manage_category_path(@category), class: "text-sm text-(color:--ks-color-link) hover:text-(color:--ks-color-link-hover) dark:text-(color:--ks-color-link-dark) dark:hover:text-(color:--ks-color-link-hover-dark)" %>
+  </p>
+
+  <%= render "alembic/manage/shared/heading", title: @question.multiple_choice? ? "New multiple choice question" : "New true/false question",
+        subtitle: @category.name %>
+
+  <% @question.errors.full_messages.each do |message| %>
+    <%= ui_alert(message: message, type: :error, class: "mb-4") %>
+  <% end %>
+
+  <%= ui_form(action: alembic.manage_category_questions_path(@category), method: :post) do %>
+    <%= hidden_field_tag "question[kind]", @question.kind, id: nil %>
+
+    <label class="ks-label mb-1">Question</label>
+    <%= ui_input(name: "question[text]", value: @question.text) %>
+
+    <%= render "alembic/manage/questions/#{@question.kind}", question: @question %>
+
+    <%= ui_button(label: "Create", type: :submit) %>
+  <% end %>
+<% end %>

@@ -1,0 +1,13 @@
+<%= ui_page(max_width: :xl) do %>
+  <%= render "alembic/manage/shared/heading", title: "Categories",
+        subtitle: "Write questions in categories to use in more than one quiz",
+        actions: ui_button(label: "New category", href: alembic.new_manage_category_path) %>
+
+  <%= ui_data_table(
+    items: @categories,
+    columns: [ { name: "Name" } ],
+    empty_message: "No categories yet."
+  ) do |table| %>
+    <% table.link(:name) { |category| alembic.manage_category_path(category) } %>
+  <% end %>
+<% end %>

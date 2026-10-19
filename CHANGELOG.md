@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Upgrading
+- Run `bin/rails alembic:install:migrations`, then `bin/rails db:migrate`, to add the tables for categories and their questions.
+
+### Added
+- **Categories of questions** — a builder creates a named category at `manage/categories` and adds true/false and multiple choice questions to it, so the same questions can be used in more than one quiz. A true/false question marks True or False as right, and a multiple choice question takes up to four options with exactly one marked right. A multiple choice question with fewer than two options, or a question without exactly one right option, is refused with a message saying why. A host that sets `Alembic.owner_method` keeps each owner's categories apart, so the builder lists, opens and adds questions only to that owner's categories, and a category made there belongs to that owner.
+
 ## [0.6.0] - 2026-10-12
 
 ### Changed

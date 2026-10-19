@@ -6,6 +6,7 @@ module Alembic
     class BaseController < Alembic.base_controller.constantize
       include AuthenticatesAdmin
       include OwnedPages
+      include OwnedCategories
 
       layout -> { Alembic.admin_layout }
 

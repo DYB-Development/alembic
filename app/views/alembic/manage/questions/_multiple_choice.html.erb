@@ -1,0 +1,15 @@
+<p class="ks-label mb-1">Options, with the right one marked</p>
+<div class="mb-4 flex flex-col gap-3">
+  <% 4.times do |index| %>
+    <% option = question.options[index] || {} %>
+    <div class="flex items-center gap-3">
+      <label class="flex shrink-0 items-center gap-2 text-sm">
+        <%= radio_button_tag "question[right]", index, option["right"], id: nil %>
+        <span>Right</span>
+      </label>
+      <div class="min-w-0 flex-1">
+        <%= ui_input(name: "question[labels][]", value: option["label"], placeholder: "Option #{index + 1}") %>
+      </div>
+    </div>
+  <% end %>
+</div>
