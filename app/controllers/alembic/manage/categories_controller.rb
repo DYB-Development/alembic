@@ -5,6 +5,10 @@ module Alembic
         @categories = Category.order(:name)
       end
 
+      def show
+        @category = Category.find(params[:id])
+      end
+
       def new
         @category = Category.new
       end
