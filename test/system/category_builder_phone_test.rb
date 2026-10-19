@@ -41,6 +41,18 @@ module Alembic
       assert_selector "h1", text: "New category"
     end
 
+    test "a phone writes a multiple choice question into a category" do
+      visit alembic.manage_category_path(@category)
+      click_on "Add a multiple choice question"
+      fill_in "question[text]", with: "Which river is longest?"
+      all("input[name='question[labels][]']")[0].fill_in(with: "Amazon")
+      all("input[name='question[labels][]']")[1].fill_in(with: "Nile")
+      all("input[name='question[right]']")[1].click
+      click_on "Create"
+
+      assert_selector "li", text: /Which river is longest\?\s+Right answer: Nile/
+    end
+
     private
 
     def assert_fits_the_screen
