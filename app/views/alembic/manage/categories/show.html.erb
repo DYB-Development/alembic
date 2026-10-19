@@ -4,4 +4,21 @@
   </p>
 
   <%= ui_page_header(title: @category.name) %>
+
+  <%= ui_section(title: "Questions") do %>
+    <% if @category.questions.any? %>
+      <ul class="flex flex-col gap-3">
+        <% @category.questions.order(:created_at).each do |question| %>
+          <li>
+            <%= ui_panel(padding: :sm) do %>
+              <p class="break-words"><%= question.text %></p>
+              <p class="mt-1 text-sm">Right answer: <%= question.options.find { |option| option["right"] }&.dig("label") %></p>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-sm">No questions yet.</p>
+    <% end %>
+  <% end %>
 <% end %>

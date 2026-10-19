@@ -39,5 +39,14 @@ module Alembic
 
       assert_select "h1", text: "Rivers"
     end
+
+    test "a category's page lists each question with its right answer" do
+      category = Category.create!(name: "Rivers")
+      category.questions.true_or_false(text: "The Nile flows north.", right: "True").save!
+
+      get alembic.manage_category_path(category)
+
+      assert_select "li", text: /The Nile flows north\.\s+Right answer: True/
+    end
   end
 end
