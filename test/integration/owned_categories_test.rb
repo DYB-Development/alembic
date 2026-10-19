@@ -24,6 +24,14 @@ module Alembic
       assert_equal @ours, Category.find_by!(name: "Rivers").owner
     end
 
+    test "the builder cannot open another owner's category" do
+      theirs = Category.create!(name: "Their rivers", owner: @theirs)
+
+      get alembic.manage_category_path(theirs), headers: as(@ours)
+
+      assert_response :not_found
+    end
+
     private
 
     def as(customer)

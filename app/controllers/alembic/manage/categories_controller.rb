@@ -6,7 +6,7 @@ module Alembic
       end
 
       def show
-        @category = Category.find(params[:id])
+        @category = owned_categories.find(params[:id])
       end
 
       def new
