@@ -48,5 +48,13 @@ module Alembic
 
       assert_select "li", text: /The Nile flows north\.\s+Right answer: True/
     end
+
+    test "a category's page links to adding a true/false question" do
+      category = Category.create!(name: "Rivers")
+
+      get alembic.manage_category_path(category)
+
+      assert_select "a[href=?]", alembic.new_manage_category_question_path(category, kind: "true_false")
+    end
   end
 end
