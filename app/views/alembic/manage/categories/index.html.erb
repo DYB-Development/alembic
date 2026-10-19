@@ -1,5 +1,7 @@
 <%= ui_page(max_width: :xl) do %>
-  <%= ui_page_header(title: "Categories", subtitle: "Write questions in categories to use in more than one quiz") %>
+  <%= ui_page_header(title: "Categories", subtitle: "Write questions in categories to use in more than one quiz") do |header| %>
+    <% header.action { ui_button(label: "New category", href: alembic.new_manage_category_path) } %>
+  <% end %>
 
   <%= ui_data_table(
     items: @categories,
