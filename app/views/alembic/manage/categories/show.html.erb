@@ -3,14 +3,10 @@
     <%= link_to "← All categories", alembic.manage_categories_path, class: "text-sm text-(color:--ks-color-link) hover:text-(color:--ks-color-link-hover) dark:text-(color:--ks-color-link-dark) dark:hover:text-(color:--ks-color-link-hover-dark)" %>
   </p>
 
-  <%= ui_page_header(title: @category.name) do |header| %>
-    <% header.action do
-         tag.div(class: "flex flex-wrap gap-2") do
-           ui_button(label: "Add a true/false question", href: alembic.new_manage_category_question_path(@category, kind: "true_false"), variant: :secondary) +
-             ui_button(label: "Add a multiple choice question", href: alembic.new_manage_category_question_path(@category, kind: "multiple_choice"), variant: :secondary)
-         end
-       end %>
-  <% end %>
+  <%= render "alembic/manage/shared/heading", title: @category.name, actions: capture {
+        ui_button(label: "Add a true/false question", href: alembic.new_manage_category_question_path(@category, kind: "true_false"), variant: :secondary) +
+          ui_button(label: "Add a multiple choice question", href: alembic.new_manage_category_question_path(@category, kind: "multiple_choice"), variant: :secondary)
+      } %>
 
   <%= ui_section(title: "Questions") do %>
     <% if @category.questions.any? %>

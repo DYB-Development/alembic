@@ -17,6 +17,12 @@ module Alembic
       assert_fits_the_screen
     end
 
+    test "a phone shows a category's name" do
+      visit alembic.manage_category_path(@category)
+
+      assert_selector "h1", text: "Rivers"
+    end
+
     private
 
     def assert_fits_the_screen
