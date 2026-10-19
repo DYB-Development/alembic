@@ -10,5 +10,12 @@ module Alembic
 
       assert_equal [ { "label" => "True", "right" => true }, { "label" => "False", "right" => false } ], @category.questions.sole.options
     end
+
+    test "adding a multiple choice question marks the option the builder chose as right" do
+      post alembic.manage_category_questions_path(@category),
+        params: { question: { kind: "multiple_choice", text: "Longest river?", labels: [ "Amazon", "Nile", "" ], right: "1" } }
+
+      assert_equal [ { "label" => "Amazon", "right" => false }, { "label" => "Nile", "right" => true } ], @category.questions.sole.options
+    end
   end
 end
