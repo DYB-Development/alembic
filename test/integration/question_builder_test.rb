@@ -36,5 +36,12 @@ module Alembic
 
       assert_select "[role=alert]", text: "A multiple choice question needs at least two options"
     end
+
+    test "a multiple choice question with no right option is refused with the reason" do
+      post alembic.manage_category_questions_path(@category),
+        params: { question: { kind: "multiple_choice", text: "Longest river?", labels: [ "Nile", "Amazon", "", "" ] } }
+
+      assert_select "[role=alert]", text: "A question needs exactly one right option"
+    end
   end
 end
