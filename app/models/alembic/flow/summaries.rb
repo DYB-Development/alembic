@@ -1,6 +1,8 @@
 module Alembic
   module Flow
     class Summaries
+      SCORES = %w[weighted_sum inner_total].freeze
+
       def initialize(flow)
         @flow = flow
       end
@@ -100,11 +102,11 @@ module Alembic
         pinned = pinned_to(run)&.summary
         return [] if pinned.blank?
 
-        Summary::Report.new(pinned).results(Summary::Run.new(state: state, steps: run.pinned_steps))
+        Summary::Report.new(pinned).results(Summary::Run.new(state: state, steps: run.pinned_steps, run: run))
       end
 
       def score_of(run, state)
-        of_run(run, state).find { |result| result.type == "weighted_sum" }&.value
+        of_run(run, state).find { |result| SCORES.include?(result.type) }&.value
       end
 
       private
