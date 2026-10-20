@@ -16,6 +16,13 @@ module Alembic
         Summaries.new(flow)
       end
 
+      def kept_run(flow, score:, seconds_taken: nil)
+        EasyFlow::Run.start(flow).tap do |run|
+          summaries(flow).pin(run)
+          RunSummary.find_by(run: run).update!(score: score, seconds_taken: seconds_taken)
+        end
+      end
+
       test "records that a flow shows each answer's value beside its label" do
         flow = published
 
@@ -248,6 +255,15 @@ module Alembic
         assert_no_difference -> { RunSummary.count } do
           summaries(flow).keep(EasyFlow::Run.start(flow), "a" => "yes")
         end
+      end
+
+      test "ranks a flow's finished runs with the higher score first" do
+        flow = published
+        summaries(flow).record("outputs" => [])
+        lower = kept_run(flow, score: 3)
+        higher = kept_run(flow, score: 8)
+
+        assert_equal [ higher, lower ], summaries(flow).ranked.map(&:run)
       end
 
       test "a flow's summary data goes with the flow" do

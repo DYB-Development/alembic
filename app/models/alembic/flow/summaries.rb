@@ -88,6 +88,10 @@ module Alembic
         pinned.update!(score: score_of(run, state), seconds_taken: seconds_taken_by(run))
       end
 
+      def ranked
+        RunSummary.order(score: :desc)
+      end
+
       def of_run(run, state)
         pinned = pinned_to(run)&.summary
         return [] if pinned.blank?
