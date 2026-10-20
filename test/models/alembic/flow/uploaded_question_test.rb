@@ -83,6 +83,10 @@ module Alembic
       test "a multiple choice row whose right answer is not the number of one of its answers is refused for it" do
         assert_equal [ "Right answer must be the number of one of its answers" ], row(right_answer: "4").tap(&:validate).errors.full_messages
       end
+
+      test "a true/false row whose right answer is neither true nor false is refused for it" do
+        assert_equal [ "Right answer must be true or false" ], row(type: "True/false", right_answer: "Yes").tap(&:validate).errors.full_messages
+      end
     end
   end
 end
