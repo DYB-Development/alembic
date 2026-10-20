@@ -227,6 +227,21 @@ module Alembic
         assert_nil RunSummary.find_by(run: run).seconds_taken
       end
 
+      test "keeping a run's results again leaves the score and time already kept" do
+        flow = published
+        flow.update!(persists: :each_step)
+        summaries(flow).record("outputs" => [ { "id" => "score", "type" => "weighted_sum" } ])
+        run = travel_to(Time.zone.local(2026, 10, 20, 9, 0, 0)) { EasyFlow::Run.start(flow) }
+        summaries(flow).pin(run)
+        travel_to(Time.zone.local(2026, 10, 20, 9, 1, 30)) { run.record(:a, "yes") }
+        summaries(flow).keep(run, "a" => "yes")
+        travel_to(Time.zone.local(2026, 10, 20, 9, 3, 0)) { run.record(:a, "no") }
+
+        summaries(flow).keep(run, "a" => "no")
+
+        assert_equal [ 5, 90 ], RunSummary.find_by(run: run).values_at(:score, :seconds_taken)
+      end
+
       test "a flow's summary data goes with the flow" do
         flow = published
         summaries(flow).record("outputs" => [])
