@@ -39,6 +39,12 @@ module Alembic
 
         assert_equal "Space", EasyFlow::Steps::Question.category_of(added_step.config)
       end
+
+      test "a saved true/false row offers True and False and weights the right one" do
+        row(type: "True/false", question: "The Sun is a star.", answer_1: nil, answer_2: nil, answer_3: nil, right_answer: "true").save!
+
+        assert_equal [ { "value" => "True", "weight" => 1 }, { "value" => "False", "weight" => 0 } ], added_step.config["answers"]
+      end
     end
   end
 end

@@ -29,7 +29,17 @@ module Alembic
       end
 
       def answers
+        return true_false_answers if kind == "truefalse"
+
         filled_answers.map { |number, text| { "value" => text, "weight" => number.to_s == right_answer.to_s.strip ? 1 : 0 } }
+      end
+
+      def true_false_answers
+        %w[True False].map { |text| { "value" => text, "weight" => text.casecmp?(right_answer.to_s.strip) ? 1 : 0 } }
+      end
+
+      def kind
+        type.to_s.downcase.gsub(/[^a-z]/, "")
       end
 
       def filled_answers
