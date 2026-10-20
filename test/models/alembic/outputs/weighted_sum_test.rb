@@ -30,6 +30,47 @@ module Alembic
         assert_equal 5, WeightedSum.output_type.compute({}, Summary::Run.new(state: { "budget" => "high" }, steps: written), {})
       end
 
+      def picking
+        { "flags" => { "type" => "multiple_select",
+                       "answers" => [ { "value" => "red", "weight" => 2 }, { "value" => "blue", "weight" => 1 }, { "value" => "green", "weight" => 0 } ] } }
+      end
+
+      def picked(values)
+        WeightedSum.output_type.compute({}, Summary::Run.new(state: { "flags" => values }, steps: picking), {})
+      end
+
+      test "a multiple select answer picking every right answer and no other adds one" do
+        assert_equal 1, picked([ "blue", "red" ])
+      end
+
+      test "a multiple select answer picking a wrong answer adds nothing" do
+        assert_equal 0, picked([ "blue", "red", "green" ])
+      end
+
+      test "a multiple select answer missing a right answer adds nothing" do
+        assert_equal 0, picked([ "red" ])
+      end
+
+      def blank
+        { "capital" => { "type" => "fill_in_the_blank", "accepted_answers" => [ { "value" => "Paris" }, { "value" => "Paree" } ] } }
+      end
+
+      def typed(text)
+        WeightedSum.output_type.compute({}, Summary::Run.new(state: { "capital" => text }, steps: blank), {})
+      end
+
+      test "a fill in the blank answer matching an accepted answer adds one" do
+        assert_equal 1, typed("Paree")
+      end
+
+      test "a fill in the blank answer differing only in letter case and outer spaces adds one" do
+        assert_equal 1, typed("  pARIS ")
+      end
+
+      test "a fill in the blank answer matching no accepted answer adds nothing" do
+        assert_equal 0, typed("London")
+      end
+
       test "registers through the public output API" do
         registry = Summary::Registry.new
 
