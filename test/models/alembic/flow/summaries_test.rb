@@ -201,6 +201,19 @@ module Alembic
         assert_nil RunSummary.find_by(run: run).score
       end
 
+      test "keeps the seconds from a run's start to its last answer when the flow saves every answer" do
+        flow = published
+        flow.update!(persists: :each_step)
+        summaries(flow).record("outputs" => [])
+        run = travel_to(Time.zone.local(2026, 10, 20, 9, 0, 0)) { EasyFlow::Run.start(flow) }
+        summaries(flow).pin(run)
+        travel_to(Time.zone.local(2026, 10, 20, 9, 1, 30)) { run.record(:a, "yes") }
+
+        summaries(flow).keep(run, "a" => "yes")
+
+        assert_equal 90, RunSummary.find_by(run: run).seconds_taken
+      end
+
       test "a flow's summary data goes with the flow" do
         flow = published
         summaries(flow).record("outputs" => [])

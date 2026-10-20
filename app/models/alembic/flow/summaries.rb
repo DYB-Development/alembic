@@ -82,7 +82,7 @@ module Alembic
       end
 
       def keep(run, state)
-        RunSummary.find_by(run: run).update!(score: of_run(run, state).find { |result| result.type == "weighted_sum" }&.value)
+        RunSummary.find_by(run: run).update!(score: score_of(run, state), seconds_taken: seconds_taken_by(run))
       end
 
       def of_run(run, state)
@@ -93,6 +93,15 @@ module Alembic
       end
 
       private
+
+      def score_of(run, state)
+        of_run(run, state).find { |result| result.type == "weighted_sum" }&.value
+      end
+
+      def seconds_taken_by(run)
+        last_answered = run.completed_at.values.max
+        (last_answered - run.created_at).to_i if last_answered
+      end
 
       def versions
         SummaryVersion.where(flow: @flow)
