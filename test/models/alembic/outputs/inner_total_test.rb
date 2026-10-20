@@ -1,0 +1,50 @@
+require "test_helper"
+
+module Alembic
+  module Outputs
+    class InnerTotalTest < ActiveSupport::TestCase
+      def saved(slug, document)
+        EasyFlow::Definition.create!(host: "alembic", slug: slug, persists: :each_step).tap { |flow| flow.record_definition(flowing(document)); flow.publish }
+      end
+
+      def quiz
+        @quiz ||= saved("quiz", "slug" => "quiz", "entry" => "ask",
+          "nodes" => [ { "id" => "ask", "type" => "question", "text" => "Right?",
+                         "options" => [ { "value" => "right", "weight" => 1 }, { "value" => "wrong" } ] },
+                       { "id" => "done", "type" => "terminal", "output" => "1" } ],
+          "edges" => [ { "from" => "ask", "to" => "done" } ]).tap do |flow|
+          Flow::Summaries.new(flow).record("outputs" => [ { "id" => "score", "type" => "weighted_sum" } ])
+        end
+      end
+
+      def event
+        saved("event", "slug" => "event", "entry" => "first",
+          "nodes" => [ { "id" => "first", "type" => "flow_step", "flow" => quiz.id.to_s, "version" => 1 },
+                       { "id" => "second", "type" => "flow_step", "flow" => quiz.id.to_s, "version" => 1 },
+                       { "id" => "done", "type" => "terminal" } ],
+          "edges" => [ { "from" => "first", "to" => "second", "on" => "1" }, { "from" => "second", "to" => "done", "on" => "1" } ])
+      end
+
+      def answered(parent, step, answer)
+        parent.advance
+        parent.inner_runs.find_by!(parent_step: step).tap do |inner|
+          Flow::Summaries.new(quiz).pin(inner)
+          inner.record(:ask, answer)
+          inner.advance
+        end
+      end
+
+      def total(parent)
+        InnerTotal.output_type.compute({}, Summary::Run.new(state: {}, steps: {}, run: parent), {})
+      end
+
+      test "adds up the score of every inner run the run started" do
+        parent = EasyFlow::Run.start(event)
+        answered(parent, "first", "right")
+        answered(parent, "second", "right")
+
+        assert_equal 2, total(parent)
+      end
+    end
+  end
+end

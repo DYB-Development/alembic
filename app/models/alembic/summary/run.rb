@@ -1,7 +1,7 @@
 module Alembic
   module Summary
-    Run = Data.define(:state, :steps) do
-      def initialize(state:, steps: {})
+    Run = Data.define(:state, :steps, :run) do
+      def initialize(state:, steps: {}, run: nil)
         super
       end
 
