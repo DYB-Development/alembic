@@ -62,5 +62,13 @@ module Alembic
 
       assert_select "form[action=?]", alembic.flow_step_path(built.slug)
     end
+
+    test "a flow built in the builder that keeps no run asks its first question" do
+      built.update!(persists: :unsaved)
+
+      get alembic.flow_step_path(built.slug)
+
+      assert_select "form[action=?]", alembic.flow_step_path(built.slug)
+    end
   end
 end

@@ -30,6 +30,12 @@ module Alembic
       flow_address((run&.flow || flow).slug)
     end
 
+    def step_form
+      return super if run
+
+      { url: flow_step_path(visited_flow_address), method: :get }
+    end
+
     def start_run(flow)
       super.tap { |run| Flow::Summaries.new(flow).pin(run) }
     end
