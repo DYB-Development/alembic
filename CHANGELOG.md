@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Kept results** — when a saved run reaches its end, alembic keeps its score, from the first weighted sum in its pinned summary, and its seconds from start to last answer, for a flow that saves every answer. Showing the results again leaves them as they were, and a run left part way keeps nothing.
+- **Ranking** — `Alembic::Flow::Summaries.new(flow).ranked` lists a flow's finished runs with a kept score, highest score first and shortest time first between equal scores, with a run that has no time last among them.
+
+### Upgrading
+- Run `bin/rails alembic:install:migrations`, then `bin/rails db:migrate`. Run summaries gain a nullable score and seconds taken, and runs finished before the upgrade keep neither.
+
 ## [0.6.0] - 2026-10-12
 
 ### Changed

@@ -103,6 +103,20 @@ summaries.of_run(run, state) # the outputs from the pinned summary and the run's
 
 The finished page shows each output as a card above the answers given.
 
+When a saved run reaches its end, alembic keeps its score and its time taken
+on the run's pinned summary, once. The score is the value of the first
+`weighted_sum` output in the pinned summary, and nothing when it has none. The
+time taken is the whole seconds from the run's start to its last answer, kept
+only for a flow that saves every answer as it is given. A flow's finished runs
+come back in rank order:
+
+```ruby
+summaries.ranked             # pinned run summaries with a score, highest score first, then shortest time
+summaries.ranked.first.run   # the top run; each also carries score and seconds_taken
+```
+
+A run with no time sorts after the runs with a time and the same score.
+
 ### Output types
 
 An output type is a pure transform:
