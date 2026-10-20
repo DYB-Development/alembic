@@ -81,6 +81,15 @@ module Alembic
       assert_equal 1, Flow::RunSummary.find_by!(run: EasyFlow::Run.find_by!(flow: history)).score
     end
 
+    test "a quiz played inside an event keeps the seconds from its start to its last answer" do
+      history = quiz("history")
+      travel_to(Time.zone.local(2026, 10, 20, 9, 0, 0)) { post alembic.flow_runs_path(event(history).slug); follow_redirect! while redirect? }
+
+      travel_to(Time.zone.local(2026, 10, 20, 9, 0, 45)) { answer(:ask, "right") }
+
+      assert_equal 45, Flow::RunSummary.find_by!(run: EasyFlow::Run.find_by!(flow: history)).seconds_taken
+    end
+
     test "a visitor taken into a quiz inside an event has the quiz's run pinned to the quiz's summary" do
       history = quiz("history")
       post alembic.flow_runs_path(event(history).slug)
