@@ -51,6 +51,18 @@ module Alembic
         assert_equal 0, picked([ "red" ])
       end
 
+      def blank
+        { "capital" => { "type" => "fill_in_the_blank", "accepted_answers" => [ { "value" => "Paris" }, { "value" => "Paree" } ] } }
+      end
+
+      def typed(text)
+        WeightedSum.output_type.compute({}, Summary::Run.new(state: { "capital" => text }, steps: blank), {})
+      end
+
+      test "a fill in the blank answer matching an accepted answer adds one" do
+        assert_equal 1, typed("Paree")
+      end
+
       test "registers through the public output API" do
         registry = Summary::Registry.new
 

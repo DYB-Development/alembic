@@ -18,6 +18,7 @@ module Alembic
 
       def self.weight_of(step, value)
         return picked_weight(step, value) if step["type"] == "multiple_select"
+        return typed_weight(step, value) if step["type"] == "fill_in_the_blank"
 
         answer_weight(step, value)
       end
@@ -33,6 +34,10 @@ module Alembic
         return 0 unless Array(values).sort == right.sort
 
         right.sum { |value| answer_weight(step, value) }
+      end
+
+      def self.typed_weight(step, text)
+        Array(step["accepted_answers"]).any? { |accepted| accepted["value"] == text } ? 1 : 0
       end
 
       def self.right_answers(step)
