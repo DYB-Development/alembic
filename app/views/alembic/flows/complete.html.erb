@@ -21,6 +21,12 @@
     <% end %>
   <% end %>
 
+  <% if (link = finish_link) %>
+    <%= ui_section do %>
+      <%= ui_button(label: link[:label], href: link[:url]) %>
+    <% end %>
+  <% end %>
+
   <% if Alembic.lead_address %>
     <%= ui_section do %>
       <%= alembic_lead_block(slug: summary_values["slug"], note: summary_values["note"]) %>

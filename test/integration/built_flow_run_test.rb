@@ -33,6 +33,15 @@ module Alembic
       assert_select "[data-answer=budget]"
     end
 
+    test "with no finish link set, the finish page links only to Start over" do
+      run = started_run
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_equal [ "Start over" ], css_select("a").map { |link| link.text.strip }
+    end
+
     test "a host app sets where Start over leads from a run" do
       Alembic.start_over_address = ->(flow) { "/play/#{flow.public_code}" }
 
@@ -41,6 +50,18 @@ module Alembic
       assert_select "a[href=?]", "/play/#{built.public_code}", text: /Start over/
     ensure
       Alembic.start_over_address = nil
+    end
+
+    test "a host app adds a link to the finish page of a flow built in the builder" do
+      Alembic.finish_link = ->(flow) { { label: "See the scoreboard", url: "/play/#{flow.public_code}/scoreboard" } }
+      run = started_run
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_select "a[href=?]", "/play/#{built.public_code}/scoreboard", text: "See the scoreboard"
+    ensure
+      Alembic.finish_link = nil
     end
 
     test "Start over from a run opens the flow in a host app that finds flows by public code across owners" do
