@@ -74,6 +74,11 @@ module Alembic
       test "a row whose type is neither true/false nor multiple choice is refused for it" do
         assert_equal [ "Type must be true/false or multiple choice" ], row(type: "Multiple select").tap(&:validate).errors.full_messages
       end
+
+      test "a multiple choice row with fewer than two answers is refused for it" do
+        assert_equal [ "Answers must be at least two for a multiple choice question" ],
+          row(answer_2: nil, answer_3: nil, right_answer: "1").tap(&:validate).errors.full_messages
+      end
     end
   end
 end

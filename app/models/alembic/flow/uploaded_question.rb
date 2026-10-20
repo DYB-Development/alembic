@@ -17,6 +17,7 @@ module Alembic
 
       validates :question, presence: true
       validate :kind_is_offered
+      validate :choices_are_offered, if: -> { kind == "multiplechoice" }
 
       def save!
         before = document.to_h
@@ -24,6 +25,10 @@ module Alembic
       end
 
       private
+
+      def choices_are_offered
+        errors.add(:answers, "must be at least two for a multiple choice question") if filled_answers.size < 2
+      end
 
       def kind_is_offered
         errors.add(:type, "must be true/false or multiple choice") unless KINDS.include?(kind)
