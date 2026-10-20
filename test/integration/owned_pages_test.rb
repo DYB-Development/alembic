@@ -57,6 +57,14 @@ module Alembic
       assert_nil Flow::Summaries.new(owned_flow).summary_page
     end
 
+    test "another owner cannot change a flow's summary" do
+      theirs = EasyFlow::Definition.create!(host: "alembic", slug: "theirs", title: "Theirs", owner: @theirs)
+
+      patch easy_flow.manage_flow_path(theirs), params: { flow: { summary: "Taken over" } }, headers: as(@ours)
+
+      assert_nil Flow::Summaries.new(theirs).text
+    end
+
     private
 
     def owned_flow
