@@ -40,6 +40,12 @@ module Alembic
         assert_equal "Space", EasyFlow::Steps::Question.category_of(added_step.config)
       end
 
+      test "a saved row is asked after the quiz's last question" do
+        row.save!
+
+        assert_equal [ added_step.id ], EasyFlow::Document.new(quiz.document).edges_from("first").map(&:to)
+      end
+
       test "a saved true/false row offers True and False and weights the right one" do
         row(type: "True/false", question: "The Sun is a star.", answer_1: nil, answer_2: nil, answer_3: nil, right_answer: "true").save!
 

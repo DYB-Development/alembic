@@ -15,13 +15,22 @@ module Alembic
 
       def save!
         before = document.to_h
-        flow.edit_history.record(document.add(step), :added, [ step["id"] ], before)
+        flow.edit_history.record(appended, :added, [ step["id"] ], before)
       end
 
       private
 
       def document
         EasyFlow::Document.new(flow.document || flow.definition || {})
+      end
+
+      def appended
+        document.add(step).connect(from: last_question, to: step["id"])
+      end
+
+      def last_question
+        reached = document.reachable
+        reached.reverse.find { |id| document.node(id)&.type == "question" } || reached.last
       end
 
       def step
