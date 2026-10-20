@@ -43,6 +43,10 @@ module Alembic
         assert_equal 3, picked([ "blue", "red" ])
       end
 
+      test "a multiple select answer picking a wrong answer adds nothing" do
+        assert_equal 0, picked([ "blue", "red", "green" ])
+      end
+
       test "registers through the public output API" do
         registry = Summary::Registry.new
 

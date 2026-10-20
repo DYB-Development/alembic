@@ -29,7 +29,14 @@ module Alembic
       end
 
       def self.picked_weight(step, values)
-        Array(values).sum { |value| answer_weight(step, value) }
+        right = right_answers(step)
+        return 0 unless Array(values).sort == right.sort
+
+        right.sum { |value| answer_weight(step, value) }
+      end
+
+      def self.right_answers(step)
+        EasyFlow::Steps::Question.answers_of(step).filter_map { |option| option["value"] if option["weight"].to_i.positive? }
       end
     end
   end
