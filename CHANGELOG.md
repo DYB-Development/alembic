@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-10-20
+
 ### Added
 - **Where Start over leads** — a host app sets `Alembic.start_over_address` to a proc that is given the flow and returns the address the Start over link on a run's question page and finish page points at.
 
