@@ -13,6 +13,8 @@ module Alembic
       ANSWER_FIELDS = (1..6).map { |number| :"answer_#{number}" }
       ANSWER_FIELDS.each { |field| attribute field, :string }
 
+      validates :question, presence: true
+
       def save!
         before = document.to_h
         flow.edit_history.record(appended, :added, [ step["id"] ], before)

@@ -66,6 +66,10 @@ module Alembic
 
         assert_equal [ { "value" => "True", "weight" => 1 }, { "value" => "False", "weight" => 0 } ], added_step.config["answers"]
       end
+
+      test "a row with no question is refused for it" do
+        assert_equal [ "Question can't be blank" ], row(question: " ").tap(&:validate).errors.full_messages
+      end
     end
   end
 end
