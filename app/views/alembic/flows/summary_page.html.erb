@@ -5,5 +5,10 @@
 <section class="py-20 md:py-28">
   <div class="max-w-2xl mx-auto px-6">
     <%= drawn_page(@summary_page, values: summary_values) %>
+    <% if (link = finish_link) %>
+      <div class="mt-10">
+        <%= ui_button(label: link[:label], href: link[:url]) %>
+      </div>
+    <% end %>
   </div>
 </section>

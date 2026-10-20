@@ -179,6 +179,17 @@ module Alembic
       assert_select "[data-block]", text: /Here is where you stand/
     end
 
+    test "a host app adds a link to the page a flow finishes on" do
+      Alembic.finish_link = ->(flow) { { label: "See the scoreboard", url: "/play/#{flow.slug}/scoreboard" } }
+      Flow::Summaries.new(summarised).finish_on(page_titled("Here is where you stand"))
+
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high", posh: "a" } }
+
+      assert_select "a[href=?]", "/play/flowed/scoreboard", text: "See the scoreboard"
+    ensure
+      Alembic.finish_link = nil
+    end
+
     test "a block naming an output is drawn with that output's value for the finished run" do
       with_figure_block do
         Flow::Summaries.new(summarised).finish_on(page_of(:figure, "output" => "score"))
