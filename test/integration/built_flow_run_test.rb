@@ -42,5 +42,16 @@ module Alembic
     ensure
       Alembic.start_over_address = nil
     end
+
+    test "Start over from a run opens the flow in a host app that finds flows by public code across owners" do
+      EasyFlow.host_named(Alembic::FLOW_HOST).finds_flows_across_owners = true
+      get alembic.run_path(EasyFlow::Run.start(built))
+
+      get css_select("a").find { |link| link.text.include?("Start over") }["href"]
+
+      assert_response :success
+    ensure
+      EasyFlow.host_named(Alembic::FLOW_HOST).finds_flows_across_owners = false
+    end
   end
 end

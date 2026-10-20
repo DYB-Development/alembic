@@ -23,7 +23,7 @@ module Alembic
     end
 
     def start_over_path
-      flow_start_path((run&.flow || flow).slug)
+      flow_start_path(flow_address((run&.flow || flow).slug))
     end
 
     def start_run(flow)
