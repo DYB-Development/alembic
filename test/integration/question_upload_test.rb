@@ -14,7 +14,9 @@ module Alembic
       EasyFlow::Definition.create!(host: "alembic", slug: "quiz-#{owner.id}", owner: owner).tap do |flow|
         flow.record_definition(flowing("slug" => flow.slug, "entry" => "first",
           "nodes" => [ { "id" => "first", "type" => "question", "question" => "First?",
-                         "answers" => [ { "value" => "Yes", "weight" => 1 }, { "value" => "No" } ] } ]))
+                         "answers" => [ { "value" => "Yes", "weight" => 1 }, { "value" => "No" } ] },
+                       { "id" => "end", "type" => "terminal" } ],
+          "edges" => [ { "from" => "first", "to" => "end" } ]))
         flow.publish
       end
     end
@@ -60,7 +62,7 @@ module Alembic
 
       post ixport.import_run_path(import), headers: as(@ours)
 
-      assert_equal [ "start", "first" ], EasyFlow::Document.new(flow.reload.document).nodes.map(&:id)
+      assert_equal [ "start", "first", "end" ], EasyFlow::Document.new(flow.reload.document).nodes.map(&:id)
     end
 
     test "a quiz's builder page links to uploading questions into that quiz" do
@@ -69,6 +71,23 @@ module Alembic
       get easy_flow.edit_manage_flow_path(flow), headers: as(@ours)
 
       assert_select "a[href=?]", ixport.new_import_path(key: :quiz_questions, target: flow.to_global_id), text: "Upload questions"
+    end
+
+    test "questions uploaded from a quiz's builder page are asked once the builder publishes" do
+      flow = quiz
+      get easy_flow.edit_manage_flow_path(flow), headers: as(@ours)
+      get css_select("a").find { |link| link.text == "Upload questions" }["href"], headers: as(@ours)
+      post ixport.imports_path, params: { key: css_select("input[name=key]").first["value"], target: css_select("input[name=target]").first["value"],
+                                          file: fixture_file_upload("questions.csv", "text/csv") }, headers: as(@ours)
+      patch ixport.import_mapping_path(Ixport::Import.last), params: { mapping: MAPPING }, headers: as(@ours)
+      post ixport.import_run_path(Ixport::Import.last), headers: as(@ours)
+      post "/alembic/manage/flows/#{flow.public_code}/canvas/publish", headers: as(@ours)
+      post alembic.flow_runs_path(flow.slug), headers: as(@ours)
+      patch alembic.run_path(EasyFlow::Run.last), params: { answers: { first: "Yes" } }, headers: as(@ours)
+
+      get alembic.run_path(EasyFlow::Run.last), headers: as(@ours)
+
+      assert_includes response.body, "Which planet is largest?"
     end
   end
 end
