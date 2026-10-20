@@ -23,5 +23,14 @@ module Alembic
 
       assert_response :success
     end
+
+    test "a finished run of a flow built in the builder shows its finish page" do
+      run = started_run
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_select "[data-answer=budget]"
+    end
   end
 end
