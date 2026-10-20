@@ -89,5 +89,16 @@ module Alembic
 
       assert_includes response.body, "Which planet is largest?"
     end
+
+    test "questions uploaded into a quiz are not asked before the builder publishes" do
+      flow = quiz
+      post ixport.import_run_path(uploaded("questions.csv", into: flow)), headers: as(@ours)
+      post alembic.flow_runs_path(flow.slug), headers: as(@ours)
+      patch alembic.run_path(EasyFlow::Run.last), params: { answers: { first: "Yes" } }, headers: as(@ours)
+
+      get alembic.run_path(EasyFlow::Run.last), headers: as(@ours)
+
+      assert_not_includes response.body, "Which planet is largest?"
+    end
   end
 end
