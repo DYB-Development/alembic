@@ -9,7 +9,7 @@ module Alembic
       helper ResultBlocksHelper
       helper ContentBlocksHelper
       helper KsBlocks::LayoutHelper
-      helper_method :flow_summary, :first_step_path, :summary_values, :intro_values
+      helper_method :flow_summary, :first_step_path, :summary_values, :intro_values, :start_over_path, :visited_flow_address
     end
 
     private
@@ -20,6 +20,20 @@ module Alembic
 
     def first_step_path(slug)
       flow_step_path(slug)
+    end
+
+    def start_over_path
+      flow_start_path(visited_flow_address)
+    end
+
+    def visited_flow_address
+      flow_address((run&.flow || flow).slug)
+    end
+
+    def step_form
+      return super if run
+
+      { url: flow_step_path(visited_flow_address), method: :get }
     end
 
     def start_run(flow)

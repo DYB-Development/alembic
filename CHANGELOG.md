@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Where Start over leads** — a host app sets `Alembic.start_over_address` to a proc that is given the flow and returns the address the Start over link on a run's question page and finish page points at.
+
+### Fixed
+- **Flows built in the builder can be played** — a run's question page, its finish page, the one-page form and the first question of a flow that keeps no run no longer raise a routing error for a flow whose document carries no slug.
+- **Start over opens the flow** — with no host setting, Start over leads to the flow's public code in a host that finds flows across owners, and to the flow's slug otherwise.
+
+### Upgrading
+- Take easy_flow 0.25 or later, which alembic now requires.
+
 ## [0.7.0] - 2026-10-20
 
 ### Added

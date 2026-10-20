@@ -5,9 +5,9 @@
 
 <section class="py-20 md:py-28">
   <div class="max-w-2xl mx-auto px-6">
-    <%= link_to "← Start over", flow_start_path(@guide.slug), class: "text-sm text-accent-600 hover:text-accent-700" %>
+    <%= link_to "← Start over", start_over_path, class: "text-sm text-accent-600 hover:text-accent-700" %>
 
-    <%= form_with url: flow_step_path(@guide.slug), method: :get, data: { turbo: false, one_page: true }, class: "mt-6" do %>
+    <%= form_with url: flow_step_path(visited_flow_address), method: :get, data: { turbo: false, one_page: true }, class: "mt-6" do %>
       <% @questions.each_with_index do |question, index| %>
         <div data-one-page-question>
           <div class="flex items-center justify-between text-sm text-gray-500 mb-2">
