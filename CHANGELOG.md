@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **A link on the finish page** — a host app sets `Alembic.finish_link` to a proc that is given the flow and returns a label and an address, and a run's finish page shows that link under the result, on the default finish page and on a flow's own finish page.
+
 ## [0.7.1] - 2026-10-20
 
 ### Added

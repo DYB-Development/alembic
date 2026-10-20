@@ -85,6 +85,18 @@ Alembic.start_over_address = ->(flow) { "/play/#{flow.public_code}" }
 The setting reaches the visitor pages only, so Start over in a preview still
 returns to the preview.
 
+A run's finish page can carry one more link, under the result, on both the
+default finish page and a flow's own finish page. Set a proc that is given the
+flow and returns the link's label and address:
+
+```ruby
+Alembic.finish_link = ->(flow) { { label: "See the scoreboard", url: "/play/#{flow.public_code}/scoreboard" } }
+```
+
+With the setting left unset the finish page shows no extra link. Like the Start
+over address, it reaches the visitor pages only, so a preview's finish page
+shows no finish link.
+
 ## 3. Summarising
 
 A flow's summary is a list of outputs, recorded as numbered versions:
