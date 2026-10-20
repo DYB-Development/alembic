@@ -43,6 +43,18 @@ module Alembic
       Alembic.start_over_address = nil
     end
 
+    test "a host app adds a link to the finish page of a flow built in the builder" do
+      Alembic.finish_link = ->(flow) { { label: "See the scoreboard", url: "/play/#{flow.public_code}/scoreboard" } }
+      run = started_run
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_select "a[href=?]", "/play/#{built.public_code}/scoreboard", text: "See the scoreboard"
+    ensure
+      Alembic.finish_link = nil
+    end
+
     test "Start over from a run opens the flow in a host app that finds flows by public code across owners" do
       EasyFlow.host_named(Alembic::FLOW_HOST).finds_flows_across_owners = true
       get alembic.run_path(EasyFlow::Run.start(built))
