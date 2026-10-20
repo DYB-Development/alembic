@@ -11,8 +11,10 @@ module Alembic
         @quiz ||= saved("quiz", "slug" => "quiz", "entry" => "ask",
           "nodes" => [ { "id" => "ask", "type" => "question", "text" => "Right?",
                          "options" => [ { "value" => "right", "weight" => 1 }, { "value" => "wrong" } ] },
+                       { "id" => "more", "type" => "question", "text" => "Again?",
+                         "options" => [ { "value" => "right", "weight" => 1 }, { "value" => "wrong" } ] },
                        { "id" => "done", "type" => "terminal", "output" => "1" } ],
-          "edges" => [ { "from" => "ask", "to" => "done" } ]).tap do |flow|
+          "edges" => [ { "from" => "ask", "to" => "more" }, { "from" => "more", "to" => "done" } ]).tap do |flow|
           Flow::Summaries.new(flow).record("outputs" => [ { "id" => "score", "type" => "weighted_sum" } ])
         end
       end
@@ -30,6 +32,7 @@ module Alembic
         parent.inner_runs.find_by!(parent_step: step).tap do |inner|
           Flow::Summaries.new(quiz).pin(inner)
           inner.record(:ask, answer)
+          inner.record(:more, "wrong")
           inner.advance
         end
       end
@@ -44,6 +47,15 @@ module Alembic
         answered(parent, "second", "right")
 
         assert_equal 2, total(parent)
+      end
+
+      test "adds nothing for an inner run that has not ended" do
+        parent = EasyFlow::Run.start(event)
+        answered(parent, "first", "right")
+        parent.advance
+        Flow::Summaries.new(quiz).pin(parent.inner_runs.find_by!(parent_step: "second").tap { |inner| inner.record(:ask, "right") })
+
+        assert_equal 1, total(parent)
       end
     end
   end

@@ -13,7 +13,7 @@ module Alembic
       end
 
       def self.total(parent)
-        parent.inner_runs.sum { |inner| score_of(inner).to_i }
+        parent.inner_runs.select(&:ended_at_end?).sum { |inner| score_of(inner).to_i }
       end
 
       def self.score_of(inner)
