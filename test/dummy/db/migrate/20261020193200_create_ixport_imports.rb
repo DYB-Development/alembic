@@ -1,0 +1,14 @@
+class CreateIxportImports < ActiveRecord::Migration[8.1]
+  def change
+    create_table :ixport_imports do |t|
+      t.string :key, null: false
+      t.references :person, polymorphic: true, null: false
+      t.references :account, polymorphic: true, null: true
+      t.json :mapping
+      t.string :status, null: false, default: "pending"
+      t.integer :added_count, null: false, default: 0
+      t.integer :updated_count, null: false, default: 0
+      t.timestamps
+    end
+  end
+end

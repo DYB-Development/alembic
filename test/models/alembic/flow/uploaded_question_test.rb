@@ -1,0 +1,92 @@
+require "test_helper"
+
+module Alembic
+  module Flow
+    class UploadedQuestionTest < ActiveSupport::TestCase
+      def quiz
+        @quiz ||= EasyFlow::Definition.create!(host: "alembic", slug: "quiz").tap do |flow|
+          flow.record_definition(flowing("slug" => "quiz", "entry" => "first",
+            "nodes" => [ { "id" => "first", "type" => "question", "question" => "First?",
+                           "answers" => [ { "value" => "Yes", "weight" => 1 }, { "value" => "No" } ] } ]))
+          flow.publish
+        end
+      end
+
+      def row(values = {})
+        UploadedQuestion.new({ flow: quiz, type: "Multiple choice", question: "Which planet is largest?", category: "Space",
+                               answer_1: "Mars", answer_2: "Jupiter", answer_3: "Venus", right_answer: "2" }.merge(values))
+      end
+
+      def added_step_id
+        EasyFlow::Document.new(quiz.reload.document).nodes.map(&:id).grep(/\Aquestion_/).last
+      end
+
+      def added_step
+        EasyFlow::Document.new(quiz.reload.document).nodes.last
+      end
+
+      test "a saved row adds a question step asking its question" do
+        row.save!
+
+        assert_equal "Which planet is largest?", added_step.config["question"]
+      end
+
+      test "a saved multiple choice row offers its filled answers and weights the right one" do
+        row.save!
+
+        assert_equal [ { "value" => "Mars", "weight" => 0 }, { "value" => "Jupiter", "weight" => 1 }, { "value" => "Venus", "weight" => 0 } ],
+          added_step.config["answers"]
+      end
+
+      test "a saved row sets its question's category" do
+        row.save!
+
+        assert_equal "Space", EasyFlow::Steps::Question.category_of(added_step.config)
+      end
+
+      test "a saved row is asked after the quiz's last question" do
+        row.save!
+
+        assert_equal [ added_step.id ], EasyFlow::Document.new(quiz.document).edges_from("first").map(&:to)
+      end
+
+      test "a saved row is asked before the step that followed the quiz's last question" do
+        quiz.update!(document: flowing("slug" => "quiz", "entry" => "first",
+          "nodes" => [ { "id" => "first", "type" => "question", "question" => "First?", "answers" => [ { "value" => "Yes" } ] },
+                       { "id" => "wrap_up", "type" => "checklist" } ],
+          "edges" => [ { "from" => "first", "to" => "wrap_up" } ]))
+
+        row.save!
+
+        assert_equal [ "wrap_up" ], EasyFlow::Document.new(quiz.document).edges_from(added_step_id).map(&:to)
+      end
+
+      test "a saved true/false row offers True and False and weights the right one" do
+        row(type: "True/false", question: "The Sun is a star.", answer_1: nil, answer_2: nil, answer_3: nil, right_answer: "true").save!
+
+        assert_equal [ { "value" => "True", "weight" => 1 }, { "value" => "False", "weight" => 0 } ], added_step.config["answers"]
+      end
+
+      test "a row with no question is refused for it" do
+        assert_equal [ "Question can't be blank" ], row(question: " ").tap(&:validate).errors.full_messages
+      end
+
+      test "a row whose type is neither true/false nor multiple choice is refused for it" do
+        assert_equal [ "Type must be true/false or multiple choice" ], row(type: "Multiple select").tap(&:validate).errors.full_messages
+      end
+
+      test "a multiple choice row with fewer than two answers is refused for it" do
+        assert_equal [ "Answers must be at least two for a multiple choice question" ],
+          row(answer_2: nil, answer_3: nil, right_answer: "1").tap(&:validate).errors.full_messages
+      end
+
+      test "a multiple choice row whose right answer is not the number of one of its answers is refused for it" do
+        assert_equal [ "Right answer must be the number of one of its answers" ], row(right_answer: "4").tap(&:validate).errors.full_messages
+      end
+
+      test "a true/false row whose right answer is neither true nor false is refused for it" do
+        assert_equal [ "Right answer must be true or false" ], row(type: "True/false", right_answer: "Yes").tap(&:validate).errors.full_messages
+      end
+    end
+  end
+end

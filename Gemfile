@@ -27,3 +27,9 @@ gem "rubocop-rails-omakase", require: false
 
 # Start debugger with binding.b [https://github.com/ruby/debug]
 # gem "debug", ">= 1.0.0"
+
+# The CSV upload a host offers through alembic's question importer. Hosts add
+# ixport themselves; here it's for testing the importer.
+group :development, :test do
+  gem "ixport", "~> 0.4"
+end

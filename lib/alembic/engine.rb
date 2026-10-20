@@ -33,6 +33,10 @@ module Alembic
       end
     end
 
+    initializer "alembic.question_importer" do |app|
+      app.config.to_prepare { require "alembic/question_importer" if defined?(Ixport::Importer) }
+    end
+
     initializer "alembic.result_blocks" do |app|
       app.config.to_prepare do
         Alembic::Page::ContentBlocks.register
