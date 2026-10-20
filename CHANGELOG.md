@@ -8,9 +8,12 @@ All notable changes to this project will be documented in this file.
 - **Multiple select answers are scored** — an answer that picks every right answer and no other adds one, and any other answer adds nothing, where a right answer is one carrying a weight above zero.
 - **Fill in the blank answers are scored** — a typed answer adds one when it matches one of the question's accepted answers, ignoring letter case and spaces at either end, and adds nothing otherwise.
 - **Both types count in shares** — the share and the by-area outputs count multiple select and fill in the blank answers against the full credit each could earn.
+- **A total across inner runs** — an `inner_total` output adds up the score of every inner run a saved run started, counting only inner runs that reached an End step, and an admin adds one from the flow's details editor.
+- **Inner runs are scored** — a run that a Flow step starts is pinned to its own flow's summary when the visitor pages reach it, so a quiz played inside an event scores what it would score played on its own.
+- **An event keeps its total** — a finished run keeps the first `weighted_sum` or `inner_total` output in its pinned summary as its score, so an event's runs are ranked by total and then by time.
 
 ### Upgrading
-- Take easy_flow 0.26 or later, which alembic now requires.
+- Take easy_flow 0.27 or later, which alembic now requires.
 
 ## [0.7.2] - 2026-10-20
 

@@ -130,7 +130,8 @@ The finished page shows each output as a card above the answers given.
 
 When a saved run reaches its end, alembic keeps its score and its time taken
 on the run's pinned summary, once. The score is the value of the first
-`weighted_sum` output in the pinned summary, and nothing when it has none. The
+`weighted_sum` or `inner_total` output in the pinned summary, and nothing when
+it has neither. The
 time taken is the whole seconds from the run's start to its last answer, kept
 only for a flow that saves every answer as it is given. A flow's finished runs
 come back in rank order:
@@ -141,6 +142,20 @@ summaries.ranked.first.run   # the top run; each also carries score and seconds_
 ```
 
 A run with no time sorts after the runs with a time and the same score.
+
+A flow whose Flow steps run other flows as inner runs, such as an event made of
+quizzes, scores itself with an `inner_total` output:
+
+```ruby
+summaries.record("outputs" => [ { "id" => "total", "type" => "inner_total", "label" => "Total score" } ])
+```
+
+The total adds up the score of every inner run the saved run started, where an
+inner run's score is the first `weighted_sum` or `inner_total` output in its own
+pinned summary. An inner run that has not reached an End step adds nothing. The
+visitor pages pin an inner run to its own flow's summary when they first reach
+it, so a host that starts or plays inner runs outside the visitor pages pins
+them itself with `summaries.pin(run)`. Outside a saved run the total is 0.
 
 ### Output types
 
@@ -154,7 +169,8 @@ end
 ```
 
 - `config` — the output's own entry from the summary document
-- `run` — a `Summary::Run`, holding `state` and the step definitions
+- `run` — a `Summary::Run`, holding `state`, the step definitions and, for a
+  saved run, the `EasyFlow::Run` itself as `run.run`
 - `so_far` — outputs already computed this pass, keyed by id, so an output can
   build on an earlier one
 
@@ -166,7 +182,7 @@ Each result is a `Summary::Result` with an `id`, a `label` and a `value`. The
 label falls back to the output type's own label when the document does not
 give one. An unknown type raises `Summary::UnknownOutputType`.
 
-Six output types ship built in:
+Seven output types ship built in:
 
 | Type | Config | Value |
 |---|---|---|
@@ -176,6 +192,7 @@ Six output types ship built in:
 | `lowest` | `of`, `count` (default 1) | the weakest categories from a `grouped` output |
 | `tally` | `tag`, `by` (defaults to the step's `category`) | how many steps were answered, optionally for one category |
 | `band` | `of`, `bands` | the first band whose `ceiling` the value falls under |
+| `inner_total` | — | sum of the scores of the inner runs that reached an End step |
 
 A band with no `ceiling` is the catch-all. The weights and categories come from
 easy_flow's question step, which carries `weight` on each answer and a
