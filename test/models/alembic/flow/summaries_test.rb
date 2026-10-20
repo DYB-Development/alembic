@@ -65,6 +65,14 @@ module Alembic
         assert_match "vibes", error.message
       end
 
+      test "records a total of inner runs among a flow's outputs" do
+        flow = published
+
+        summaries(flow).record("outputs" => [ { "id" => "total", "type" => "inner_total" } ])
+
+        assert_equal "inner_total", summaries(flow).document["outputs"].sole["type"]
+      end
+
       test "records a summary template as a numbered version" do
         flow = published
 
