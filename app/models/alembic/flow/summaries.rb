@@ -77,6 +77,10 @@ module Alembic
         RunSummary.create!(run: run, summary_version: current_version) if current_version
       end
 
+      def pin_inner(run)
+        pin(run) if run.parent_run && pinned_to(run).nil?
+      end
+
       def pinned_to(run)
         RunSummary.find_by(run: run)&.summary_version
       end

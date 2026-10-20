@@ -42,6 +42,10 @@ module Alembic
       super.tap { |run| Flow::Summaries.new(flow).pin(run) }
     end
 
+    def admitted_run
+      super.tap { |found| Flow::Summaries.new(found.flow).pin_inner(found) }
+    end
+
     def finished(answers, finished_run)
       @outputs = outputs_of(answers.transform_keys(&:to_s))
       Flow::Summaries.new(flow).pin(finished_run) if finished_run && run.nil?
