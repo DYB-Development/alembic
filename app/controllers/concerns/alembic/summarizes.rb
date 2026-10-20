@@ -29,6 +29,7 @@ module Alembic
     def finished(answers, finished_run)
       @outputs = outputs_of(answers.transform_keys(&:to_s))
       Flow::Summaries.new(flow).pin(finished_run) if finished_run && run.nil?
+      Flow::Summaries.new(finished_run.flow).keep(finished_run, answers.transform_keys(&:to_s)) if finished_run
       @summary_page = Flow::Summaries.new(run&.flow || flow).summary_page
       render template: @summary_page&.live_version ? "alembic/flows/summary_page" : "alembic/flows/complete"
     end

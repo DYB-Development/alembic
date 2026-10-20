@@ -5,7 +5,7 @@ module Alembic
     def branching
       { "slug" => "saved", "entry" => "budget",
         "nodes" => [ { "id" => "budget", "type" => "question", "text" => "Budget?",
-                       "options" => [ { "value" => "low", "label" => "Modest" }, { "value" => "high", "label" => "Generous" } ] },
+                       "options" => [ { "value" => "low", "label" => "Modest", "weight" => 2 }, { "value" => "high", "label" => "Generous" } ] },
                      { "id" => "gate", "type" => "condition", "step" => "budget", "output" => "answer", "comparison" => "is", "answer" => "high" },
                      { "id" => "posh", "type" => "question", "text" => "Premium tier?", "options" => [ "gold" ] },
                      { "id" => "plain", "type" => "question", "text" => "Basic tier?", "options" => [ "bronze" ] } ],
@@ -79,6 +79,18 @@ module Alembic
       get alembic.run_path(run)
 
       assert_select "[data-output=?]", "answered"
+    end
+
+    test "a saved session played to its end keeps its score" do
+      summaries.record("outputs" => [ { "id" => "score", "type" => "weighted_sum" } ])
+      post alembic.flow_runs_path(saved.slug)
+      run = EasyFlow::Run.last
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+      patch alembic.run_path(run), params: { answers: { plain: "bronze" } }
+
+      get alembic.run_path(run)
+
+      assert_equal 2, Flow::RunSummary.find_by(run: run).score
     end
 
     test "a visitor part way through a withdrawn version is told it was withdrawn" do
