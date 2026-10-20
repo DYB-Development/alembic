@@ -13,7 +13,10 @@ module Alembic
       ANSWER_FIELDS = (1..6).map { |number| :"answer_#{number}" }
       ANSWER_FIELDS.each { |field| attribute field, :string }
 
+      KINDS = %w[truefalse multiplechoice].freeze
+
       validates :question, presence: true
+      validate :kind_is_offered
 
       def save!
         before = document.to_h
@@ -21,6 +24,10 @@ module Alembic
       end
 
       private
+
+      def kind_is_offered
+        errors.add(:type, "must be true/false or multiple choice") unless KINDS.include?(kind)
+      end
 
       def document
         EasyFlow::Document.new(flow.document || flow.definition || {})

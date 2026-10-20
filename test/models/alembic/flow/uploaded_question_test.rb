@@ -70,6 +70,10 @@ module Alembic
       test "a row with no question is refused for it" do
         assert_equal [ "Question can't be blank" ], row(question: " ").tap(&:validate).errors.full_messages
       end
+
+      test "a row whose type is neither true/false nor multiple choice is refused for it" do
+        assert_equal [ "Type must be true/false or multiple choice" ], row(type: "Multiple select").tap(&:validate).errors.full_messages
+      end
     end
   end
 end
