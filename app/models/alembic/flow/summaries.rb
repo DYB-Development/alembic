@@ -103,11 +103,11 @@ module Alembic
         Summary::Report.new(pinned).results(Summary::Run.new(state: state, steps: run.pinned_steps))
       end
 
-      private
-
       def score_of(run, state)
         of_run(run, state).find { |result| result.type == "weighted_sum" }&.value
       end
+
+      private
 
       def seconds_taken_by(run)
         return unless run.flow.each_step?

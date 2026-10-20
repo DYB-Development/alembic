@@ -208,6 +208,15 @@ module Alembic
         assert_nil RunSummary.find_by(run: run).score
       end
 
+      test "works out a run's score from the first weighted sum in its pinned summary" do
+        flow = published
+        summaries(flow).record("outputs" => [ { "id" => "answered", "type" => "tally" }, { "id" => "score", "type" => "weighted_sum" } ])
+        run = EasyFlow::Run.start(flow)
+        summaries(flow).pin(run)
+
+        assert_equal 5, summaries(flow).score_of(run, "a" => "yes")
+      end
+
       test "keeps the seconds from a run's start to its last answer when the flow saves every answer" do
         flow = published
         flow.update!(persists: :each_step)
