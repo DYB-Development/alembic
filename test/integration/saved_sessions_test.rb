@@ -22,6 +22,14 @@ module Alembic
       Flow::Summaries.new(saved)
     end
 
+    def play(answers)
+      post alembic.flow_runs_path(saved.slug)
+      EasyFlow::Run.last.tap do |run|
+        answers.each { |step, answer| patch alembic.run_path(run), params: { answers: { step => answer } } }
+        get alembic.run_path(run)
+      end
+    end
+
     test "starting a saved session sends the visitor to its address under alembic" do
       post alembic.flow_runs_path(saved.slug)
 
@@ -102,6 +110,14 @@ module Alembic
       get alembic.run_path(run)
 
       assert_equal [ nil, nil ], Flow::RunSummary.find_by(run: run).values_at(:score, :seconds_taken)
+    end
+
+    test "saved sessions played to their end are ranked by the score they kept" do
+      summaries.record("outputs" => [ { "id" => "score", "type" => "weighted_sum" } ])
+      unweighted = play(budget: "high", posh: "gold")
+      weighted = play(budget: "low", plain: "bronze")
+
+      assert_equal [ weighted, unweighted ], summaries.ranked.map(&:run)
     end
 
     test "a visitor part way through a withdrawn version is told it was withdrawn" do
