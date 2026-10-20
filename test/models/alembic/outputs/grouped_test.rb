@@ -53,6 +53,14 @@ module Alembic
         assert_equal({ "Flags" => 100 }, result)
       end
 
+      test "a right fill in the blank answer is a full share of its category" do
+        set = { "capital" => { "type" => "fill_in_the_blank", "category" => "Places", "accepted_answers" => [ { "value" => "Paris" } ] } }
+
+        result = Grouped.output_type.compute({}, Summary::Run.new(state: { "capital" => "paris" }, steps: set), {})
+
+        assert_equal({ "Places" => 100 }, result)
+      end
+
       test "can be told which field carries the tag" do
         marked = { "budget" => { "area" => "money", "options" => [ { "value" => "high", "weight" => 5 } ] } }
 
