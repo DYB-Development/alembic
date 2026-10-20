@@ -49,7 +49,7 @@ module Alembic
     test "the details editor labels its fields with the look's label style" do
       get easy_flow.edit_manage_flow_path(easy_flow_definitions(:business_scorecard))
 
-      assert_select "label.ks-label", 4
+      assert_select "label.ks-label", 5
     end
 
     test "the details editor draws its back link in the look's link colour" do
@@ -283,6 +283,12 @@ module Alembic
       get easy_flow.edit_manage_flow_path(straight_flow)
 
       assert_select "[data-new-outcome] input[name=?]", "flow[outputs][0][id]"
+    end
+
+    test "the details editor offers to add a total of inner runs after the new outcome" do
+      get easy_flow.edit_manage_flow_path(straight_flow)
+
+      assert_select "[data-new-inner-total] input[name=?][value=?]", "flow[outputs][1][type]", "inner_total"
     end
 
     test "saving an added outcome records its entries and rules" do

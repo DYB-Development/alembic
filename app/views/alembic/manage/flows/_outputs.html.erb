@@ -58,4 +58,10 @@
     <%= hidden_field_tag "#{field}[type]", "outcome", id: nil %>
     <%= ui_input(name: "#{field}[id]", placeholder: "The new outcome's id") %>
   </div>
+  <% field = "flow[outputs][#{outputs.size + 1}]" %>
+  <div data-new-inner-total class="mt-6">
+    <label class="ks-label mb-1">Add a total of every inner run's score</label>
+    <%= hidden_field_tag "#{field}[type]", "inner_total", id: nil %>
+    <%= ui_input(name: "#{field}[id]", placeholder: "The new total's id") %>
+  </div>
 <% end %>
