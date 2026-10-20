@@ -73,6 +73,12 @@ module Alembic
       assert_response :not_found
     end
 
+    test "the owner can change their flow's summary" do
+      patch easy_flow.manage_flow_path(owned_flow), params: { flow: { summary: "Our scoring" } }, headers: as(@ours)
+
+      assert_equal "Our scoring", Flow::Summaries.new(owned_flow).text
+    end
+
     private
 
     def owned_flow
