@@ -30,10 +30,7 @@ module Alembic
       end
 
       def self.picked_weight(step, values)
-        right = right_answers(step)
-        return 0 unless Array(values).sort == right.sort
-
-        right.sum { |value| answer_weight(step, value) }
+        Array(values).sort == right_answers(step).sort ? 1 : 0
       end
 
       def self.typed_weight(step, text)

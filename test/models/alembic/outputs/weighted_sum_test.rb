@@ -39,8 +39,8 @@ module Alembic
         WeightedSum.output_type.compute({}, Summary::Run.new(state: { "flags" => values }, steps: picking), {})
       end
 
-      test "a multiple select answer picking every right answer and no other adds their weights" do
-        assert_equal 3, picked([ "blue", "red" ])
+      test "a multiple select answer picking every right answer and no other adds one" do
+        assert_equal 1, picked([ "blue", "red" ])
       end
 
       test "a multiple select answer picking a wrong answer adds nothing" do

@@ -24,8 +24,8 @@ module Alembic
 
       get alembic.run_path(run)
 
-      assert_select "[data-output=?]", "score", text: /5/
-      assert_equal 5, Flow::RunSummary.find_by(run: run).score
+      assert_select "[data-output=?]", "score", text: /2/
+      assert_equal 2, Flow::RunSummary.find_by(run: run).score
     end
   end
 end
