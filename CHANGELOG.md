@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-20
+
 ### Added
 - **Kept results** — when a saved run reaches its end, alembic keeps its score, from the first weighted sum in its pinned summary, and its seconds from start to last answer, for a flow that saves every answer. Showing the results again leaves them as they were, and a run left part way keeps nothing.
 - **Ranking** — `Alembic::Flow::Summaries.new(flow).ranked` lists a flow's finished runs with a kept score, highest score first and shortest time first between equal scores, with a run that has no time last among them.
