@@ -89,7 +89,7 @@ module Alembic
       end
 
       def ranked
-        RunSummary.where(summary_version: versions).order(score: :desc).order(RunSummary.arel_table[:seconds_taken].asc.nulls_last)
+        RunSummary.where(summary_version: versions).where.not(score: nil).order(score: :desc).order(RunSummary.arel_table[:seconds_taken].asc.nulls_last)
       end
 
       def of_run(run, state)

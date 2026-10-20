@@ -294,6 +294,15 @@ module Alembic
         assert_equal [ own ], summaries(flow).ranked.map(&:run)
       end
 
+      test "ranks no run that has no score kept" do
+        flow = published
+        summaries(flow).record("outputs" => [])
+        finished = kept_run(flow, score: 2)
+        summaries(flow).pin(EasyFlow::Run.start(flow))
+
+        assert_equal [ finished ], summaries(flow).ranked.map(&:run)
+      end
+
       test "a flow's summary data goes with the flow" do
         flow = published
         summaries(flow).record("outputs" => [])
