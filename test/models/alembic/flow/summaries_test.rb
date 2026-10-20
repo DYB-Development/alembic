@@ -275,6 +275,15 @@ module Alembic
         assert_equal [ faster, slower ], summaries(flow).ranked.map(&:run)
       end
 
+      test "ranks a run with no time last among runs with the same score" do
+        flow = published
+        summaries(flow).record("outputs" => [])
+        untimed = kept_run(flow, score: 5)
+        timed = kept_run(flow, score: 5, seconds_taken: 300)
+
+        assert_equal [ timed, untimed ], summaries(flow).ranked.map(&:run)
+      end
+
       test "a flow's summary data goes with the flow" do
         flow = published
         summaries(flow).record("outputs" => [])
