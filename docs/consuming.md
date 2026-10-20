@@ -229,3 +229,67 @@ engine's own.
 An admin tries a flow at `/alembic/manage/flows/:id/preview`. It runs the flow
 as it is being edited, finishes on the same summary page a visitor sees, and is
 authenticated as the rest of the builder is.
+
+## 5. Uploading questions from a CSV file
+
+A builder can upload a CSV file of questions into a quiz from the quiz's details
+page. Alembic offers this through [ixport](https://github.com/DYB-Development/ixport),
+which the host adds itself. Alembic does not depend on ixport: its question
+importer and the "Upload questions" link exist only in a host that has it.
+
+Add ixport, and wallflower to run uploads in the background, then install their
+tables and mount both:
+
+```ruby
+gem "ixport", "~> 0.4"
+gem "wallflower"
+```
+
+```bash
+$ bin/rails generate wallflower:install
+$ bin/rails generate ixport:install
+$ bin/rails db:migrate
+```
+
+```ruby
+mount Ixport::Engine => "/imports"
+mount Wallflower::Engine => "/background"
+```
+
+Configure ixport, and register Alembic's importer with `refuse_whole_file: true`
+and its owner check:
+
+```ruby
+# config/initializers/ixport.rb
+Ixport.configure do |config|
+  config.current_account_method = :current_owner
+  config.background_runner = :wallflower
+end
+
+Ixport.register_import :quiz_questions, title: "Quiz questions", importer: "Alembic::QuestionImporter",
+  refuse_whole_file: true,
+  allow: ->(_person, account, quiz) { Alembic::QuestionImporter.allows?(account, quiz) }
+```
+
+When `Alembic.owner_method` is set, `config.current_account_method` names the
+same method. The rule then refuses any quiz that does not belong to the current
+owner, and the upload pages answer not found for it. With no owner method set,
+the rule allows any of Alembic's flows. ixport's views use keystone_ui's
+helpers, so the controller ixport's pages inherit has to offer them.
+
+The upload page lists the fields a file's columns are matched to, and the
+builder matches each column on the next page:
+
+| Field | What it holds |
+|---|---|
+| Type | `True/false` or `Multiple choice` |
+| Question | the question's text |
+| Category | the question's category, which may be blank |
+| Answer 1 to Answer 6 | a multiple choice question's answers, at least two |
+| Right answer | the number of the right answer, or `true` or `false` for a true/false question |
+
+Each row becomes a question step, added after the quiz's last question in its
+working draft, with weight 1 on the right answer and 0 on the others. Takers see
+the new questions once the builder publishes the quiz. A file in which any row
+cannot become a question saves nothing, and the preview names each such row
+with what is wrong with it.
