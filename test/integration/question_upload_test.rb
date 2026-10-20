@@ -28,5 +28,11 @@ module Alembic
 
       assert_select "[data-expected-field]", text: "Right answer"
     end
+
+    test "a builder cannot open the upload page for another owner's quiz" do
+      get ixport.new_import_path(key: :quiz_questions, target: quiz(@theirs).to_global_id), headers: as(@ours)
+
+      assert_response :not_found
+    end
   end
 end
