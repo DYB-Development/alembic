@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-10-20
+
 ### Added
 - **Multiple select answers are scored** — an answer that picks every right answer and no other adds one, and any other answer adds nothing, where a right answer is one carrying a weight above zero.
 - **Fill in the blank answers are scored** — a typed answer adds one when it matches one of the question's accepted answers, ignoring letter case and spaces at either end, and adds nothing otherwise.
