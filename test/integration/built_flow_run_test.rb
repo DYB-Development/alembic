@@ -53,5 +53,14 @@ module Alembic
     ensure
       EasyFlow.host_named(Alembic::FLOW_HOST).finds_flows_across_owners = false
     end
+
+    test "a flow built in the builder shows its questions on one page" do
+      built.update!(persists: :unsaved)
+      Flow::Summaries.new(built).ask_on_one_page(true)
+
+      get alembic.flow_step_path(built.slug)
+
+      assert_select "form[action=?]", alembic.flow_step_path(built.slug)
+    end
   end
 end
