@@ -54,6 +54,23 @@ module Alembic
       assert_equal 90, Flow::RunSummary.find_by!(run: EasyFlow::Run.find_by!(flow: played)).seconds_taken
     end
 
+    def play(flow, minutes, *answers)
+      started = Time.zone.local(2026, 10, 20, 9, 0, 0)
+      travel_to(started) { post alembic.flow_runs_path(flow.slug); follow_redirect! while redirect? }
+      travel_to(started + minutes.minutes) { answers.each { |value| answer(:ask, value) } }
+      EasyFlow::Run.where(flow: flow).order(:id).last
+    end
+
+    test "an event's finished runs are listed by total and then by time" do
+      played = event(quiz("history"), quiz("science"))
+      Flow::Summaries.new(played).record("outputs" => [ { "id" => "total", "type" => "inner_total" } ])
+      slow = play(played, 5, "right", "right")
+      low = play(played, 1, "right", "wrong")
+      fast = play(played, 2, "right", "right")
+
+      assert_equal [ fast, slow, low ], Flow::Summaries.new(played).ranked.map(&:run)
+    end
+
     test "a visitor taken into a quiz inside an event has the quiz's run pinned to the quiz's summary" do
       history = quiz("history")
       post alembic.flow_runs_path(event(history).slug)
