@@ -190,6 +190,17 @@ module Alembic
         assert_equal 5, RunSummary.find_by(run: run).score
       end
 
+      test "keeps no score for a run whose summary has no weighted sum" do
+        flow = published
+        summaries(flow).record("outputs" => [ { "id" => "answered", "type" => "tally" } ])
+        run = EasyFlow::Run.start(flow)
+        summaries(flow).pin(run)
+
+        summaries(flow).keep(run, "a" => "yes")
+
+        assert_nil RunSummary.find_by(run: run).score
+      end
+
       test "a flow's summary data goes with the flow" do
         flow = published
         summaries(flow).record("outputs" => [])
