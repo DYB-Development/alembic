@@ -71,6 +71,16 @@ module Alembic
       assert_equal [ fast, slow, low ], Flow::Summaries.new(played).ranked.map(&:run)
     end
 
+    test "a quiz played inside an event keeps its own score" do
+      history = quiz("history")
+      post alembic.flow_runs_path(event(history).slug)
+      follow_redirect! while redirect?
+
+      answer(:ask, "right")
+
+      assert_equal 1, Flow::RunSummary.find_by!(run: EasyFlow::Run.find_by!(flow: history)).score
+    end
+
     test "a visitor taken into a quiz inside an event has the quiz's run pinned to the quiz's summary" do
       history = quiz("history")
       post alembic.flow_runs_path(event(history).slug)
