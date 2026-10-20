@@ -1,6 +1,8 @@
 module Alembic
   module Flow
     class Summaries
+      SCORES = %w[weighted_sum inner_total].freeze
+
       def initialize(flow)
         @flow = flow
       end
@@ -77,6 +79,10 @@ module Alembic
         RunSummary.create!(run: run, summary_version: current_version) if current_version
       end
 
+      def pin_inner(run)
+        pin(run) if run.parent_run && pinned_to(run).nil?
+      end
+
       def pinned_to(run)
         RunSummary.find_by(run: run)&.summary_version
       end
@@ -96,14 +102,14 @@ module Alembic
         pinned = pinned_to(run)&.summary
         return [] if pinned.blank?
 
-        Summary::Report.new(pinned).results(Summary::Run.new(state: state, steps: run.pinned_steps))
+        Summary::Report.new(pinned).results(Summary::Run.new(state: state, steps: run.pinned_steps, run: run))
+      end
+
+      def score_of(run, state)
+        of_run(run, state).find { |result| SCORES.include?(result.type) }&.value
       end
 
       private
-
-      def score_of(run, state)
-        of_run(run, state).find { |result| result.type == "weighted_sum" }&.value
-      end
 
       def seconds_taken_by(run)
         return unless run.flow.each_step?

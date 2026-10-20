@@ -65,6 +65,14 @@ module Alembic
         assert_match "vibes", error.message
       end
 
+      test "records a total of inner runs among a flow's outputs" do
+        flow = published
+
+        summaries(flow).record("outputs" => [ { "id" => "total", "type" => "inner_total" } ])
+
+        assert_equal "inner_total", summaries(flow).document["outputs"].sole["type"]
+      end
+
       test "records a summary template as a numbered version" do
         flow = published
 
@@ -206,6 +214,34 @@ module Alembic
         summaries(flow).keep(run, "a" => "yes")
 
         assert_nil RunSummary.find_by(run: run).score
+      end
+
+      test "works out a run's score from the first weighted sum in its pinned summary" do
+        flow = published
+        summaries(flow).record("outputs" => [ { "id" => "answered", "type" => "tally" }, { "id" => "score", "type" => "weighted_sum" } ])
+        run = EasyFlow::Run.start(flow)
+        summaries(flow).pin(run)
+
+        assert_equal 5, summaries(flow).score_of(run, "a" => "yes")
+      end
+
+      test "keeps a finished run's total of inner runs as its score" do
+        quiz = published("quiz").tap do |flow|
+          flow.record_definition(flowing("slug" => "quiz", "entry" => "a",
+            "nodes" => [ { "id" => "a", "type" => "question", "question" => "A?", "answers" => [ { "value" => "yes", "weight" => 5 } ] },
+                         { "id" => "end", "type" => "terminal" } ],
+            "edges" => [ { "from" => "a", "to" => "end" } ]))
+          flow.publish
+        end
+        summaries(quiz).record("outputs" => [ { "id" => "score", "type" => "weighted_sum" } ])
+        event = published("event")
+        summaries(event).record("outputs" => [ { "id" => "total", "type" => "inner_total" } ])
+        run = EasyFlow::Run.start(event).tap { |started| summaries(event).pin(started) }
+        EasyFlow::Run.start(quiz).tap { |inner| inner.update!(parent_run: run, parent_step: "a"); inner.record(:a, "yes"); summaries(quiz).pin(inner) }
+
+        summaries(event).keep(run, {})
+
+        assert_equal 5, RunSummary.find_by(run: run).score
       end
 
       test "keeps the seconds from a run's start to its last answer when the flow saves every answer" do

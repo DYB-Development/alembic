@@ -9,6 +9,7 @@ module Alembic
       helper ResultBlocksHelper
       helper ContentBlocksHelper
       helper KsBlocks::LayoutHelper
+      after_action :keep_ended_inner_run, only: :step
       helper_method :flow_summary, :first_step_path, :summary_values, :intro_values, :start_over_path, :finish_link, :visited_flow_address
     end
 
@@ -40,6 +41,16 @@ module Alembic
 
     def start_run(flow)
       super.tap { |run| Flow::Summaries.new(flow).pin(run) }
+    end
+
+    def admitted_run
+      super.tap { |found| Flow::Summaries.new(found.flow).pin_inner(found) }
+    end
+
+    def keep_ended_inner_run
+      return unless run&.parent_run && run.ended_at_end?
+
+      Flow::Summaries.new(run.flow).keep(run, run.walked(run.recorded).transform_keys(&:to_s))
     end
 
     def finished(answers, finished_run)

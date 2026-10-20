@@ -29,6 +29,7 @@ module Alembic
         Alembic::Outputs::Tally.register
         Alembic::Outputs::Band.register
         Alembic::Outputs::Outcome.register
+        Alembic::Outputs::InnerTotal.register
       end
     end
 
