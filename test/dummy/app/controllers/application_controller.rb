@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
 
   helper Rails.application.routes.url_helpers
+  helper KeystoneUiHelper
 
   def note_the_refusal(refusal)
     response.headers["X-Refusal"] = refusal.class.name
@@ -19,6 +20,10 @@ class ApplicationController < ActionController::Base
 
   def alembic_visitor_permitted?(diagnostic)
     diagnostic.present?
+  end
+
+  def require_a_customer
+    head :forbidden unless current_customer
   end
 
   def current_customer
