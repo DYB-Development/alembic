@@ -154,8 +154,10 @@ The total adds up the score of every inner run the saved run started, where an
 inner run's score is the first `weighted_sum` or `inner_total` output in its own
 pinned summary. An inner run that has not reached an End step adds nothing. The
 visitor pages pin an inner run to its own flow's summary when they first reach
-it, so a host that starts or plays inner runs outside the visitor pages pins
-them itself with `summaries.pin(run)`. Outside a saved run the total is 0.
+it, and keep its score and time once it reaches an End step, so it is ranked
+with its flow's other runs. A host that starts or plays inner runs outside the
+visitor pages pins them itself with `summaries.pin(run)` and keeps them with
+`summaries.keep(run, state)`. Outside a saved run the total is 0.
 
 ### Output types
 
