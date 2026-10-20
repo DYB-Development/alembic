@@ -25,7 +25,15 @@ module Alembic
       end
 
       def step
-        @step ||= { "id" => next_id, "type" => "question", "question" => question }
+        @step ||= { "id" => next_id, "type" => "question", "question" => question, "answers" => answers }
+      end
+
+      def answers
+        filled_answers.map { |number, text| { "value" => text, "weight" => number.to_s == right_answer.to_s.strip ? 1 : 0 } }
+      end
+
+      def filled_answers
+        ANSWER_FIELDS.each_with_index.filter_map { |field, index| [ index + 1, public_send(field).strip ] if public_send(field).present? }
       end
 
       def next_id

@@ -26,6 +26,13 @@ module Alembic
 
         assert_equal "Which planet is largest?", added_step.config["question"]
       end
+
+      test "a saved multiple choice row offers its filled answers and weights the right one" do
+        row.save!
+
+        assert_equal [ { "value" => "Mars", "weight" => 0 }, { "value" => "Jupiter", "weight" => 1 }, { "value" => "Venus", "weight" => 0 } ],
+          added_step.config["answers"]
+      end
     end
   end
 end
