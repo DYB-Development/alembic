@@ -79,6 +79,10 @@ module Alembic
         assert_equal [ "Answers must be at least two for a multiple choice question" ],
           row(answer_2: nil, answer_3: nil, right_answer: "1").tap(&:validate).errors.full_messages
       end
+
+      test "a multiple choice row whose right answer is not the number of one of its answers is refused for it" do
+        assert_equal [ "Right answer must be the number of one of its answers" ], row(right_answer: "4").tap(&:validate).errors.full_messages
+      end
     end
   end
 end

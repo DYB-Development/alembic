@@ -28,6 +28,7 @@ module Alembic
 
       def choices_are_offered
         errors.add(:answers, "must be at least two for a multiple choice question") if filled_answers.size < 2
+        errors.add(:right_answer, "must be the number of one of its answers") if answers.none? { |answer| answer["weight"] == 1 }
       end
 
       def kind_is_offered
