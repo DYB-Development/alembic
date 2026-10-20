@@ -1,0 +1,31 @@
+require "test_helper"
+
+module Alembic
+  module Flow
+    class UploadedQuestionTest < ActiveSupport::TestCase
+      def quiz
+        @quiz ||= EasyFlow::Definition.create!(host: "alembic", slug: "quiz").tap do |flow|
+          flow.record_definition(flowing("slug" => "quiz", "entry" => "first",
+            "nodes" => [ { "id" => "first", "type" => "question", "question" => "First?",
+                           "answers" => [ { "value" => "Yes", "weight" => 1 }, { "value" => "No" } ] } ]))
+          flow.publish
+        end
+      end
+
+      def row(values = {})
+        UploadedQuestion.new({ flow: quiz, type: "Multiple choice", question: "Which planet is largest?", category: "Space",
+                               answer_1: "Mars", answer_2: "Jupiter", answer_3: "Venus", right_answer: "2" }.merge(values))
+      end
+
+      def added_step
+        EasyFlow::Document.new(quiz.reload.document).nodes.last
+      end
+
+      test "a saved row adds a question step asking its question" do
+        row.save!
+
+        assert_equal "Which planet is largest?", added_step.config["question"]
+      end
+    end
+  end
+end
