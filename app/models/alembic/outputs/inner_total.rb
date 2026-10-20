@@ -13,6 +13,8 @@ module Alembic
       end
 
       def self.total(parent)
+        return 0 if parent.nil?
+
         parent.inner_runs.select(&:ended_at_end?).sum { |inner| score_of(inner).to_i }
       end
 

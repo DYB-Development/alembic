@@ -57,6 +57,10 @@ module Alembic
 
         assert_equal 1, total(parent)
       end
+
+      test "totals nothing for answers that belong to no saved run" do
+        assert_equal 0, InnerTotal.output_type.compute({}, Summary::Run.new(state: {}, steps: {}), {})
+      end
     end
   end
 end
