@@ -15,6 +15,13 @@ module Alembic
         "steps_text" => Array(entry["steps"]).map { |step| "#{step['title']}\n#{step['code']}" }.join("\n---\n") }
     end
 
+    def alembic_question_upload_path(flow)
+      registration = defined?(Ixport) && Ixport.registrations.values.find { |found| found.importer == "Alembic::QuestionImporter" }
+      return unless registration && respond_to?(:ixport)
+
+      ixport.new_import_path(key: registration.key, target: flow.to_global_id)
+    end
+
     def alembic_output_lines(value)
       case value
       when Hash then value.key?("name") ? [ value["name"] ] : value.map { |name, share| "#{name}: #{share}" }

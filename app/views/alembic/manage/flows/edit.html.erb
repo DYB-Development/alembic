@@ -5,6 +5,12 @@
 
   <%= ui_form_page(title: "Edit details", back_url: easy_flow.manage_flow_path(@flow)) %>
 
+  <% if (upload_path = alembic_question_upload_path(@flow)) %>
+    <%= ui_section(title: "Questions from a file") do %>
+      <%= link_to "Upload questions", upload_path, class: "text-sm text-(color:--ks-color-link) hover:text-(color:--ks-color-link-hover) dark:text-(color:--ks-color-link-dark) dark:hover:text-(color:--ks-color-link-hover-dark)" %>
+    <% end %>
+  <% end %>
+
   <%= ui_form(action: easy_flow.manage_flow_path(@flow), method: :patch) do %>
     <%= ui_section(title: "How this is introduced") do %>
       <label class="ks-label mb-1">Title</label>
