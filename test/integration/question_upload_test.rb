@@ -62,5 +62,13 @@ module Alembic
 
       assert_equal [ "start", "first" ], EasyFlow::Document.new(flow.reload.document).nodes.map(&:id)
     end
+
+    test "a quiz's builder page links to uploading questions into that quiz" do
+      flow = quiz
+
+      get easy_flow.edit_manage_flow_path(flow), headers: as(@ours)
+
+      assert_select "a[href=?]", ixport.new_import_path(key: :quiz_questions, target: flow.to_global_id), text: "Upload questions"
+    end
   end
 end
