@@ -36,6 +36,14 @@ module Alembic
         assert_not_includes grouped({ "loose" => "x" }).keys, nil
       end
 
+      test "groups a question step by its category setting" do
+        set = { "budget" => { "category" => "Money", "options" => [ { "value" => "high", "weight" => 5 } ] } }
+
+        result = Grouped.output_type.compute({}, Summary::Run.new(state: { "budget" => "high" }, steps: set), {})
+
+        assert_equal({ "Money" => 100 }, result)
+      end
+
       test "can be told which field carries the tag" do
         marked = { "budget" => { "area" => "money", "options" => [ { "value" => "high", "weight" => 5 } ] } }
 

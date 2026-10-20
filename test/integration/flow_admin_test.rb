@@ -29,6 +29,14 @@ module Alembic
       assert_equal "/alembic/manage/flows/#{flow.public_code}/canvas", drawn["base"]
     end
 
+    test "the canvas sets a question step's category" do
+      flow = straight_flow
+
+      patch "/alembic/manage/flows/#{flow.public_code}/canvas/steps/b", params: { config: { question: "B?", category: "Pace", answers: [ { value: "y", weight: 1 } ] } }, as: :json
+
+      assert_equal "Pace", EasyFlow::Steps::Question.category_of(EasyFlow::Document.new(flow.reload.document).node("b").config)
+    end
+
     test "the details editor offers the flow's summary for editing" do
       flow = easy_flow_definitions(:business_scorecard)
       Flow::Summaries.new(flow).describe("What this asks about")

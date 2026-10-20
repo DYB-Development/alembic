@@ -1,7 +1,0 @@
-<p class="ks-label mb-1">Right answer</p>
-<div class="mb-4 flex flex-wrap gap-3">
-  <% Alembic::Question::TRUE_OR_FALSE.each do |label| %>
-    <%= ui_radio_card(name: "question[right]", value: label, label: label,
-          checked: question.options.any? { |option| option["label"] == label && option["right"] }) %>
-  <% end %>
-</div>
