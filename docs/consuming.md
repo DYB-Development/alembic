@@ -50,7 +50,6 @@ mount Alembic::Engine => "/alembic"
 | `/alembic/manage/flows/:id/edit` | a flow's details, with its summary text |
 | `/alembic/manage/flows/:id/preview` | trying a flow before it is published |
 | `/alembic/manage/pages` | the page builder |
-| `/alembic/manage/categories` | categories of true/false and multiple choice questions |
 
 ## 2. Settings
 

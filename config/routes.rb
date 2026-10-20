@@ -10,10 +10,6 @@ Alembic::Engine.routes.draw do
       delete "blocks/:block_id", to: "page_blocks#remove_block", as: :block
     end
 
-    resources :categories, only: [ :index, :new, :create, :show ] do
-      resources :questions, only: [ :new, :create ]
-    end
-
     resources :flows, only: [ :edit, :update ] do
       resource :preview, only: :show, controller: "previews" do
         get :step
