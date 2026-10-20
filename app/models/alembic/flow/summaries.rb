@@ -89,7 +89,7 @@ module Alembic
       end
 
       def ranked
-        RunSummary.order(score: :desc)
+        RunSummary.order(score: :desc, seconds_taken: :asc)
       end
 
       def of_run(run, state)

@@ -266,6 +266,15 @@ module Alembic
         assert_equal [ higher, lower ], summaries(flow).ranked.map(&:run)
       end
 
+      test "ranks the shorter time first between two runs with the same score" do
+        flow = published
+        summaries(flow).record("outputs" => [])
+        slower = kept_run(flow, score: 5, seconds_taken: 120)
+        faster = kept_run(flow, score: 5, seconds_taken: 45)
+
+        assert_equal [ faster, slower ], summaries(flow).ranked.map(&:run)
+      end
+
       test "a flow's summary data goes with the flow" do
         flow = published
         summaries(flow).record("outputs" => [])
