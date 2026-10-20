@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
 - **Kept results** — when a saved run reaches its end, alembic keeps its score, from the first weighted sum in its pinned summary, and its seconds from start to last answer, for a flow that saves every answer. Showing the results again leaves them as they were, and a run left part way keeps nothing.
 - **Ranking** — `Alembic::Flow::Summaries.new(flow).ranked` lists a flow's finished runs with a kept score, highest score first and shortest time first between equal scores, with a run that has no time last among them.
 
+### Fixed
+- **Summaries belong to the flow's owner** — in an app whose flows belong to an owner, saving the builder's details for another owner's flow is refused as not found and leaves that flow's summary as it was. It used to save the summary changes before refusing the rest.
+
 ### Upgrading
 - Run `bin/rails alembic:install:migrations`, then `bin/rails db:migrate`. Run summaries gain a nullable score and seconds taken, and runs finished before the upgrade keep neither.
 
