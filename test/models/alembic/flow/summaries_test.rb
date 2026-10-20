@@ -16,6 +16,13 @@ module Alembic
         Summaries.new(flow)
       end
 
+      def kept_run(flow, score:, seconds_taken: nil)
+        EasyFlow::Run.start(flow).tap do |run|
+          summaries(flow).pin(run)
+          RunSummary.find_by(run: run).update!(score: score, seconds_taken: seconds_taken)
+        end
+      end
+
       test "records that a flow shows each answer's value beside its label" do
         flow = published
 
@@ -177,6 +184,123 @@ module Alembic
         flow = published
 
         assert_empty summaries(flow).of_run(EasyFlow::Run.start(flow), "a" => "yes")
+      end
+
+      test "keeps a finished run's score from the first weighted sum in its summary" do
+        flow = published
+        summaries(flow).record("outputs" => [ { "id" => "answered", "type" => "tally" }, { "id" => "score", "type" => "weighted_sum" } ])
+        run = EasyFlow::Run.start(flow)
+        summaries(flow).pin(run)
+
+        summaries(flow).keep(run, "a" => "yes")
+
+        assert_equal 5, RunSummary.find_by(run: run).score
+      end
+
+      test "keeps no score for a run whose summary has no weighted sum" do
+        flow = published
+        summaries(flow).record("outputs" => [ { "id" => "answered", "type" => "tally" } ])
+        run = EasyFlow::Run.start(flow)
+        summaries(flow).pin(run)
+
+        summaries(flow).keep(run, "a" => "yes")
+
+        assert_nil RunSummary.find_by(run: run).score
+      end
+
+      test "keeps the seconds from a run's start to its last answer when the flow saves every answer" do
+        flow = published
+        flow.update!(persists: :each_step)
+        summaries(flow).record("outputs" => [])
+        run = travel_to(Time.zone.local(2026, 10, 20, 9, 0, 0)) { EasyFlow::Run.start(flow) }
+        summaries(flow).pin(run)
+        travel_to(Time.zone.local(2026, 10, 20, 9, 1, 30)) { run.record(:a, "yes") }
+
+        summaries(flow).keep(run, "a" => "yes")
+
+        assert_equal 90, RunSummary.find_by(run: run).seconds_taken
+      end
+
+      test "keeps no time for a run the flow saves only once it finishes" do
+        flow = published
+        flow.update!(persists: :on_finish)
+        summaries(flow).record("outputs" => [])
+        run = travel_to(Time.zone.local(2026, 10, 20, 9, 5, 0)) { EasyFlow::Run.start(flow) }
+        run.update!(recorded: { "a" => { "value" => "yes", "completed_at" => "2026-10-20T09:01:00Z" } })
+        summaries(flow).pin(run)
+
+        summaries(flow).keep(run, "a" => "yes")
+
+        assert_nil RunSummary.find_by(run: run).seconds_taken
+      end
+
+      test "keeping a run's results again leaves the score and time already kept" do
+        flow = published
+        flow.update!(persists: :each_step)
+        summaries(flow).record("outputs" => [ { "id" => "score", "type" => "weighted_sum" } ])
+        run = travel_to(Time.zone.local(2026, 10, 20, 9, 0, 0)) { EasyFlow::Run.start(flow) }
+        summaries(flow).pin(run)
+        travel_to(Time.zone.local(2026, 10, 20, 9, 1, 30)) { run.record(:a, "yes") }
+        summaries(flow).keep(run, "a" => "yes")
+        travel_to(Time.zone.local(2026, 10, 20, 9, 3, 0)) { run.record(:a, "no") }
+
+        summaries(flow).keep(run, "a" => "no")
+
+        assert_equal [ 5, 90 ], RunSummary.find_by(run: run).values_at(:score, :seconds_taken)
+      end
+
+      test "keeps nothing for a run pinned to no summary" do
+        flow = published
+
+        assert_no_difference -> { RunSummary.count } do
+          summaries(flow).keep(EasyFlow::Run.start(flow), "a" => "yes")
+        end
+      end
+
+      test "ranks a flow's finished runs with the higher score first" do
+        flow = published
+        summaries(flow).record("outputs" => [])
+        lower = kept_run(flow, score: 3)
+        higher = kept_run(flow, score: 8)
+
+        assert_equal [ higher, lower ], summaries(flow).ranked.map(&:run)
+      end
+
+      test "ranks the shorter time first between two runs with the same score" do
+        flow = published
+        summaries(flow).record("outputs" => [])
+        slower = kept_run(flow, score: 5, seconds_taken: 120)
+        faster = kept_run(flow, score: 5, seconds_taken: 45)
+
+        assert_equal [ faster, slower ], summaries(flow).ranked.map(&:run)
+      end
+
+      test "ranks a run with no time last among runs with the same score" do
+        flow = published
+        summaries(flow).record("outputs" => [])
+        untimed = kept_run(flow, score: 5)
+        timed = kept_run(flow, score: 5, seconds_taken: 300)
+
+        assert_equal [ timed, untimed ], summaries(flow).ranked.map(&:run)
+      end
+
+      test "ranks only the flow's own runs" do
+        flow = published
+        other = published("other")
+        [ flow, other ].each { |each| summaries(each).record("outputs" => []) }
+        own = kept_run(flow, score: 1)
+        kept_run(other, score: 9)
+
+        assert_equal [ own ], summaries(flow).ranked.map(&:run)
+      end
+
+      test "ranks no run that has no score kept" do
+        flow = published
+        summaries(flow).record("outputs" => [])
+        finished = kept_run(flow, score: 2)
+        summaries(flow).pin(EasyFlow::Run.start(flow))
+
+        assert_equal [ finished ], summaries(flow).ranked.map(&:run)
       end
 
       test "a flow's summary data goes with the flow" do

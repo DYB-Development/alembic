@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_12_204544) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_20_120000) do
   create_table "alembic_flow_definition_summaries", force: :cascade do |t|
     t.boolean "asks_on_one_page", default: false, null: false
     t.datetime "created_at", null: false
@@ -31,6 +31,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_204544) do
     t.integer "run_id", null: false
     t.integer "summary_version_id", null: false
     t.datetime "updated_at", null: false
+    t.integer "score"
+    t.integer "seconds_taken"
     t.index ["run_id"], name: "index_alembic_flow_run_summaries_on_run_id", unique: true
     t.index ["summary_version_id"], name: "index_alembic_flow_run_summaries_on_summary_version_id"
   end
