@@ -17,6 +17,10 @@ module Alembic
                                answer_1: "Mars", answer_2: "Jupiter", answer_3: "Venus", right_answer: "2" }.merge(values))
       end
 
+      def added_step_id
+        EasyFlow::Document.new(quiz.reload.document).nodes.map(&:id).grep(/\Aquestion_/).last
+      end
+
       def added_step
         EasyFlow::Document.new(quiz.reload.document).nodes.last
       end
@@ -44,6 +48,17 @@ module Alembic
         row.save!
 
         assert_equal [ added_step.id ], EasyFlow::Document.new(quiz.document).edges_from("first").map(&:to)
+      end
+
+      test "a saved row is asked before the step that followed the quiz's last question" do
+        quiz.update!(document: flowing("slug" => "quiz", "entry" => "first",
+          "nodes" => [ { "id" => "first", "type" => "question", "question" => "First?", "answers" => [ { "value" => "Yes" } ] },
+                       { "id" => "wrap_up", "type" => "checklist" } ],
+          "edges" => [ { "from" => "first", "to" => "wrap_up" } ]))
+
+        row.save!
+
+        assert_equal [ "wrap_up" ], EasyFlow::Document.new(quiz.document).edges_from(added_step_id).map(&:to)
       end
 
       test "a saved true/false row offers True and False and weights the right one" do

@@ -25,6 +25,9 @@ module Alembic
       end
 
       def appended
+        leaving = document.edges_from(last_question).first
+        return document.insert(step, on: [ last_question, leaving.to ]) if leaving
+
         document.add(step).connect(from: last_question, to: step["id"])
       end
 
