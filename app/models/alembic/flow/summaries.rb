@@ -81,6 +81,10 @@ module Alembic
         RunSummary.find_by(run: run)&.summary_version
       end
 
+      def keep(run, state)
+        RunSummary.find_by(run: run).update!(score: of_run(run, state).find { |result| result.type == "weighted_sum" }.value)
+      end
+
       def of_run(run, state)
         pinned = pinned_to(run)&.summary
         return [] if pinned.blank?
