@@ -179,6 +179,17 @@ module Alembic
         assert_empty summaries(flow).of_run(EasyFlow::Run.start(flow), "a" => "yes")
       end
 
+      test "keeps a finished run's score from the first weighted sum in its summary" do
+        flow = published
+        summaries(flow).record("outputs" => [ { "id" => "answered", "type" => "tally" }, { "id" => "score", "type" => "weighted_sum" } ])
+        run = EasyFlow::Run.start(flow)
+        summaries(flow).pin(run)
+
+        summaries(flow).keep(run, "a" => "yes")
+
+        assert_equal 5, RunSummary.find_by(run: run).score
+      end
+
       test "a flow's summary data goes with the flow" do
         flow = published
         summaries(flow).record("outputs" => [])
