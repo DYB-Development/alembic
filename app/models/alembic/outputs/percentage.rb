@@ -24,6 +24,8 @@ module Alembic
       end
 
       def self.most(step)
+        return WeightedSum.weight_of(step, WeightedSum.right_answers(step)) if step["type"] == "multiple_select"
+
         EasyFlow::Steps::Question.answers_of(step).filter_map { |option| option["weight"].to_i if option.is_a?(Hash) }.max.to_i
       end
     end

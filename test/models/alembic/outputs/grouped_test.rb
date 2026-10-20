@@ -44,6 +44,15 @@ module Alembic
         assert_equal({ "Money" => 100 }, result)
       end
 
+      test "a fully right multiple select answer is a full share of its category" do
+        set = { "flags" => { "type" => "multiple_select", "category" => "Flags",
+                             "answers" => [ { "value" => "red", "weight" => 2 }, { "value" => "blue", "weight" => 1 }, { "value" => "green" } ] } }
+
+        result = Grouped.output_type.compute({}, Summary::Run.new(state: { "flags" => [ "red", "blue" ] }, steps: set), {})
+
+        assert_equal({ "Flags" => 100 }, result)
+      end
+
       test "can be told which field carries the tag" do
         marked = { "budget" => { "area" => "money", "options" => [ { "value" => "high", "weight" => 5 } ] } }
 
