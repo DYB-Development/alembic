@@ -284,6 +284,16 @@ module Alembic
         assert_equal [ timed, untimed ], summaries(flow).ranked.map(&:run)
       end
 
+      test "ranks only the flow's own runs" do
+        flow = published
+        other = published("other")
+        [ flow, other ].each { |each| summaries(each).record("outputs" => []) }
+        own = kept_run(flow, score: 1)
+        kept_run(other, score: 9)
+
+        assert_equal [ own ], summaries(flow).ranked.map(&:run)
+      end
+
       test "a flow's summary data goes with the flow" do
         flow = published
         summaries(flow).record("outputs" => [])
