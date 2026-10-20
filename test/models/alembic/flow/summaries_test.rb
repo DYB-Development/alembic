@@ -242,6 +242,14 @@ module Alembic
         assert_equal [ 5, 90 ], RunSummary.find_by(run: run).values_at(:score, :seconds_taken)
       end
 
+      test "keeps nothing for a run pinned to no summary" do
+        flow = published
+
+        assert_no_difference -> { RunSummary.count } do
+          summaries(flow).keep(EasyFlow::Run.start(flow), "a" => "yes")
+        end
+      end
+
       test "a flow's summary data goes with the flow" do
         flow = published
         summaries(flow).record("outputs" => [])

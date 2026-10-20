@@ -83,7 +83,7 @@ module Alembic
 
       def keep(run, state)
         pinned = RunSummary.find_by(run: run)
-        return if pinned.score || pinned.seconds_taken
+        return if pinned.nil? || pinned.score || pinned.seconds_taken
 
         pinned.update!(score: score_of(run, state), seconds_taken: seconds_taken_by(run))
       end
