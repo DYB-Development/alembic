@@ -53,5 +53,14 @@ module Alembic
 
       assert_select "[data-refused-row]", text: /3\s+Right answer must be true or false/
     end
+
+    test "a file with a row that cannot become a question adds none of its questions" do
+      flow = quiz
+      import = uploaded("questions_with_a_bad_row.csv", into: flow)
+
+      post ixport.import_run_path(import), headers: as(@ours)
+
+      assert_equal [ "start", "first" ], EasyFlow::Document.new(flow.reload.document).nodes.map(&:id)
+    end
   end
 end
