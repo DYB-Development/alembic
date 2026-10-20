@@ -33,6 +33,15 @@ module Alembic
       assert_select "[data-answer=budget]"
     end
 
+    test "with no finish link set, the finish page links only to Start over" do
+      run = started_run
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_equal [ "Start over" ], css_select("a").map { |link| link.text.strip }
+    end
+
     test "a host app sets where Start over leads from a run" do
       Alembic.start_over_address = ->(flow) { "/play/#{flow.public_code}" }
 
