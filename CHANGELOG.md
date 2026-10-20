@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- **Multiple select answers are scored** — an answer that picks every right answer and no other adds the weights of the right answers, and any other answer adds nothing, where a right answer is one carrying a weight above zero.
+- **Multiple select answers are scored** — an answer that picks every right answer and no other adds one, and any other answer adds nothing, where a right answer is one carrying a weight above zero.
 - **Fill in the blank answers are scored** — a typed answer adds one when it matches one of the question's accepted answers, ignoring letter case and spaces at either end, and adds nothing otherwise.
 - **Both types count in shares** — the share and the by-area outputs count multiple select and fill in the blank answers against the full credit each could earn.
 
