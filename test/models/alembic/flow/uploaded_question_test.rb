@@ -33,6 +33,12 @@ module Alembic
         assert_equal [ { "value" => "Mars", "weight" => 0 }, { "value" => "Jupiter", "weight" => 1 }, { "value" => "Venus", "weight" => 0 } ],
           added_step.config["answers"]
       end
+
+      test "a saved row sets its question's category" do
+        row.save!
+
+        assert_equal "Space", EasyFlow::Steps::Question.category_of(added_step.config)
+      end
     end
   end
 end

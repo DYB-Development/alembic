@@ -25,7 +25,7 @@ module Alembic
       end
 
       def step
-        @step ||= { "id" => next_id, "type" => "question", "question" => question, "answers" => answers }
+        @step ||= { "id" => next_id, "type" => "question", "question" => question, "category" => category.presence, "answers" => answers }.compact
       end
 
       def answers
