@@ -93,6 +93,17 @@ module Alembic
       assert_equal 2, Flow::RunSummary.find_by(run: run).score
     end
 
+    test "a saved session left part way keeps nothing" do
+      summaries.record("outputs" => [ { "id" => "score", "type" => "weighted_sum" } ])
+      post alembic.flow_runs_path(saved.slug)
+      run = EasyFlow::Run.last
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_equal [ nil, nil ], Flow::RunSummary.find_by(run: run).values_at(:score, :seconds_taken)
+    end
+
     test "a visitor part way through a withdrawn version is told it was withdrawn" do
       Alembic.refusal_method = :note_the_refusal
       run = EasyFlow::Run.start(saved)
