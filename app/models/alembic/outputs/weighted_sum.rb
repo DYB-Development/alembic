@@ -17,9 +17,19 @@ module Alembic
       end
 
       def self.weight_of(step, value)
+        return picked_weight(step, value) if step["type"] == "multiple_select"
+
+        answer_weight(step, value)
+      end
+
+      def self.answer_weight(step, value)
         chosen = EasyFlow::Steps::Question.answers_of(step).find { |option| option.is_a?(Hash) && option["value"] == value }
 
         chosen&.fetch("weight", nil).to_i
+      end
+
+      def self.picked_weight(step, values)
+        Array(values).sum { |value| answer_weight(step, value) }
       end
     end
   end

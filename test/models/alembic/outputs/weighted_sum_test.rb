@@ -30,6 +30,19 @@ module Alembic
         assert_equal 5, WeightedSum.output_type.compute({}, Summary::Run.new(state: { "budget" => "high" }, steps: written), {})
       end
 
+      def picking
+        { "flags" => { "type" => "multiple_select",
+                       "answers" => [ { "value" => "red", "weight" => 2 }, { "value" => "blue", "weight" => 1 }, { "value" => "green", "weight" => 0 } ] } }
+      end
+
+      def picked(values)
+        WeightedSum.output_type.compute({}, Summary::Run.new(state: { "flags" => values }, steps: picking), {})
+      end
+
+      test "a multiple select answer picking every right answer and no other adds their weights" do
+        assert_equal 3, picked([ "blue", "red" ])
+      end
+
       test "registers through the public output API" do
         registry = Summary::Registry.new
 
