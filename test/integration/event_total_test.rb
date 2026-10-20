@@ -24,6 +24,25 @@ module Alembic
         "edges" => edges + [ { "from" => steps.last["id"], "to" => "done", "on" => "1" } ])
     end
 
+    def answer(step, value)
+      patch request.path, params: { answers: { step => value } }
+      follow_redirect! while redirect?
+    end
+
+    test "an event with two quizzes played through the visitor pages keeps the sum of both quizzes' scores" do
+      history = quiz("history")
+      science = quiz("science")
+      played = event(history, science)
+      patch easy_flow.manage_flow_path(played), params: { flow: { outputs: { "0" => { id: "total", type: "inner_total" } } } }
+
+      post alembic.flow_runs_path(played.slug)
+      follow_redirect! while redirect?
+      answer(:ask, "right")
+      answer(:ask, "right")
+
+      assert_equal 2, Flow::RunSummary.find_by!(run: EasyFlow::Run.find_by!(flow: played)).score
+    end
+
     test "a visitor taken into a quiz inside an event has the quiz's run pinned to the quiz's summary" do
       history = quiz("history")
       post alembic.flow_runs_path(event(history).slug)
