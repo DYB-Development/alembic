@@ -1,0 +1,27 @@
+require "test_helper"
+
+module Alembic
+  class BuiltFlowRunTest < ActionDispatch::IntegrationTest
+    def built
+      @built ||= EasyFlow::Definition.create!(host: "alembic", slug: "built", persists: :each_step).tap do |flow|
+        flow.record_definition(flowing(
+          "entry" => "budget",
+          "nodes" => [ { "id" => "budget", "type" => "question", "text" => "Budget?",
+                         "options" => [ { "value" => "low", "label" => "Modest", "weight" => 2 } ] } ]
+        ))
+        flow.publish
+      end
+    end
+
+    def started_run
+      post alembic.flow_runs_path(built.slug)
+      EasyFlow::Run.last
+    end
+
+    test "a run of a flow built in the builder shows its question page" do
+      get alembic.run_path(started_run)
+
+      assert_response :success
+    end
+  end
+end
