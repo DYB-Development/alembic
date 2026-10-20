@@ -67,6 +67,10 @@ module Alembic
         assert_equal 1, typed("  pARIS ")
       end
 
+      test "a fill in the blank answer matching no accepted answer adds nothing" do
+        assert_equal 0, typed("London")
+      end
+
       test "registers through the public output API" do
         registry = Summary::Registry.new
 
