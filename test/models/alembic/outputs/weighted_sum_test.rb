@@ -63,6 +63,10 @@ module Alembic
         assert_equal 1, typed("Paree")
       end
 
+      test "a fill in the blank answer differing only in letter case and outer spaces adds one" do
+        assert_equal 1, typed("  pARIS ")
+      end
+
       test "registers through the public output API" do
         registry = Summary::Registry.new
 

@@ -37,7 +37,11 @@ module Alembic
       end
 
       def self.typed_weight(step, text)
-        Array(step["accepted_answers"]).any? { |accepted| accepted["value"] == text } ? 1 : 0
+        Array(step["accepted_answers"]).any? { |accepted| comparable(accepted["value"]) == comparable(text) } ? 1 : 0
+      end
+
+      def self.comparable(text)
+        text.to_s.strip.downcase
       end
 
       def self.right_answers(step)
