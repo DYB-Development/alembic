@@ -90,6 +90,17 @@ module Alembic
       assert_equal 45, Flow::RunSummary.find_by!(run: EasyFlow::Run.find_by!(flow: history)).seconds_taken
     end
 
+    test "a quiz played inside an event is listed among the quiz's own ranked attempts" do
+      history = quiz("history")
+      post alembic.flow_runs_path(event(history).slug)
+      follow_redirect! while redirect?
+      answer(:ask, "right")
+      inside = EasyFlow::Run.find_by!(flow: history)
+      own = play(history, 1, "wrong")
+
+      assert_equal [ inside, own ], Flow::Summaries.new(history).ranked.map(&:run)
+    end
+
     test "a visitor taken into a quiz inside an event has the quiz's run pinned to the quiz's summary" do
       history = quiz("history")
       post alembic.flow_runs_path(event(history).slug)
