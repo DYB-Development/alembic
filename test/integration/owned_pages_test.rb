@@ -65,6 +65,14 @@ module Alembic
       assert_nil Flow::Summaries.new(theirs).text
     end
 
+    test "the builder refuses another owner's summary change as not found" do
+      theirs = EasyFlow::Definition.create!(host: "alembic", slug: "theirs", title: "Theirs", owner: @theirs)
+
+      patch easy_flow.manage_flow_path(theirs), params: { flow: { summary: "Taken over" } }, headers: as(@ours)
+
+      assert_response :not_found
+    end
+
     private
 
     def owned_flow
