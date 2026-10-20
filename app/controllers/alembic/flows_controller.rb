@@ -44,6 +44,10 @@ module Alembic
       alembic.flow_path(slug)
     end
 
+    def start_over_path
+      Alembic.start_over_address&.call(run&.flow || flow) || super
+    end
+
     def flow_step_path(slug)
       alembic.flow_step_path(slug)
     end

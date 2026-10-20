@@ -32,5 +32,15 @@ module Alembic
 
       assert_select "[data-answer=budget]"
     end
+
+    test "a host app sets where Start over leads from a run" do
+      Alembic.start_over_address = ->(flow) { "/play/#{flow.public_code}" }
+
+      get alembic.run_path(started_run)
+
+      assert_select "a[href=?]", "/play/#{built.public_code}", text: /Start over/
+    ensure
+      Alembic.start_over_address = nil
+    end
   end
 end
