@@ -240,6 +240,12 @@ module Alembic
       assert_select ".ks-radio-card .ks-radio-card-label", text: /Generous/
     end
 
+    test "an answer choice's hint takes the look's muted option text colour" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select ".ks-radio-card small.ks-radio-card-hint", text: "Under a thousand"
+    end
+
     test "the step page counts the question being asked out of every question on its path" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
 
