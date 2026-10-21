@@ -52,6 +52,49 @@ module Alembic
       Alembic.start_over_address = nil
     end
 
+    test "a host app sets where Start over leads from the run being played" do
+      Alembic.start_over_address = ->(_flow, run) { "/runs/#{run.id}/again" }
+      run = started_run
+
+      get alembic.run_path(run)
+
+      assert_select "a[href=?]", "/runs/#{run.id}/again", text: /Start over/
+    ensure
+      Alembic.start_over_address = nil
+    end
+
+    test "a Start over setting that returns nothing leads to alembic's own start address" do
+      Alembic.start_over_address = ->(_flow) { nil }
+
+      get alembic.run_path(started_run)
+
+      assert_select "a[href=?]", alembic.flow_path(built.slug), text: /Start over/
+    ensure
+      Alembic.start_over_address = nil
+    end
+
+    test "a host app hides Start over on a run's question page" do
+      Alembic.start_over_address = ->(_flow) { false }
+
+      get alembic.run_path(started_run)
+
+      assert_select "a", text: /Start over/, count: 0
+    ensure
+      Alembic.start_over_address = nil
+    end
+
+    test "a host app hides Start over on a run's finish page" do
+      Alembic.start_over_address = ->(_flow) { false }
+      run = started_run
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_select "a", text: /Start over/, count: 0
+    ensure
+      Alembic.start_over_address = nil
+    end
+
     test "a host app adds a link to the finish page of a flow built in the builder" do
       Alembic.finish_link = ->(flow) { { label: "See the scoreboard", url: "/play/#{flow.public_code}/scoreboard" } }
       run = started_run
@@ -82,6 +125,18 @@ module Alembic
       get alembic.flow_step_path(built.slug)
 
       assert_select "form[action=?]", alembic.flow_step_path(built.slug)
+    end
+
+    test "a host app hides Start over on the one-page form" do
+      Alembic.start_over_address = ->(_flow) { false }
+      built.update!(persists: :unsaved)
+      Flow::Summaries.new(built).ask_on_one_page(true)
+
+      get alembic.flow_step_path(built.slug)
+
+      assert_select "a", text: /Start over/, count: 0
+    ensure
+      Alembic.start_over_address = nil
     end
 
     test "a flow built in the builder that keeps no run asks its first question" do

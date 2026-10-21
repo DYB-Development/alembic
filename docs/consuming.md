@@ -82,6 +82,15 @@ address:
 Alembic.start_over_address = ->(flow) { "/play/#{flow.public_code}" }
 ```
 
+A proc that takes two arguments is also given the run being played, which is
+nil on a page that keeps no run. Return false to hide Start over on the
+question page, the one-page form and the finish page. Returning nil leaves the
+link pointing at the flow's intro page in Alembic.
+
+```ruby
+Alembic.start_over_address = ->(flow, run) { run && Retakes.blocked?(run) ? false : "/play/#{flow.public_code}" }
+```
+
 The setting reaches the visitor pages only, so Start over in a preview still
 returns to the preview.
 

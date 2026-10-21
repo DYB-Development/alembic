@@ -4,8 +4,10 @@
 
 <%= ui_page(max_width: :md) do %>
   <%= ui_page_header(title: "That's everything", subtitle: "Thanks — here's what you told us") do |header| %>
-    <% header.action do %>
-      <%= ui_button(label: "Start over", href: starting_over, variant: :secondary) %>
+    <% if starting_over %>
+      <% header.action do %>
+        <%= ui_button(label: "Start over", href: starting_over, variant: :secondary) %>
+      <% end %>
     <% end %>
   <% end %>
 

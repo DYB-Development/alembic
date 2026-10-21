@@ -45,7 +45,16 @@ module Alembic
     end
 
     def start_over_path
-      Alembic.start_over_address&.call(run&.flow || flow) || super
+      address = host_start_over_address
+      address.nil? ? super : address
+    end
+
+    def host_start_over_address
+      setting = Alembic.start_over_address
+      return unless setting
+      return setting.call(run&.flow || flow, run) if setting.arity == 2
+
+      setting.call(run&.flow || flow)
     end
 
     def finish_link

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-10-21
+
+### Added
+- **A host app can hide Start over** — when `Alembic.start_over_address` returns false, a run's question page, the one-page form and the finish page show no Start over link, and a return of nil still leads to alembic's own start address.
+- **Start over can depend on the run** — a `start_over_address` proc that takes two arguments is given the run being played after the flow, so one quiz can offer Start over to one player and not another, and a proc that takes only the flow keeps working.
+
 ## [0.8.0] - 2026-10-20
 
 ### Added
