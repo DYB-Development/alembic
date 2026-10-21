@@ -36,6 +36,12 @@ module Alembic
       assert_select "[data-one-page-ready] button[type=submit]"
     end
 
+    test "the one-page form's button that sends every answer is the look's primary button" do
+      get alembic.flow_step_path(straight.slug)
+
+      assert_select "[data-one-page-ready] button.ks-button-primary[type=submit]", text: "See my results"
+    end
+
     test "answers sent without one to a required question return the visitor to that question" do
       get alembic.flow_step_path(straight.slug), params: { answers: { speed: "fast", cost: "cheap" } }
 
