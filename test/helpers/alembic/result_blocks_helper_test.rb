@@ -137,6 +137,10 @@ module Alembic
         "p.ks-tone-muted", text: "Most of it runs on memory."
     end
 
+    test "draws categories in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_categories_block(value: { "Sales" => 30 })
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
