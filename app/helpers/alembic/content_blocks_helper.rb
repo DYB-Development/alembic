@@ -11,7 +11,7 @@ module Alembic
       render "alembic/blocks/facts", facts: facts
     end
 
-    START_LOOK = "inline-flex items-center justify-center font-semibold rounded-lg bg-accent-600 text-white hover:bg-accent-500 px-6 py-3 cursor-pointer".freeze
+    START_LOOK = "ks-button ks-button-primary ks-button-lg".freeze
 
     def alembic_start_block(start_path:, label: "Start →", starts_a_run: false)
       return button_to(label, start_path, method: :post, class: START_LOOK) if starts_a_run

@@ -58,6 +58,10 @@ module Alembic
       assert_select_in alembic_code_block { "Order.count" }, "pre.ks-code-block code", text: "Order.count"
     end
 
+    test "draws a start link as the look's primary button" do
+      assert_select_in alembic_start_block(start_path: "/diagnostics/scorecard/step"), "a.ks-button.ks-button-primary", text: "Start →"
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
