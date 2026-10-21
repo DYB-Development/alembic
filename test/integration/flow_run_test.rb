@@ -222,6 +222,12 @@ module Alembic
       assert_select "fieldset p", text: "money"
     end
 
+    test "a question's category takes the look's link colour" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "fieldset p[class~=?]", "dark:text-(color:--ks-color-link-dark)", text: "money"
+    end
+
     test "a question's text takes the look's heading colour in light and dark mode" do
       get alembic.flow_step_path(flowed.slug)
 
