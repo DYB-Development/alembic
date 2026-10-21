@@ -6,6 +6,8 @@ module Alembic
 
     helper KeystoneUiHelper
 
+    LIGHT_ONLY = /\b(?:(?:text|bg|border|divide)-(?:gray|accent)-\d+|bg-white|text-red-\d+)\b/
+
     test "draws a score as a large percentage" do
       assert_select_in alembic_score_block(value: 64), ".text-7xl", text: "64%"
     end
@@ -103,7 +105,7 @@ module Alembic
       chosen = { "key" => "live", "name" => "Live query",
                  "sections" => [ { "heading" => "What people do to avoid it", "text" => "Cache it.", "note" => "Stale numbers." } ] }
 
-      assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "p.text-red-700", text: "Result: Stale numbers."
+      assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "p.ks-tone-danger", text: "Result: Stale numbers."
     end
 
     test "draws each of an outcome entry's steps as titled code" do
@@ -124,6 +126,49 @@ module Alembic
 
     test "colours a strong score green" do
       assert_equal "bg-emerald-500", alembic_tone(70)
+    end
+
+    test "draws a score in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_score_block(value: 64, caption: "of it answered well")
+    end
+
+    test "draws a band's description in the look's muted text colour" do
+      assert_select_in alembic_band_block(value: { "name" => "Flying blind", "description" => "Most of it runs on memory." }, score: 30),
+        "p.ks-tone-muted", text: "Most of it runs on memory."
+    end
+
+    test "draws categories in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_categories_block(value: { "Sales" => 30 })
+    end
+
+    test "draws weakest categories in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_weakest_block(value: [ { "name" => "Hiring", "miss" => "Hires are a guess.", "cost" => "Slow hires cost months." } ])
+    end
+
+    test "draws answers in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_answers_block(value: [ [ "What is your budget?", "Generous" ] ])
+    end
+
+    test "draws a lead form in the look's colours only" do
+      Alembic.lead_address = ->(slug) { "/labs/#{slug}/interest" }
+
+      assert_no_match LIGHT_ONLY, alembic_lead_block(slug: "scorecard", blurb: "We will be in touch.")
+    ensure
+      Alembic.lead_address = nil
+    end
+
+    test "draws an outcome entry in the look's colours only" do
+      chosen = { "key" => "live", "label" => "Tier 1", "name" => "Live query", "tagline" => "Compute it now.",
+                 "facts" => [ [ "Setup", "An index" ] ],
+                 "sections" => [ { "heading" => "Why it works", "text" => "Always correct." },
+                                 { "heading" => "What people do to avoid it", "text" => "Cache it.", "note" => "Stale numbers." } ],
+                 "steps" => [ { "title" => "Add an index", "code" => "add_index :orders, :status" } ] }
+
+      assert_no_match LIGHT_ONLY, alembic_outcome_block(value: { "chosen" => chosen })
+    end
+
+    test "draws the outcomes heading in the look's heading colour" do
+      assert_select_in alembic_outcomes_block(value: { "entries" => [] }, heading: "Every way to do it"), "h2.ks-heading", text: "Every way to do it"
     end
 
     private

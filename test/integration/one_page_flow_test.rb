@@ -21,13 +21,43 @@ module Alembic
     test "each question on the one-page form counts itself out of every question" do
       get alembic.flow_step_path(straight.slug)
 
-      assert_select "[data-one-page-question]:last-of-type span", text: "Question 3 of 3"
+      assert_select "[data-one-page-question]:last-of-type .ks-meter-label", text: "Question 3 of 3"
+    end
+
+    test "each question on the one-page form fills the look's progress meter with the share before it" do
+      get alembic.flow_step_path(straight.slug)
+
+      assert_select "[data-one-page-question]:last-of-type .ks-progress-track .ks-progress-bar[style=?]", "width: 67%"
     end
 
     test "the one-page form ends on a ready state with a button that sends every answer" do
       get alembic.flow_step_path(straight.slug)
 
       assert_select "[data-one-page-ready] button[type=submit]"
+    end
+
+    test "the one-page form's button that sends every answer is the look's primary button" do
+      get alembic.flow_step_path(straight.slug)
+
+      assert_select "[data-one-page-ready] button.ks-button-primary[type=submit]", text: "See my results"
+    end
+
+    test "every Previous button on the one-page form takes the look's muted text colour" do
+      get alembic.flow_step_path(straight.slug)
+
+      assert_select "button[data-one-page-previous].ks-tone-muted", 3
+    end
+
+    test "the one-page form's ready note takes the look's muted text colour" do
+      get alembic.flow_step_path(straight.slug)
+
+      assert_select "[data-one-page-ready] p.ks-tone-muted", text: "That's every question."
+    end
+
+    test "the one-page form's Start over link takes the look's link colour" do
+      get alembic.flow_step_path(straight.slug)
+
+      assert_select "a[class~=?]", "dark:text-(color:--ks-color-link-dark)", text: /Start over/
     end
 
     test "answers sent without one to a required question return the visitor to that question" do

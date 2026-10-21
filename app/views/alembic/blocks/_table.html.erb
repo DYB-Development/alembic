@@ -1,17 +1,17 @@
 <div class="overflow-x-auto">
   <table class="w-full text-sm text-left">
     <thead>
-      <tr class="border-b border-gray-200">
+      <tr class="border-b border-(color:--ks-color-border) dark:border-(color:--ks-color-border-dark)">
         <% heading.each do |cell| %>
-          <th class="py-2 pr-4 font-semibold text-gray-900"><%= cell %></th>
+          <th class="ks-tone-neutral py-2 pr-4 font-semibold"><%= cell %></th>
         <% end %>
       </tr>
     </thead>
     <tbody>
       <% rows.each do |row| %>
-        <tr class="border-b border-gray-100">
+        <tr class="border-b border-(color:--ks-color-divider) dark:border-(color:--ks-color-divider-dark)">
           <% row.each do |cell| %>
-            <td class="py-2 pr-4 text-gray-600"><%= cell %></td>
+            <td class="ks-tone-muted py-2 pr-4"><%= cell %></td>
           <% end %>
         </tr>
       <% end %>

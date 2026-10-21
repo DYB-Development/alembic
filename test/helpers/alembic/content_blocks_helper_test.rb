@@ -6,6 +6,8 @@ module Alembic
 
     helper KeystoneUiHelper
 
+    LIGHT_ONLY = /\b(?:(?:text|bg|border|divide)-(?:gray|accent)-\d+|bg-white|text-red-\d+)\b/
+
     test "draws a hero's headline as the page's heading" do
       assert_select_in alembic_hero_block(headline: "What is your business not seeing?"), "h1", text: "What is your business not seeing?"
     end
@@ -16,6 +18,10 @@ module Alembic
 
     test "draws a hero's text under its headline" do
       assert_select_in alembic_hero_block(headline: "Seeing?", text: "A three-minute check."), "p.text-lg", text: "A three-minute check."
+    end
+
+    test "draws a hero in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_hero_block(headline: "Seeing?", kicker: "Business diagnostic", text: "A three-minute check.")
     end
 
     test "fills a fact written as the question count with the count it is handed" do
@@ -38,6 +44,22 @@ module Alembic
     test "draws a start button that posts when starting makes a run" do
       assert_select_in alembic_start_block(start_path: "/diagnostics/scorecard/runs", starts_a_run: true),
         "form[method=post][action=?]", "/diagnostics/scorecard/runs"
+    end
+
+    test "draws facts in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_facts_block(question_count: 15) { "{question_count} | questions\nFree" }
+    end
+
+    test "draws a table in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_table_block { "Tier | Setup\nLive query | An index" }
+    end
+
+    test "draws a code block in the look's code colours" do
+      assert_select_in alembic_code_block { "Order.count" }, "pre.ks-code-block code", text: "Order.count"
+    end
+
+    test "draws a start link as the look's primary button" do
+      assert_select_in alembic_start_block(start_path: "/diagnostics/scorecard/step"), "a.ks-button.ks-button-primary", text: "Start →"
     end
 
     private

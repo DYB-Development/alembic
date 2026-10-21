@@ -222,16 +222,58 @@ module Alembic
       assert_select "fieldset p", text: "money"
     end
 
+    test "a question's category takes the look's link colour" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "fieldset p[class~=?]", "dark:text-(color:--ks-color-link-dark)", text: "money"
+    end
+
+    test "a question's text takes the look's heading colour in light and dark mode" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "legend.ks-heading", text: "What is your budget?"
+    end
+
+    test "each answer choice is drawn as the look's radio card" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "label input[type=radio] + .ks-radio-card.ks-radio-card-highlight", 2
+    end
+
+    test "each answer choice names itself in the look's option text colour" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select ".ks-radio-card .ks-radio-card-label", text: /Generous/
+    end
+
+    test "an answer choice's hint takes the look's muted option text colour" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select ".ks-radio-card small.ks-radio-card-hint", text: "Under a thousand"
+    end
+
+    test "the step page's Start over link takes the look's link colour" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "a[class~=?]", "dark:text-(color:--ks-color-link-dark)", text: /Start over/
+    end
+
+    test "the step page's Back button takes the look's muted text colour" do
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
+
+      assert_select "button[name=back].ks-tone-muted"
+    end
+
     test "the step page counts the question being asked out of every question on its path" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
 
-      assert_select "span", text: "Question 2 of 2"
+      assert_select ".ks-meter-label", text: "Question 2 of 2"
     end
 
     test "the step page's progress bar fills with the share of questions answered" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
 
-      assert_select "i.bg-accent-600[style=?]", "width:50%"
+      assert_select ".ks-progress-track .ks-progress-bar[style=?]", "width: 50%"
     end
 
     test "choosing an answer on the step page sends it on without pressing Next" do
@@ -252,6 +294,14 @@ module Alembic
       get alembic.flow_step_path(flowed.slug)
 
       assert_select "label span.uppercase", text: "low"
+    end
+
+    test "an answer's value is outlined in the look's tint border colour" do
+      Flow::Summaries.new(flowed).show_answer_values(true)
+
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "label span[class~=?]", "border-(color:--ks-color-tint-border)", text: "low"
     end
 
     test "a visitor opening a flow sees the live blocks of the page it starts on" do

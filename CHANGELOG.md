@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-10-21
+
+### Fixed
+- **Visitor pages read in dark mode** — the question page, the one-page form, the intro and finish pages and the result blocks they draw take their colours from keystone_ui's tokens and components, so question text, answer choices, progress and buttons follow the host's keystone palette in light and dark mode.
+
 ## [0.8.1] - 2026-10-21
 
 ### Added
