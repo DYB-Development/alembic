@@ -48,6 +48,12 @@ module Alembic
       assert_select "button[data-one-page-previous].ks-tone-muted", 3
     end
 
+    test "the one-page form's ready note takes the look's muted text colour" do
+      get alembic.flow_step_path(straight.slug)
+
+      assert_select "[data-one-page-ready] p.ks-tone-muted", text: "That's every question."
+    end
+
     test "answers sent without one to a required question return the visitor to that question" do
       get alembic.flow_step_path(straight.slug), params: { answers: { speed: "fast", cost: "cheap" } }
 
