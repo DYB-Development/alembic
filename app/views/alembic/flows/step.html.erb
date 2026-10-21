@@ -15,7 +15,7 @@
     <% end %>
 
     <% if @waiting %>
-      <p class="mt-6 text-gray-700">Waiting for <%= @waiting %>.</p>
+      <p class="mt-6 ks-tone-neutral">Waiting for <%= @waiting %>.</p>
     <% else %>
       <%= form_with url: step_form[:url], method: step_form[:method], data: { turbo: false }, class: "mt-6" do %>
         <%= hidden_field_tag :asked, @question.id %>
