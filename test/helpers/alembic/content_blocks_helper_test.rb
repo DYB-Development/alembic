@@ -50,6 +50,10 @@ module Alembic
       assert_no_match LIGHT_ONLY, alembic_facts_block(question_count: 15) { "{question_count} | questions\nFree" }
     end
 
+    test "draws a table in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_table_block { "Tier | Setup\nLive query | An index" }
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
