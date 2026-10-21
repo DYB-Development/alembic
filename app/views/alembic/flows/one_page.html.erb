@@ -6,7 +6,7 @@
 <section class="py-20 md:py-28">
   <div class="max-w-2xl mx-auto px-6">
     <% if (starting_over = start_over_path) %>
-      <%= link_to "← Start over", starting_over, class: "text-sm text-accent-600 hover:text-accent-700" %>
+      <%= link_to "← Start over", starting_over, class: "text-sm text-(color:--ks-color-link) hover:text-(color:--ks-color-link-hover) dark:text-(color:--ks-color-link-dark) dark:hover:text-(color:--ks-color-link-hover-dark)" %>
     <% end %>
 
     <%= form_with url: flow_step_path(visited_flow_address), method: :get, data: { turbo: false, one_page: true }, class: "mt-6" do %>

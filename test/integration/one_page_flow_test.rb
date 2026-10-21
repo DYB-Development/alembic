@@ -54,6 +54,12 @@ module Alembic
       assert_select "[data-one-page-ready] p.ks-tone-muted", text: "That's every question."
     end
 
+    test "the one-page form's Start over link takes the look's link colour" do
+      get alembic.flow_step_path(straight.slug)
+
+      assert_select "a[class~=?]", "dark:text-(color:--ks-color-link-dark)", text: /Start over/
+    end
+
     test "answers sent without one to a required question return the visitor to that question" do
       get alembic.flow_step_path(straight.slug), params: { answers: { speed: "fast", cost: "cheap" } }
 
