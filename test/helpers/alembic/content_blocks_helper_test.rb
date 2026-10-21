@@ -6,6 +6,8 @@ module Alembic
 
     helper KeystoneUiHelper
 
+    LIGHT_ONLY = /\b(?:(?:text|bg|border|divide)-(?:gray|accent)-\d+|bg-white|text-red-\d+)\b/
+
     test "draws a hero's headline as the page's heading" do
       assert_select_in alembic_hero_block(headline: "What is your business not seeing?"), "h1", text: "What is your business not seeing?"
     end
@@ -16,6 +18,10 @@ module Alembic
 
     test "draws a hero's text under its headline" do
       assert_select_in alembic_hero_block(headline: "Seeing?", text: "A three-minute check."), "p.text-lg", text: "A three-minute check."
+    end
+
+    test "draws a hero in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_hero_block(headline: "Seeing?", kicker: "Business diagnostic", text: "A three-minute check.")
     end
 
     test "fills a fact written as the question count with the count it is handed" do
