@@ -6,6 +6,8 @@ module Alembic
 
     helper KeystoneUiHelper
 
+    LIGHT_ONLY = /\b(?:(?:text|bg|border|divide)-(?:gray|accent)-\d+|bg-white|text-red-\d+)\b/
+
     test "draws a score as a large percentage" do
       assert_select_in alembic_score_block(value: 64), ".text-7xl", text: "64%"
     end
@@ -124,6 +126,10 @@ module Alembic
 
     test "colours a strong score green" do
       assert_equal "bg-emerald-500", alembic_tone(70)
+    end
+
+    test "draws a score in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_score_block(value: 64, caption: "of it answered well")
     end
 
     private
