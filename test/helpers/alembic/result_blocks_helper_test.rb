@@ -167,6 +167,10 @@ module Alembic
       assert_no_match LIGHT_ONLY, alembic_outcome_block(value: { "chosen" => chosen })
     end
 
+    test "draws the outcomes heading in the look's heading colour" do
+      assert_select_in alembic_outcomes_block(value: { "entries" => [] }, heading: "Every way to do it"), "h2.ks-heading", text: "Every way to do it"
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
