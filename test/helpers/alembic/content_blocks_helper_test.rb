@@ -54,6 +54,10 @@ module Alembic
       assert_no_match LIGHT_ONLY, alembic_table_block { "Tier | Setup\nLive query | An index" }
     end
 
+    test "draws a code block in the look's code colours" do
+      assert_select_in alembic_code_block { "Order.count" }, "pre.ks-code-block code", text: "Order.count"
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
