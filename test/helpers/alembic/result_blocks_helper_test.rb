@@ -105,7 +105,7 @@ module Alembic
       chosen = { "key" => "live", "name" => "Live query",
                  "sections" => [ { "heading" => "What people do to avoid it", "text" => "Cache it.", "note" => "Stale numbers." } ] }
 
-      assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "p.text-red-700", text: "Result: Stale numbers."
+      assert_select_in alembic_outcome_block(value: { "chosen" => chosen }), "p.ks-tone-danger", text: "Result: Stale numbers."
     end
 
     test "draws each of an outcome entry's steps as titled code" do
@@ -155,6 +155,16 @@ module Alembic
       assert_no_match LIGHT_ONLY, alembic_lead_block(slug: "scorecard", blurb: "We will be in touch.")
     ensure
       Alembic.lead_address = nil
+    end
+
+    test "draws an outcome entry in the look's colours only" do
+      chosen = { "key" => "live", "label" => "Tier 1", "name" => "Live query", "tagline" => "Compute it now.",
+                 "facts" => [ [ "Setup", "An index" ] ],
+                 "sections" => [ { "heading" => "Why it works", "text" => "Always correct." },
+                                 { "heading" => "What people do to avoid it", "text" => "Cache it.", "note" => "Stale numbers." } ],
+                 "steps" => [ { "title" => "Add an index", "code" => "add_index :orders, :status" } ] }
+
+      assert_no_match LIGHT_ONLY, alembic_outcome_block(value: { "chosen" => chosen })
     end
 
     private
