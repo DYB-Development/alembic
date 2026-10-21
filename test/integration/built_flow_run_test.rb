@@ -94,6 +94,18 @@ module Alembic
       assert_select "form[action=?]", alembic.flow_step_path(built.slug)
     end
 
+    test "a host app hides Start over on the one-page form" do
+      Alembic.start_over_address = ->(_flow) { false }
+      built.update!(persists: :unsaved)
+      Flow::Summaries.new(built).ask_on_one_page(true)
+
+      get alembic.flow_step_path(built.slug)
+
+      assert_select "a", text: /Start over/, count: 0
+    ensure
+      Alembic.start_over_address = nil
+    end
+
     test "a flow built in the builder that keeps no run asks its first question" do
       built.update!(persists: :unsaved)
 
