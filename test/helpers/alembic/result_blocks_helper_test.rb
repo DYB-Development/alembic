@@ -149,6 +149,14 @@ module Alembic
       assert_no_match LIGHT_ONLY, alembic_answers_block(value: [ [ "What is your budget?", "Generous" ] ])
     end
 
+    test "draws a lead form in the look's colours only" do
+      Alembic.lead_address = ->(slug) { "/labs/#{slug}/interest" }
+
+      assert_no_match LIGHT_ONLY, alembic_lead_block(slug: "scorecard", blurb: "We will be in touch.")
+    ensure
+      Alembic.lead_address = nil
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
