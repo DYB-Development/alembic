@@ -2,7 +2,9 @@
 
 <section class="py-20 md:py-28">
   <div class="max-w-2xl mx-auto px-6">
-    <%= link_to "← Start over", start_over_path, class: "text-sm text-accent-600 hover:text-accent-700" %>
+    <% if (starting_over = start_over_path) %>
+      <%= link_to "← Start over", starting_over, class: "text-sm text-accent-600 hover:text-accent-700" %>
+    <% end %>
 
     <% answered = @answers.size %>
     <% questions = answered + @guide.questions_left(@answers) %>

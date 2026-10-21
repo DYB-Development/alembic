@@ -52,6 +52,16 @@ module Alembic
       Alembic.start_over_address = nil
     end
 
+    test "a host app hides Start over on a run's question page" do
+      Alembic.start_over_address = ->(_flow) { false }
+
+      get alembic.run_path(started_run)
+
+      assert_select "a", text: /Start over/, count: 0
+    ensure
+      Alembic.start_over_address = nil
+    end
+
     test "a host app adds a link to the finish page of a flow built in the builder" do
       Alembic.finish_link = ->(flow) { { label: "See the scoreboard", url: "/play/#{flow.public_code}/scoreboard" } }
       run = started_run
