@@ -132,6 +132,11 @@ module Alembic
       assert_no_match LIGHT_ONLY, alembic_score_block(value: 64, caption: "of it answered well")
     end
 
+    test "draws a band's description in the look's muted text colour" do
+      assert_select_in alembic_band_block(value: { "name" => "Flying blind", "description" => "Most of it runs on memory." }, score: 30),
+        "p.ks-tone-muted", text: "Most of it runs on memory."
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
