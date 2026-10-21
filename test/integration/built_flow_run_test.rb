@@ -52,6 +52,17 @@ module Alembic
       Alembic.start_over_address = nil
     end
 
+    test "a host app sets where Start over leads from the run being played" do
+      Alembic.start_over_address = ->(_flow, run) { "/runs/#{run.id}/again" }
+      run = started_run
+
+      get alembic.run_path(run)
+
+      assert_select "a[href=?]", "/runs/#{run.id}/again", text: /Start over/
+    ensure
+      Alembic.start_over_address = nil
+    end
+
     test "a host app hides Start over on a run's question page" do
       Alembic.start_over_address = ->(_flow) { false }
 
