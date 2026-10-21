@@ -35,7 +35,7 @@
         <div class="mt-8 flex items-center gap-4">
           <%= ui_button(label: "Next", type: :submit) %>
           <% if @answers.any? %>
-            <button type="submit" name="back" value="1" formnovalidate class="cursor-pointer text-sm text-gray-500 underline underline-offset-2 hover:text-gray-900">← Back</button>
+            <button type="submit" name="back" value="1" formnovalidate class="ks-tone-muted cursor-pointer text-sm underline underline-offset-2 hover:text-(color:--ks-color-text) dark:hover:text-(color:--ks-color-text-dark)">← Back</button>
           <% end %>
         </div>
       <% end %>
