@@ -63,6 +63,16 @@ module Alembic
       Alembic.start_over_address = nil
     end
 
+    test "a Start over setting that returns nothing leads to alembic's own start address" do
+      Alembic.start_over_address = ->(_flow) { nil }
+
+      get alembic.run_path(started_run)
+
+      assert_select "a[href=?]", alembic.flow_path(built.slug), text: /Start over/
+    ensure
+      Alembic.start_over_address = nil
+    end
+
     test "a host app hides Start over on a run's question page" do
       Alembic.start_over_address = ->(_flow) { false }
 
