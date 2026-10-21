@@ -261,7 +261,7 @@ module Alembic
     test "the step page's progress bar fills with the share of questions answered" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
 
-      assert_select "i.bg-accent-600[style=?]", "width:50%"
+      assert_select ".ks-progress-track .ks-progress-bar[style=?]", "width: 50%"
     end
 
     test "choosing an answer on the step page sends it on without pressing Next" do
