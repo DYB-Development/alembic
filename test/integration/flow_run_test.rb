@@ -228,6 +228,12 @@ module Alembic
       assert_select "legend.ks-heading", text: "What is your budget?"
     end
 
+    test "each answer choice is drawn as the look's radio card" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "label input[type=radio] + .ks-radio-card.ks-radio-card-highlight", 2
+    end
+
     test "the step page counts the question being asked out of every question on its path" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
 
