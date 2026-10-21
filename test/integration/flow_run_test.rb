@@ -255,7 +255,7 @@ module Alembic
     test "the step page counts the question being asked out of every question on its path" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
 
-      assert_select "span", text: "Question 2 of 2"
+      assert_select ".ks-meter-label", text: "Question 2 of 2"
     end
 
     test "the step page's progress bar fills with the share of questions answered" do
