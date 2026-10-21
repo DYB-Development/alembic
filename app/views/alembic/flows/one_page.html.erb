@@ -12,10 +12,7 @@
     <%= form_with url: flow_step_path(visited_flow_address), method: :get, data: { turbo: false, one_page: true }, class: "mt-6" do %>
       <% @questions.each_with_index do |question, index| %>
         <div data-one-page-question>
-          <div class="flex items-center justify-between text-sm text-gray-500 mb-2">
-            <span>Question <%= index + 1 %> of <%= @questions.size %></span>
-          </div>
-          <div class="mb-8"><%= ui_progress(value: index, max: @questions.size) %></div>
+          <div class="mb-8"><%= ui_progress(value: index, max: @questions.size, label: "Question #{index + 1} of #{@questions.size}") %></div>
           <%= render "alembic/flows/question", question: question, category: step_category(question), shows_values: shows_answer_values?, sends_on_choice: false %>
           <% if index.positive? %>
             <button type="button" data-one-page-previous hidden class="mt-6 cursor-pointer text-sm text-gray-500 underline underline-offset-2 hover:text-gray-900">← Previous</button>

@@ -21,7 +21,7 @@ module Alembic
     test "each question on the one-page form counts itself out of every question" do
       get alembic.flow_step_path(straight.slug)
 
-      assert_select "[data-one-page-question]:last-of-type span", text: "Question 3 of 3"
+      assert_select "[data-one-page-question]:last-of-type .ks-meter-label", text: "Question 3 of 3"
     end
 
     test "each question on the one-page form fills the look's progress meter with the share before it" do
