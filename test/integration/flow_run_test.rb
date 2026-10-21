@@ -284,6 +284,14 @@ module Alembic
       assert_select "label span.uppercase", text: "low"
     end
 
+    test "an answer's value is outlined in the look's tint border colour" do
+      Flow::Summaries.new(flowed).show_answer_values(true)
+
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "label span[class~=?]", "border-(color:--ks-color-tint-border)", text: "low"
+    end
+
     test "a visitor opening a flow sees the live blocks of the page it starts on" do
       Flow::Summaries.new(flowed).start_on(page_titled("Before you begin"))
 
