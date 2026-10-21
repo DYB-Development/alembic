@@ -15,7 +15,7 @@
           <div class="mb-8"><%= ui_progress(value: index, max: @questions.size, label: "Question #{index + 1} of #{@questions.size}") %></div>
           <%= render "alembic/flows/question", question: question, category: step_category(question), shows_values: shows_answer_values?, sends_on_choice: false %>
           <% if index.positive? %>
-            <button type="button" data-one-page-previous hidden class="mt-6 cursor-pointer text-sm text-gray-500 underline underline-offset-2 hover:text-gray-900">← Previous</button>
+            <button type="button" data-one-page-previous hidden class="mt-6 ks-tone-muted cursor-pointer text-sm underline underline-offset-2 hover:text-(color:--ks-color-text) dark:hover:text-(color:--ks-color-text-dark)">← Previous</button>
           <% end %>
         </div>
       <% end %>
@@ -24,7 +24,7 @@
         <p class="text-gray-600 mb-5">That's every question.</p>
         <div class="flex items-center gap-4">
         <%= ui_button(label: "See my results", type: :submit) %>
-        <button type="button" data-one-page-previous hidden class="cursor-pointer text-sm text-gray-500 underline underline-offset-2 hover:text-gray-900">← Previous</button>
+        <button type="button" data-one-page-previous hidden class="ks-tone-muted cursor-pointer text-sm underline underline-offset-2 hover:text-(color:--ks-color-text) dark:hover:text-(color:--ks-color-text-dark)">← Previous</button>
         </div>
       </div>
     <% end %>
