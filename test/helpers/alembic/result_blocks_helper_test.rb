@@ -145,6 +145,10 @@ module Alembic
       assert_no_match LIGHT_ONLY, alembic_weakest_block(value: [ { "name" => "Hiring", "miss" => "Hires are a guess.", "cost" => "Slow hires cost months." } ])
     end
 
+    test "draws answers in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_answers_block(value: [ [ "What is your budget?", "Generous" ] ])
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
