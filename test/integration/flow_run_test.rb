@@ -222,6 +222,12 @@ module Alembic
       assert_select "fieldset p", text: "money"
     end
 
+    test "a question's text takes the look's heading colour in light and dark mode" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "legend.ks-heading", text: "What is your budget?"
+    end
+
     test "the step page counts the question being asked out of every question on its path" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "high" } }
 
