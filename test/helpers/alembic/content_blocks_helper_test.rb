@@ -46,6 +46,10 @@ module Alembic
         "form[method=post][action=?]", "/diagnostics/scorecard/runs"
     end
 
+    test "draws facts in the look's colours only" do
+      assert_no_match LIGHT_ONLY, alembic_facts_block(question_count: 15) { "{question_count} | questions\nFree" }
+    end
+
     private
 
     def assert_select_in(html, *selector, **equality)
