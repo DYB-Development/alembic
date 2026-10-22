@@ -40,7 +40,12 @@
       <% @answered.each do |step, value| %>
         <li data-answer="<%= step %>" class="flex items-baseline justify-between gap-6 py-3">
           <span class="ks-tone-muted"><%= @guide.question_text(step) %></span>
-          <span class="shrink-0 font-(weight:--ks-font-weight-medium) ks-tone-neutral"><%= @guide.choice_label(step, value) %></span>
+          <span class="flex shrink-0 items-center gap-2 font-(weight:--ks-font-weight-medium) ks-tone-neutral">
+            <%= @guide.choice_label(step, value) %>
+            <% if answered_right?(step, value) %>
+              <svg aria-label="Right" role="img" class="size-5 ks-tone-success" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" /></svg>
+            <% end %>
+          </span>
         </li>
       <% end %>
     </ul>
