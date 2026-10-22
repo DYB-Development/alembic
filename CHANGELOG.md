@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.8.3] - 2026-10-22
+
 ### Added
 - **Right answers marked on a finished quiz** — on the finish page of a scored quiz, each question answered with a positively weighted answer shows a green check beside the answer, and a form that is not a quiz shows none.
 
