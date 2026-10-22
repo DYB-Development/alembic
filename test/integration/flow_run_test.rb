@@ -22,6 +22,20 @@ module Alembic
       end
     end
 
+    def quizzed
+      @quizzed ||= EasyFlow::Definition.create!(host: "alembic", slug: "quizzed", kind: "scored").tap do |flow|
+        flow.record_definition(flowing(
+          "slug" => "quizzed", "entry" => "paris",
+          "nodes" => [ { "id" => "paris", "type" => "question", "text" => "Paris is the capital of France.",
+                         "options" => [ { "value" => "true", "label" => "True", "weight" => 1 }, { "value" => "false", "label" => "False", "weight" => 0 } ] },
+                       { "id" => "rome", "type" => "question", "text" => "Rome is the capital of Spain.",
+                         "options" => [ { "value" => "true", "label" => "True", "weight" => 0 }, { "value" => "false", "label" => "False", "weight" => 1 } ] } ],
+          "edges" => [ { "from" => "paris", "to" => "rome" } ]
+        ))
+        flow.publish
+      end
+    end
+
     def page_titled(title)
       page_of(:section, "title" => title)
     end
@@ -357,6 +371,24 @@ module Alembic
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
       assert_select "[data-answer=?]", "budget"
+    end
+
+    test "a finished quiz marks a question answered right with a check" do
+      get alembic.flow_step_path(quizzed.slug), params: { answers: { paris: "true", rome: "true" } }
+
+      assert_select "[data-answer=paris] [aria-label=Right]"
+    end
+
+    test "a finished quiz shows no check on a question answered wrong" do
+      get alembic.flow_step_path(quizzed.slug), params: { answers: { paris: "true", rome: "true" } }
+
+      assert_select "[data-answer=rome] [aria-label=Right]", count: 0
+    end
+
+    test "a finished flow that is not a quiz shows no checks" do
+      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
+
+      assert_select "[aria-label=Right]", count: 0
     end
 
     test "the finished page shows each question in the look's muted text" do

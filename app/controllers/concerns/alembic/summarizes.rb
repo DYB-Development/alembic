@@ -10,7 +10,7 @@ module Alembic
       helper ContentBlocksHelper
       helper KsBlocks::LayoutHelper
       after_action :keep_ended_inner_run, only: :step
-      helper_method :flow_summary, :first_step_path, :summary_values, :intro_values, :start_over_path, :finish_link, :visited_flow_address
+      helper_method :flow_summary, :first_step_path, :summary_values, :intro_values, :start_over_path, :finish_link, :visited_flow_address, :answered_right?
     end
 
     private
@@ -76,6 +76,10 @@ module Alembic
     def summary_values
       @outputs.to_h { |output| [ output.id, output.value ] }
         .merge("slug" => @guide.slug, "note" => result_note, "answers" => answers_given)
+    end
+
+    def answered_right?(step, value)
+      (run&.flow || flow).scored? && Outputs::WeightedSum.weight_of(@guide.step(step).config, value).positive?
     end
 
     def answers_given
