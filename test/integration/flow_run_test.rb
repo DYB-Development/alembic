@@ -379,6 +379,12 @@ module Alembic
       assert_select "[data-answer=paris] [aria-label=Right]"
     end
 
+    test "a finished quiz shows no check on a question answered wrong" do
+      get alembic.flow_step_path(quizzed.slug), params: { answers: { paris: "true", rome: "true" } }
+
+      assert_select "[data-answer=rome] [aria-label=Right]", count: 0
+    end
+
     test "the finished page shows each question in the look's muted text" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
