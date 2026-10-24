@@ -2,7 +2,8 @@ module Alembic
   module Flow
     module AnswerKey
       def self.chosen(step)
-        Outputs::WeightedSum.right_answers(step).first
+        right = Outputs::WeightedSum.right_answers(step)
+        step["type"] == "multiple_select" ? right : right.first
       end
     end
   end

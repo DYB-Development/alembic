@@ -8,6 +8,12 @@ module Alembic
 
         assert_equal "b", AnswerKey.chosen(step)
       end
+
+      test "the key to a multiple-select question is every answer that carries points" do
+        step = { "type" => "multiple_select", "answers" => [ { "value" => "a", "weight" => 1 }, { "value" => "b", "weight" => 0 }, { "value" => "c", "weight" => 1 } ] }
+
+        assert_equal %w[a c], AnswerKey.chosen(step)
+      end
     end
   end
 end
