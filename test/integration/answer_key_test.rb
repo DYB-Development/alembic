@@ -27,6 +27,18 @@ module Alembic
       end
     end
 
+    test "an owner cannot open the answer key of another owner's quiz" do
+      Alembic.owner_method = :current_customer
+      ours = Customer.create!(name: "Ours")
+      theirs = EasyFlow::Definition.create!(host: "alembic", slug: "theirs", owner: Customer.create!(name: "Theirs"))
+
+      get alembic.step_manage_flow_answer_key_path(theirs), headers: { "X-Customer" => ours.id.to_s }
+
+      assert_response :not_found
+    ensure
+      Alembic.owner_method = nil
+    end
+
     test "moving on from a question keeps the owner in the answer key" do
       get alembic.step_manage_flow_answer_key_path(quiz)
 
