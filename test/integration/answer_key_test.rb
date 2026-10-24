@@ -45,6 +45,23 @@ module Alembic
       assert_select "form[action=?]", alembic.step_manage_flow_answer_key_path(quiz)
     end
 
+    test "the answer key shows a multiple-select question with every right answer ticked" do
+      picked = EasyFlow::Definition.create!(host: "alembic", slug: "picked").tap do |flow|
+        flow.edit_history.edit_document(flowing(
+          "slug" => "picked", "entry" => "flag",
+          "nodes" => [ { "id" => "flag", "type" => "multiple_select", "question" => "Colours on the French flag?",
+                         "answers" => [ { "value" => "blue", "weight" => 1 }, { "value" => "green", "weight" => 0 }, { "value" => "red", "weight" => 1 } ] },
+                       { "id" => "end", "type" => "terminal" } ],
+          "edges" => [ { "from" => "flag", "to" => "end" } ]
+        ))
+        flow.create_version
+      end
+
+      get alembic.step_manage_flow_answer_key_path(picked)
+
+      assert_equal %w[blue red], css_select("input[type=checkbox][checked]").map { |box| box["value"] }
+    end
+
     test "the answer key shows a fill-in-the-blank question with its first accepted answer typed in" do
       typed = EasyFlow::Definition.create!(host: "alembic", slug: "typed").tap do |flow|
         flow.edit_history.edit_document(flowing(
