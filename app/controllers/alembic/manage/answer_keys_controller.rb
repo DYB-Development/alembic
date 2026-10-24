@@ -1,7 +1,7 @@
 module Alembic
   module Manage
     class AnswerKeysController < PreviewsController
-      helper_method :step_category, :shows_answer_values?
+      helper_method :shows_answer_values?
 
       def self.local_prefixes
         [ "alembic/flows", *super ]
@@ -24,10 +24,6 @@ module Alembic
 
       def shows_answer_values?
         Flow::Summaries.new(previewed).shows_answer_values?
-      end
-
-      def step_category(question)
-        EasyFlow::Steps::Question.category_of(@guide.step(question.id)&.config)
       end
     end
   end
