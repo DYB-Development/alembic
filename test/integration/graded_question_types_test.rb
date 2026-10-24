@@ -60,6 +60,14 @@ module Alembic
       assert_select "[data-answer=flags] [aria-label=Right]"
     end
 
+    test "a player who types an accepted answer to a fill in the blank question sees it marked right" do
+      run = finished(flags: [ "green" ], capital: " paris ")
+
+      get alembic.run_path(run)
+
+      assert_select "[data-answer=capital] [aria-label=Right]"
+    end
+
     private
 
     def finished(flags:, capital:)
