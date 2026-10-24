@@ -51,5 +51,41 @@ module Alembic
       assert_select "[data-output=?]", "score", text: /2/
       assert_equal 2, Flow::RunSummary.find_by(run: run).score
     end
+
+    test "a player who ticks exactly the right options of a multiple select question sees it marked right" do
+      run = finished(flags: [ "red", "blue" ], capital: "Lyon")
+
+      get alembic.run_path(run)
+
+      assert_select "[data-answer=flags] [aria-label=Right]"
+    end
+
+    test "a player who types an accepted answer to a fill in the blank question sees it marked right" do
+      run = finished(flags: [ "green" ], capital: " paris ")
+
+      get alembic.run_path(run)
+
+      assert_select "[data-answer=capital] [aria-label=Right]"
+    end
+
+    test "a player's wrong answers to multiple select and fill in the blank questions are not marked right" do
+      run = finished(flags: [ "green" ], capital: "Lyon")
+
+      get alembic.run_path(run)
+
+      assert_select "[aria-label=Right]", 0
+    end
+
+    private
+
+    def finished(flags:, capital:)
+      mixed.update!(kind: "scored")
+      Flow::Summaries.new(mixed).record("outputs" => [ { "id" => "score", "type" => "weighted_sum", "label" => "Your score" } ])
+      post alembic.flow_runs_path(mixed.slug)
+      EasyFlow::Run.last.tap do |run|
+        patch alembic.run_path(run), params: { answers: { flags: flags } }
+        patch alembic.run_path(run), params: { answers: { capital: capital } }
+      end
+    end
   end
 end

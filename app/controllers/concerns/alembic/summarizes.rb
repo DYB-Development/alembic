@@ -93,7 +93,12 @@ module Alembic
     end
 
     def answered_right?(step, value)
-      (run&.flow || flow).scored? && Outputs::WeightedSum.weight_of(@guide.step(step).config, value).positive?
+      (run&.flow || flow).scored? && Outputs::WeightedSum.weight_of(step_settings(step), value).positive?
+    end
+
+    def step_settings(id)
+      step = @guide.step(id)
+      step.config.merge("type" => step.type)
     end
 
     def answers_given
