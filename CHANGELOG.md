@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- A player's results mark a right answer to a multiple-select or fill-in-the-blank question as right, as the score already counts it.
+
 ## [0.9.0] - 2026-10-24
 
 ### Added
