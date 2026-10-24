@@ -68,6 +68,14 @@ module Alembic
       assert_select "[data-answer=capital] [aria-label=Right]"
     end
 
+    test "a player's wrong answers to multiple select and fill in the blank questions are not marked right" do
+      run = finished(flags: [ "green" ], capital: "Lyon")
+
+      get alembic.run_path(run)
+
+      assert_select "[aria-label=Right]", 0
+    end
+
     private
 
     def finished(flags:, capital:)
