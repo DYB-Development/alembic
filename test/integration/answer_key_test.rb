@@ -17,6 +17,16 @@ module Alembic
       end
     end
 
+    test "walking through the answer key to the end saves no run and no score" do
+      Flow::Summaries.new(quiz).record("outputs" => [ { "id" => "score", "type" => "weighted_sum", "label" => "Score" } ])
+
+      assert_no_difference [ "EasyFlow::Run.count", "Alembic::Flow::RunSummary.count" ] do
+        get alembic.step_manage_flow_answer_key_path(quiz)
+        get alembic.step_manage_flow_answer_key_path(quiz), params: { asked: "capital", answers: { capital: "paris" } }
+        get alembic.step_manage_flow_answer_key_path(quiz), params: { asked: "river", answers: { capital: "paris", river: "seine" } }
+      end
+    end
+
     test "moving on from a question keeps the owner in the answer key" do
       get alembic.step_manage_flow_answer_key_path(quiz)
 
