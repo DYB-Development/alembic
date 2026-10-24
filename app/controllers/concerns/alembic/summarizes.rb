@@ -10,10 +10,18 @@ module Alembic
       helper ContentBlocksHelper
       helper KsBlocks::LayoutHelper
       after_action :keep_ended_inner_run, only: :step
-      helper_method :flow_summary, :first_step_path, :summary_values, :intro_values, :start_over_path, :finish_link, :visited_flow_address, :answered_right?
+      helper_method :flow_summary, :first_step_path, :summary_values, :intro_values, :start_over_path, :finish_link, :visited_flow_address, :answered_right?, :single_choice?, :drawing_of
     end
 
     private
+
+    def single_choice?(question)
+      @guide.step(question.id)&.type == "question"
+    end
+
+    def drawing_of(question)
+      EasyFlow::Drawing.of(@guide.step(question.id))
+    end
 
     def flow_summary(flow)
       Flow::Summaries.new(flow).text
