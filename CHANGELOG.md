@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-24
+
 ### Added
 
 - An owner can walk through a quiz's answer key from its details page, seeing each question as a player does with its right answer already chosen, and a host links to it with `step_manage_flow_answer_key_path`.
