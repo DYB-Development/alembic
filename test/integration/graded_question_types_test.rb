@@ -31,6 +31,14 @@ module Alembic
       assert_select "input[type=checkbox][name=?]:not([onchange])", "answers[flags][]", count: 3
     end
 
+    test "a quiz asked on one page shows a checkbox for each option of a multiple select question" do
+      Flow::Summaries.new(mixed).ask_on_one_page(true)
+
+      get alembic.flow_step_path(mixed.slug)
+
+      assert_select "input[type=checkbox][name=?]", "answers[flags][]", count: 3
+    end
+
     test "a run answering multiple select and fill in the blank questions shows and keeps their score" do
       Flow::Summaries.new(mixed).record("outputs" => [ { "id" => "score", "type" => "weighted_sum", "label" => "Your score" } ])
       post alembic.flow_runs_path(mixed.slug)

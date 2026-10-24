@@ -13,7 +13,11 @@
       <% @questions.each_with_index do |question, index| %>
         <div data-one-page-question>
           <div class="mb-8"><%= ui_progress(value: index, max: @questions.size, label: "Question #{index + 1} of #{@questions.size}") %></div>
-          <%= render "alembic/flows/question", question: question, category: step_category(question), shows_values: shows_answer_values?, sends_on_choice: false %>
+          <% if single_choice?(question) %>
+            <%= render "alembic/flows/question", question: question, category: step_category(question), shows_values: shows_answer_values?, sends_on_choice: false %>
+          <% else %>
+            <%= render drawing_of(question), step: question %>
+          <% end %>
           <% if index.positive? %>
             <button type="button" data-one-page-previous hidden class="mt-6 ks-tone-muted cursor-pointer text-sm underline underline-offset-2 hover:text-(color:--ks-color-text) dark:hover:text-(color:--ks-color-text-dark)">← Previous</button>
           <% end %>
