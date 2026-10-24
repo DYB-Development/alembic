@@ -8,11 +8,19 @@ module Alembic
           "slug" => "quiz", "entry" => "capital",
           "nodes" => [ { "id" => "capital", "type" => "question", "question" => "Capital of France?",
                          "answers" => [ { "value" => "lyon", "weight" => 0 }, { "value" => "paris", "weight" => 1 } ] },
+                       { "id" => "river", "type" => "question", "question" => "River through Paris?",
+                         "answers" => [ { "value" => "seine", "weight" => 1 }, { "value" => "rhone", "weight" => 0 } ] },
                        { "id" => "end", "type" => "terminal" } ],
-          "edges" => [ { "from" => "capital", "to" => "end" } ]
+          "edges" => [ { "from" => "capital", "to" => "river" }, { "from" => "river", "to" => "end" } ]
         ))
         flow.create_version
       end
+    end
+
+    test "moving on from a question keeps the owner in the answer key" do
+      get alembic.step_manage_flow_answer_key_path(quiz)
+
+      assert_select "form[action=?]", alembic.step_manage_flow_answer_key_path(quiz)
     end
 
     test "the answer key shows a fill-in-the-blank question with its first accepted answer typed in" do
