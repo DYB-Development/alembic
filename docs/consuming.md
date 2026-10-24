@@ -49,6 +49,7 @@ mount Alembic::Engine => "/alembic"
 | `/alembic/manage/flows` | easy_flow's flow builder |
 | `/alembic/manage/flows/:id/edit` | a flow's details, with its summary text |
 | `/alembic/manage/flows/:id/preview` | trying a flow before it is published |
+| `/alembic/manage/flows/:id/answer_key/step` | a quiz's answer key, each question with its right answer chosen |
 | `/alembic/manage/pages` | the page builder |
 
 ## 2. Settings
@@ -257,6 +258,14 @@ engine's own.
 An admin tries a flow at `/alembic/manage/flows/:id/preview`. It runs the flow
 as it is being edited, finishes on the same summary page a visitor sees, and is
 authenticated as the rest of the builder is.
+
+The answer key at `/alembic/manage/flows/:id/answer_key/step` steps through the
+same preview with each question's right answer already chosen: the option
+carrying points on a single-choice question, every option carrying points on a
+multiple-select question, and the first accepted answer on a fill-in-the-blank
+question. It saves no run, opens only the owner's flows, and the flow's details
+page links to it. A host links to it with
+`alembic.step_manage_flow_answer_key_path(flow)`.
 
 ## 5. Uploading questions from a CSV file
 
