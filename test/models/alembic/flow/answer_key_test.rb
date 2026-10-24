@@ -14,6 +14,12 @@ module Alembic
 
         assert_equal %w[a c], AnswerKey.chosen(step)
       end
+
+      test "the key to a fill-in-the-blank question is its first accepted answer" do
+        step = { "type" => "fill_in_the_blank", "accepted_answers" => [ { "value" => "Paris" }, { "value" => "Paree" } ] }
+
+        assert_equal "Paris", AnswerKey.chosen(step)
+      end
     end
   end
 end
