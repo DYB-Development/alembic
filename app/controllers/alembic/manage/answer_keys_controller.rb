@@ -18,7 +18,8 @@ module Alembic
       end
 
       def chosen_answer(question)
-        Flow::AnswerKey.chosen(@guide.step(question.id).config)
+        step = @guide.step(question.id)
+        Flow::AnswerKey.chosen(step.config.merge("type" => step.type))
       end
 
       def shows_answer_values?
