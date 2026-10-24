@@ -10,7 +10,7 @@ module Alembic
       helper ContentBlocksHelper
       helper KsBlocks::LayoutHelper
       after_action :keep_ended_inner_run, only: :step
-      helper_method :flow_summary, :first_step_path, :summary_values, :intro_values, :start_over_path, :finish_link, :visited_flow_address, :answered_right?
+      helper_method :flow_summary, :first_step_path, :summary_values, :intro_values, :start_over_path, :finish_link, :visited_flow_address, :answered_right?, :chosen_answer
     end
 
     private
@@ -22,6 +22,8 @@ module Alembic
     def first_step_path(slug)
       flow_step_path(slug)
     end
+
+    def chosen_answer(_question); end
 
     def start_over_path
       flow_start_path(visited_flow_address)

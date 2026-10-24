@@ -6,7 +6,7 @@
   <div class="space-y-3">
     <% question.choices.each do |choice| %>
       <label class="block cursor-pointer">
-        <%= radio_button_tag "answers[#{question.id}]", choice.value, false, class: "peer sr-only", onchange: (local_assigns.fetch(:sends_on_choice, true) ? "this.form.requestSubmit()" : nil) %>
+        <%= radio_button_tag "answers[#{question.id}]", choice.value, choice.value == local_assigns[:chosen], class: "peer sr-only", onchange: (local_assigns.fetch(:sends_on_choice, true) ? "this.form.requestSubmit()" : nil) %>
         <span class="ks-radio-card ks-radio-card-highlight flex items-start gap-3 transition hover:border-(color:--ks-color-hover-border)">
           <% if shows_values %>
             <span class="text-xs font-semibold uppercase tracking-wider text-(color:--ks-color-link) dark:text-(color:--ks-color-link-dark) border border-(color:--ks-color-tint-border) rounded px-2 py-0.5 shrink-0 mt-0.5"><%= choice.value %></span>
