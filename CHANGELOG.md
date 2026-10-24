@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- A player sees a checkbox for each option of a multiple-select question and moves on with Next, so they can tick every right option instead of being moved on after the first.
+- A quiz asked on one page shows a multiple-select question with checkboxes and no longer fails on a fill-in-the-blank question.
+
 ## [0.8.3] - 2026-10-22
 
 ### Added
