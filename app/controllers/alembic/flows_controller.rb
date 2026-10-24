@@ -2,7 +2,7 @@ module Alembic
   class FlowsController < EasyFlow::FlowsController
     hosted_by FLOW_HOST
     include Summarizes
-    helper_method :step_category, :shows_answer_values?
+    helper_method :shows_answer_values?
 
     def step
       return super unless asked_on_one_page?
@@ -30,10 +30,6 @@ module Alembic
 
     def shows_answer_values?
       Flow::Summaries.new(run&.flow || flow).shows_answer_values?
-    end
-
-    def step_category(question)
-      EasyFlow::Steps::Question.category_of(@guide.step(question.id)&.config)
     end
 
     def run_location(run)

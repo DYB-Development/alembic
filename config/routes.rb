@@ -14,6 +14,9 @@ Alembic::Engine.routes.draw do
       resource :preview, only: :show, controller: "previews" do
         get :step
       end
+      resource :answer_key, only: :show, controller: "answer_keys" do
+        get :step
+      end
     end
   end
 

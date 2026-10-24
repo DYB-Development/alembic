@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- An owner can walk through a quiz's answer key from its details page, seeing each question as a player does with its right answer already chosen, and a host links to it with `step_manage_flow_answer_key_path`.
+
+### Changed
+
+- Requires easy_flow 0.29, whose question drawings take a chosen answer.
+
 ### Fixed
 
 - A player sees a checkbox for each option of a multiple-select question and moves on with Next, so they can tick every right option instead of being moved on after the first.

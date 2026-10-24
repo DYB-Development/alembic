@@ -11,6 +11,10 @@
     <% end %>
   <% end %>
 
+  <%= ui_section(title: "Answer key") do %>
+    <%= link_to "Walk through the answer key", alembic.step_manage_flow_answer_key_path(@flow), class: "text-sm text-(color:--ks-color-link) hover:text-(color:--ks-color-link-hover) dark:text-(color:--ks-color-link-dark) dark:hover:text-(color:--ks-color-link-hover-dark)" %>
+  <% end %>
+
   <%= ui_form(action: easy_flow.manage_flow_path(@flow), method: :patch) do %>
     <%= ui_section(title: "How this is introduced") do %>
       <label class="ks-label mb-1">Title</label>

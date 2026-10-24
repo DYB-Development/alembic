@@ -27,9 +27,9 @@
 
         <% if single_choice?(@question) %>
           <%= render "alembic/flows/question", question: @question, category: step_category(@question),
-                shows_values: shows_answer_values? %>
+                shows_values: shows_answer_values?, chosen: chosen_answer(@question) %>
         <% else %>
-          <%= render @drawing, step: @question %>
+          <%= render @drawing, step: @question, chosen: chosen_answer(@question) %>
         <% end %>
 
         <div class="mt-8 flex items-center gap-4">

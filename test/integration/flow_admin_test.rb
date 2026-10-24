@@ -140,6 +140,14 @@ module Alembic
       assert_select "a[href=?]", alembic.manage_flow_preview_path(flow)
     end
 
+    test "the details editor links to the flow's answer key" do
+      flow = straight_flow
+
+      get easy_flow.edit_manage_flow_path(flow)
+
+      assert_select "a[href=?]", alembic.step_manage_flow_answer_key_path(flow), text: "Walk through the answer key"
+    end
+
     test "the details editor links to a preview of the flow's summary page with sample answers" do
       flow = straight_flow
 
