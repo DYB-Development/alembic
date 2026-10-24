@@ -23,6 +23,14 @@ module Alembic
       assert_select "input[type=checkbox][name=?]", "answers[flags][]", count: 3
     end
 
+    test "ticking an option of a multiple select question does not move the player on" do
+      post alembic.flow_runs_path(mixed.slug)
+
+      get alembic.run_path(EasyFlow::Run.last)
+
+      assert_select "input[type=checkbox][name=?]:not([onchange])", "answers[flags][]", count: 3
+    end
+
     test "a run answering multiple select and fill in the blank questions shows and keeps their score" do
       Flow::Summaries.new(mixed).record("outputs" => [ { "id" => "score", "type" => "weighted_sum", "label" => "Your score" } ])
       post alembic.flow_runs_path(mixed.slug)
