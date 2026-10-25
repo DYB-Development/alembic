@@ -30,6 +30,12 @@ module Alembic
       assert_equal shown_order(run), shown_order(run)
     end
 
+    test "two players can see a question's answers in different orders" do
+      Flow::Summaries.new(quiz).shuffle_answers(true)
+
+      assert_not_equal shown_order(run_coded("first-player")), shown_order(run_coded("second-player"))
+    end
+
     private
 
     def run_coded(code)
