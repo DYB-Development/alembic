@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-10-24
+
 ### Added
 
 - An owner can set a quiz to show each question's answers in a random order from its details page, and each player keeps their own order for a question across reloads and going back.
