@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_20_193205) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_031225) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -49,6 +49,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_193205) do
     t.integer "summary_cursor"
     t.integer "summary_page_id"
     t.datetime "updated_at", null: false
+    t.boolean "shuffles_answers", default: false, null: false
     t.index ["flow_id"], name: "index_alembic_flow_definition_summaries_on_flow_id", unique: true
     t.index ["intro_page_id"], name: "index_alembic_flow_definition_summaries_on_intro_page_id"
     t.index ["summary_page_id"], name: "index_alembic_flow_definition_summaries_on_summary_page_id"

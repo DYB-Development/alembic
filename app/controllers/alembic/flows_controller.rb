@@ -1,3 +1,6 @@
+require "digest"
+require "securerandom"
+
 module Alembic
   class FlowsController < EasyFlow::FlowsController
     hosted_by FLOW_HOST
@@ -26,6 +29,16 @@ module Alembic
         state[question.id.to_s] = "asked"
       end
       questions
+    end
+
+    def shown(question)
+      return question unless question.respond_to?(:choices) && Flow::Summaries.new(run&.flow || flow).shuffles_answers?
+
+      question.with(choices: question.choices.sort_by { |choice| Digest::SHA256.hexdigest("#{shuffle_seed}:#{question.id}:#{choice.value}") })
+    end
+
+    def shuffle_seed
+      run&.public_code || (cookies[:alembic_shuffle_seed] ||= SecureRandom.hex(8))
     end
 
     def shows_answer_values?

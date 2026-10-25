@@ -49,6 +49,14 @@ module Alembic
         details.update!(shows_answer_values: shown)
       end
 
+      def shuffles_answers?
+        details.shuffles_answers
+      end
+
+      def shuffle_answers(shuffled)
+        details.update!(shuffles_answers: shuffled)
+      end
+
       def asks_on_one_page?
         details.asks_on_one_page
       end

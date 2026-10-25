@@ -15,6 +15,7 @@ module Alembic
         @categories = questions_of(@flow).filter_map { |node| EasyFlow::Steps::Question.category_of(node) }.uniq
         @shows_answer_values = summaries.shows_answer_values?
         @asks_on_one_page = summaries.asks_on_one_page?
+        @shuffles_answers = summaries.shuffles_answers?
         @branches = summaries.branches?
         @published_pages = owned_pages.where(id: Page::Version.live.select(:page_id)).order(:name)
       end
@@ -27,6 +28,7 @@ module Alembic
         summaries.finish_on(owned_pages.find_by(id: details[:summary_page_id])) unless details[:summary_page_id].nil?
         summaries.show_answer_values(details[:shows_answer_values] == "1") unless details[:shows_answer_values].nil?
         summaries.ask_on_one_page(details[:asks_on_one_page] == "1") unless details[:asks_on_one_page].nil?
+        summaries.shuffle_answers(details[:shuffles_answers] == "1") unless details[:shuffles_answers].nil?
         record_outputs(summaries, details[:outputs]) if details[:outputs]
 
         super
