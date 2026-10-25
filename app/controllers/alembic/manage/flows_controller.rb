@@ -27,6 +27,7 @@ module Alembic
         summaries.finish_on(owned_pages.find_by(id: details[:summary_page_id])) unless details[:summary_page_id].nil?
         summaries.show_answer_values(details[:shows_answer_values] == "1") unless details[:shows_answer_values].nil?
         summaries.ask_on_one_page(details[:asks_on_one_page] == "1") unless details[:asks_on_one_page].nil?
+        summaries.shuffle_answers(details[:shuffles_answers] == "1") unless details[:shuffles_answers].nil?
         record_outputs(summaries, details[:outputs]) if details[:outputs]
 
         super

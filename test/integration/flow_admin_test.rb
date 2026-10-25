@@ -96,6 +96,14 @@ module Alembic
       assert Flow::Summaries.new(flow).shows_answer_values?
     end
 
+    test "saving the details turns on shuffling each question's answers" do
+      flow = straight_flow
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { shuffles_answers: "1" } }
+
+      assert Flow::Summaries.new(flow).shuffles_answers?
+    end
+
     test "saving the details puts a flow with no branching on one page" do
       flow = straight_flow
 
