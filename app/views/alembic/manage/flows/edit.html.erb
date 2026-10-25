@@ -39,6 +39,12 @@
         <%= check_box_tag "flow[asks_on_one_page]", "1", @asks_on_one_page, disabled: @branches %>
         <span>Ask every question on one page</span>
       </label>
+
+      <%= hidden_field_tag "flow[shuffles_answers]", "0", id: nil %>
+      <label class="mt-3 flex items-center gap-2">
+        <%= check_box_tag "flow[shuffles_answers]", "1", @shuffles_answers %>
+        <span>Show each question's answers in a random order</span>
+      </label>
     <% end %>
 
     <%= ui_section(title: "Where this starts") do %>

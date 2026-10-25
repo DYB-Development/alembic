@@ -15,6 +15,7 @@ module Alembic
         @categories = questions_of(@flow).filter_map { |node| EasyFlow::Steps::Question.category_of(node) }.uniq
         @shows_answer_values = summaries.shows_answer_values?
         @asks_on_one_page = summaries.asks_on_one_page?
+        @shuffles_answers = summaries.shuffles_answers?
         @branches = summaries.branches?
         @published_pages = owned_pages.where(id: Page::Version.live.select(:page_id)).order(:name)
       end
