@@ -23,6 +23,13 @@ module Alembic
       assert_equal BUILT, shown_order(run_coded("first-player"))
     end
 
+    test "a player sees the same shuffled order each time they come back to a question" do
+      Flow::Summaries.new(quiz).shuffle_answers(true)
+      run = run_coded("first-player")
+
+      assert_equal shown_order(run), shown_order(run)
+    end
+
     private
 
     def run_coded(code)
