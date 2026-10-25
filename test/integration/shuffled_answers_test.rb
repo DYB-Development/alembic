@@ -50,6 +50,16 @@ module Alembic
       assert_not_equal BUILT, css_select("input[type=checkbox][name='answers[pick][]']").map { |input| input["value"] }
     end
 
+    test "a quiz asked on one page shows each question's answers in a shuffled order when it shuffles answers" do
+      Flow::Summaries.new(quiz).ask_on_one_page(true)
+      Flow::Summaries.new(quiz).shuffle_answers(true)
+      cookies[:alembic_shuffle_seed] = "first-player"
+
+      get alembic.flow_step_path(quiz.slug)
+
+      assert_not_equal BUILT, css_select("input[name='answers[pick]']").map { |input| input["value"] }
+    end
+
     private
 
     def run_coded(code)

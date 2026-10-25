@@ -14,9 +14,9 @@
         <div data-one-page-question>
           <div class="mb-8"><%= ui_progress(value: index, max: @questions.size, label: "Question #{index + 1} of #{@questions.size}") %></div>
           <% if single_choice?(question) %>
-            <%= render "alembic/flows/question", question: question, category: step_category(question), shows_values: shows_answer_values?, sends_on_choice: false %>
+            <%= render "alembic/flows/question", question: shown(question), category: step_category(question), shows_values: shows_answer_values?, sends_on_choice: false %>
           <% else %>
-            <%= render drawing_of(question), step: question %>
+            <%= render drawing_of(question), step: shown(question) %>
           <% end %>
           <% if index.positive? %>
             <button type="button" data-one-page-previous hidden class="mt-6 ks-tone-muted cursor-pointer text-sm underline underline-offset-2 hover:text-(color:--ks-color-text) dark:hover:text-(color:--ks-color-text-dark)">← Previous</button>
