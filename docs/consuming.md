@@ -255,6 +255,11 @@ engine's own.
 
 ### Previewing what visitors cannot reach
 
+A flow's details page can set it to show each question's answers in a random
+order. Each visitor's order comes from their run, or from a cookie when the flow
+keeps no run, so it stays the same for them. The preview and the answer key keep
+the built order.
+
 An admin tries a flow at `/alembic/manage/flows/:id/preview`. It runs the flow
 as it is being edited, finishes on the same summary page a visitor sees, and is
 authenticated as the rest of the builder is.

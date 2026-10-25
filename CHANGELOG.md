@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- An owner can set a quiz to show each question's answers in a random order from its details page, and each player keeps their own order for a question across reloads and going back.
+
+### Upgrading
+
+- Run `bin/rails alembic:install:migrations` and migrate, which adds the setting to every existing quiz turned off.
+
 ## [0.9.1] - 2026-10-24
 
 ### Fixed
