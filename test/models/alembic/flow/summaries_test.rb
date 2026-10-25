@@ -31,6 +31,14 @@ module Alembic
         assert summaries(flow).shows_answer_values?
       end
 
+      test "records that a flow shuffles each question's answers" do
+        flow = published
+
+        summaries(flow).shuffle_answers(true)
+
+        assert summaries(flow).shuffles_answers?
+      end
+
       test "records that a flow asks every question on one page" do
         flow = published
 
