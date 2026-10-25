@@ -36,6 +36,20 @@ module Alembic
       assert_not_equal shown_order(run_coded("first-player")), shown_order(run_coded("second-player"))
     end
 
+    test "a player sees a multiple select question's answers in a shuffled order when the quiz shuffles answers" do
+      ticked = EasyFlow::Definition.create!(host: "alembic", slug: "ticked", persists: :each_step).tap do |flow|
+        flow.record_definition(flowing("slug" => "ticked", "entry" => "pick",
+          "nodes" => [ { "id" => "pick", "type" => "multiple_select", "question" => "Pick some",
+                         "answers" => BUILT.map { |value| { "value" => value } } } ]))
+        flow.publish
+      end
+      Flow::Summaries.new(ticked).shuffle_answers(true)
+
+      get alembic.run_path(EasyFlow::Run.start(ticked).tap { |run| run.update!(public_code: "first-player") })
+
+      assert_not_equal BUILT, css_select("input[type=checkbox][name='answers[pick][]']").map { |input| input["value"] }
+    end
+
     private
 
     def run_coded(code)
