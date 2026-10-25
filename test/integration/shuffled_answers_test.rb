@@ -19,6 +19,10 @@ module Alembic
       assert_not_equal BUILT, shown_order(run_coded("first-player"))
     end
 
+    test "a player sees a question's answers in their built order when the quiz does not shuffle answers" do
+      assert_equal BUILT, shown_order(run_coded("first-player"))
+    end
+
     private
 
     def run_coded(code)
