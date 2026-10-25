@@ -60,6 +60,24 @@ module Alembic
       assert_not_equal BUILT, css_select("input[name='answers[pick]']").map { |input| input["value"] }
     end
 
+    test "a right answer scores the same when the quiz shuffles answers" do
+      scored = EasyFlow::Definition.create!(host: "alembic", slug: "scored", persists: :each_step).tap do |flow|
+        flow.record_definition(flowing("slug" => "scored", "entry" => "pick",
+          "nodes" => [ { "id" => "pick", "type" => "question", "question" => "Pick one",
+                         "answers" => BUILT.map { |value| { "value" => value, "weight" => (value == "c") ? 1 : 0 } } } ]))
+        flow.publish
+      end
+      Flow::Summaries.new(scored).shuffle_answers(true)
+      Flow::Summaries.new(scored).record("outputs" => [ { "id" => "score", "type" => "weighted_sum", "label" => "Score" } ])
+      post alembic.flow_runs_path(scored.slug)
+      run = EasyFlow::Run.last
+
+      patch alembic.run_path(run), params: { answers: { pick: "c" } }
+      get alembic.run_path(run)
+
+      assert_equal 1, Flow::RunSummary.find_by(run: run).score
+    end
+
     private
 
     def run_coded(code)
