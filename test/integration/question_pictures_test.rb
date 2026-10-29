@@ -93,5 +93,19 @@ module Alembic
 
       assert_select "fieldset img[src='/pictures/picture-1'] + legend", text: "Which country is this?"
     end
+
+    test "a player sees a fill-in-the-blank question's picture above the question" do
+      typed = EasyFlow::Definition.create!(host: "alembic", slug: "typed", persists: :each_step).tap do |flow|
+        flow.record_definition(flowing("slug" => "typed", "entry" => "capital",
+          "nodes" => [ { "id" => "capital", "type" => "fill_in_the_blank", "question" => "What is this city?", "picture" => "picture-3",
+                         "accepted_answers" => [ { "value" => "Paris" } ] } ]))
+        flow.publish
+      end
+      post alembic.flow_runs_path(typed.slug)
+
+      get alembic.run_path(EasyFlow::Run.last)
+
+      assert_select "label img[src='/pictures/picture-3'] + span", text: "What is this city?"
+    end
   end
 end
