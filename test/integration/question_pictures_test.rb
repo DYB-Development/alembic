@@ -87,5 +87,11 @@ module Alembic
 
       assert_select "fieldset img[src='/pictures/picture-1'] + legend", text: "Which country is this?"
     end
+
+    test "the answer key shows a question's picture above its text" do
+      get alembic.step_manage_flow_answer_key_path(drafted)
+
+      assert_select "fieldset img[src='/pictures/picture-1'] + legend", text: "Which country is this?"
+    end
   end
 end
