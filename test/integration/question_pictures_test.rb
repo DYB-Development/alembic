@@ -62,5 +62,17 @@ module Alembic
 
       assert_select "img[alt=?]", "The question's picture"
     end
+
+    test "a question with no picture is drawn with no picture" do
+      plain = EasyFlow::Definition.create!(host: "alembic", slug: "plain", persists: :each_step).tap do |flow|
+        flow.record_definition(flowing(quiz.merge("slug" => "plain", "nodes" => quiz["nodes"].map { |node| node.except("picture") })))
+        flow.publish
+      end
+      post alembic.flow_runs_path(plain.slug)
+
+      get alembic.run_path(EasyFlow::Run.last)
+
+      assert_select "img", count: 0
+    end
   end
 end
