@@ -54,5 +54,13 @@ module Alembic
 
       assert_equal [ "/pictures/picture-1", "/pictures/picture-2" ], css_select("fieldset img").map { |picture| picture["src"] }
     end
+
+    test "a question's picture has alternative text naming it as the question's picture" do
+      post alembic.flow_runs_path(pictured.slug)
+
+      get alembic.run_path(EasyFlow::Run.last)
+
+      assert_select "img[alt=?]", "The question's picture"
+    end
   end
 end
