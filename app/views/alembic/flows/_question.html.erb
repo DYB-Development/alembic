@@ -2,6 +2,7 @@
   <% if category.present? %>
     <p class="text-xs font-semibold uppercase tracking-wider text-(color:--ks-color-link) dark:text-(color:--ks-color-link-dark) mb-2"><%= category %></p>
   <% end %>
+  <%= render "easy_flow/steps/picture", step: question %>
   <legend class="ks-heading text-xl mb-5 leading-snug"><%= question.text %></legend>
   <div class="space-y-3">
     <% question.choices.each do |choice| %>
