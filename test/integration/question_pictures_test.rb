@@ -74,5 +74,18 @@ module Alembic
 
       assert_select "img", count: 0
     end
+
+    def drafted
+      @drafted ||= EasyFlow::Definition.create!(host: "alembic", slug: "drafted").tap do |flow|
+        flow.edit_history.edit_document(flowing(quiz.merge("slug" => "drafted")))
+        flow.create_version
+      end
+    end
+
+    test "an author previewing a quiz in the builder sees a question's picture above its text" do
+      get alembic.step_manage_flow_preview_path(drafted)
+
+      assert_select "fieldset img[src='/pictures/picture-1'] + legend", text: "Which country is this?"
+    end
   end
 end
