@@ -36,5 +36,15 @@ module Alembic
 
       assert_select "fieldset img[src='/pictures/picture-1'] + legend", text: "Which country is this?"
     end
+
+    test "a player sees a multiple select question's picture above the question" do
+      post alembic.flow_runs_path(pictured.slug)
+      run = EasyFlow::Run.last
+      patch alembic.run_path(run), params: { answers: { france: "france" } }
+
+      get alembic.run_path(run)
+
+      assert_select "fieldset img[src='/pictures/picture-2'] + legend", text: "Which colours are on this flag?"
+    end
   end
 end
