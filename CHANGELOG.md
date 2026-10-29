@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- A question's picture, added in the quiz builder, shows above the question for a player at their own pace, on a quiz asked on one page, in the builder's preview and on the answer key, with alternative text naming it as the question's picture.
+
+### Upgrading
+
+- alembic now requires easy_flow 0.30. To show pictures, set `EasyFlow.picture_store` to the store that keeps them, as easy_flow's install guide describes.
+
 ## [0.10.0] - 2026-10-24
 
 ### Added
