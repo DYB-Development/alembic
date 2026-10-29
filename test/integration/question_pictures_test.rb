@@ -46,5 +46,13 @@ module Alembic
 
       assert_select "fieldset img[src='/pictures/picture-2'] + legend", text: "Which colours are on this flag?"
     end
+
+    test "a player taking a quiz shown on one page sees each question's picture above its text" do
+      Flow::Summaries.new(pictured).ask_on_one_page(true)
+
+      get alembic.flow_step_path(pictured.slug)
+
+      assert_equal [ "/pictures/picture-1", "/pictures/picture-2" ], css_select("fieldset img").map { |picture| picture["src"] }
+    end
   end
 end
