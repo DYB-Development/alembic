@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-10-29
+
 ### Added
 
 - A question's picture, added in the quiz builder, shows above the question for a player at their own pace, on a quiz asked on one page, in the builder's preview and on the answer key, with alternative text naming it as the question's picture.
