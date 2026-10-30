@@ -296,6 +296,12 @@ module Alembic
       assert_select "input[type=radio][onchange=?]", "this.form.requestSubmit()"
     end
 
+    test "a question that sends on choosing an answer shows no Next button" do
+      get alembic.flow_step_path(flowed.slug)
+
+      assert_select "button[type=submit]:not([name=back])", count: 0
+    end
+
     test "the step page shows each answer's hint under its label" do
       get alembic.flow_step_path(flowed.slug)
 
