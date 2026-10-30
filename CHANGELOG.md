@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- A question that moves on when an answer is tapped no longer shows a Next button, so a player who taps an answer and then Next no longer skips the following question.
+- A question that moves on when an answer is tapped refuses to be sent with no answer, and stays open asking the player to pick one.
+
 ## [0.11.0] - 2026-10-29
 
 ### Added

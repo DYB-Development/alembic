@@ -21,6 +21,12 @@ module Alembic
       run.nil? && params[:answers].blank? && Flow::Summaries.new(flow).asks_on_one_page?
     end
 
+    def answer_problem(step, answer)
+      return "Pick an answer to go on." if step&.type == "question" && answer.blank?
+
+      super
+    end
+
     def questions_in_order
       state = {}
       questions = []
