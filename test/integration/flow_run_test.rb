@@ -302,6 +302,12 @@ module Alembic
       assert_select "button[type=submit]:not([name=back])", count: 0
     end
 
+    test "a question that sends on choosing an answer stays open when sent with no answer" do
+      get alembic.flow_step_path(quizzed.slug), params: { asked: "paris", answers: { paris: "" } }
+
+      assert_select "legend", text: "Paris is the capital of France."
+    end
+
     test "the step page shows each answer's hint under its label" do
       get alembic.flow_step_path(flowed.slug)
 
