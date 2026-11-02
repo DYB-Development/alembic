@@ -3,7 +3,7 @@
 <% starting_over = start_over_path %>
 
 <%= ui_page(max_width: :md) do %>
-  <%= ui_page_header(title: "That's everything", subtitle: "Thanks — here's what you told us") do |header| %>
+  <%= ui_page_header(title: Alembic.finish_title, subtitle: Alembic.finish_subtitle) do |header| %>
     <% if starting_over %>
       <% header.action do %>
         <%= ui_button(label: "Start over", href: starting_over, variant: :secondary) %>
@@ -35,7 +35,7 @@
     <% end %>
   <% end %>
 
-  <%= ui_section(title: @outputs.any? ? "What you told us" : nil) do %>
+  <%= ui_section(title: @outputs.any? ? Alembic.finish_answers_heading : nil) do %>
     <ul class="divide-y divide-(color:--ks-color-divider) border-y border-(color:--ks-color-divider) dark:divide-(color:--ks-color-divider-dark) dark:border-(color:--ks-color-divider-dark)">
       <% @answered.each do |step, value| %>
         <li data-answer="<%= step %>" class="flex items-baseline justify-between gap-6 py-3">

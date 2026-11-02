@@ -32,6 +32,10 @@
           <%= render @drawing, step: shown(@question), chosen: chosen_answer(@question) %>
         <% end %>
 
+        <% if (right_answer = chosen_answer(@question)).present? %>
+          <%= ui_value_list(rows: [ { label: ui_badge(label: "Right answer", variant: :success), value: @guide.choice_label(@question.id, right_answer) } ]) %>
+        <% end %>
+
         <div class="mt-8 flex items-center gap-4">
           <%= ui_button(label: "Next", type: :submit) unless single_choice?(@question) %>
           <% if @answers.any? %>

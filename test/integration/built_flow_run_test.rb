@@ -42,6 +42,43 @@ module Alembic
       assert_equal [ "Start over" ], css_select("a").map { |link| link.text.strip }
     end
 
+    test "a host app sets the finish page's title" do
+      Alembic.finish_title = "Thanks for playing"
+      run = started_run
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_select "h1", text: "Thanks for playing"
+    ensure
+      Alembic.finish_title = nil
+    end
+
+    test "a host app sets the finish page's subtitle" do
+      Alembic.finish_subtitle = "Here is how you did"
+      run = started_run
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_select "h1 + p", text: "Here is how you did"
+    ensure
+      Alembic.finish_subtitle = nil
+    end
+
+    test "a host app sets the heading over the finish page's answers" do
+      Alembic.finish_answers_heading = "Your answers"
+      Flow::Summaries.new(built).record("outputs" => [ { "id" => "score", "type" => "weighted_sum", "label" => "Score" } ])
+      run = started_run
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_select "h2", text: "Your answers"
+    ensure
+      Alembic.finish_answers_heading = nil
+    end
+
     test "a host app sets where Start over leads from a run" do
       Alembic.start_over_address = ->(flow) { "/play/#{flow.public_code}" }
 
