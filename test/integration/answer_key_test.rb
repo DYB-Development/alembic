@@ -84,5 +84,11 @@ module Alembic
 
       assert_select "input[type=radio][value=paris][checked]"
     end
+
+    test "the answer key names a question's right answer beside a Right answer badge" do
+      get alembic.step_manage_flow_answer_key_path(quiz)
+
+      assert_select ".ks-value-list-row:has(.ks-badge-success)", text: /Right answer\s+paris/
+    end
   end
 end
