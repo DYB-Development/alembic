@@ -66,6 +66,19 @@ module Alembic
       Alembic.finish_subtitle = nil
     end
 
+    test "a host app sets the heading over the finish page's answers" do
+      Alembic.finish_answers_heading = "Your answers"
+      Flow::Summaries.new(built).record("outputs" => [ { "id" => "score", "type" => "weighted_sum", "label" => "Score" } ])
+      run = started_run
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_select "h2", text: "Your answers"
+    ensure
+      Alembic.finish_answers_heading = nil
+    end
+
     test "a host app sets where Start over leads from a run" do
       Alembic.start_over_address = ->(flow) { "/play/#{flow.public_code}" }
 
