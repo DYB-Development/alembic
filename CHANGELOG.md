@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-11-02
+
 ### Added
 
 - A host app can set the default finish page's title, its subtitle and the heading over the answers with `Alembic.finish_title`, `Alembic.finish_subtitle` and `Alembic.finish_answers_heading`, and any left unset keeps today's wording.
