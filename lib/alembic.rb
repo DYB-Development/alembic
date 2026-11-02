@@ -15,7 +15,7 @@ module Alembic
   class << self
     attr_accessor :lead_address, :lead_fields_partial, :lead_note, :start_over_address, :finish_link
     attr_reader :admin_authentication_method, :visitor_authorization_method, :refusal_method, :owner_method
-    attr_writer :finish_title, :finish_subtitle
+    attr_writer :finish_title, :finish_subtitle, :finish_answers_heading
 
     def finish_title
       @finish_title || "That's everything"
@@ -23,6 +23,10 @@ module Alembic
 
     def finish_subtitle
       @finish_subtitle || "Thanks — here's what you told us"
+    end
+
+    def finish_answers_heading
+      @finish_answers_heading || "What you told us"
     end
 
     FLOW_HOST_SETTINGS.each do |name|
