@@ -42,6 +42,18 @@ module Alembic
       assert_equal [ "Start over" ], css_select("a").map { |link| link.text.strip }
     end
 
+    test "a host app sets the finish page's title" do
+      Alembic.finish_title = "Thanks for playing"
+      run = started_run
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_select "h1", text: "Thanks for playing"
+    ensure
+      Alembic.finish_title = nil
+    end
+
     test "a host app sets where Start over leads from a run" do
       Alembic.start_over_address = ->(flow) { "/play/#{flow.public_code}" }
 

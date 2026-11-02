@@ -3,7 +3,7 @@
 <% starting_over = start_over_path %>
 
 <%= ui_page(max_width: :md) do %>
-  <%= ui_page_header(title: "That's everything", subtitle: "Thanks — here's what you told us") do |header| %>
+  <%= ui_page_header(title: Alembic.finish_title, subtitle: "Thanks — here's what you told us") do |header| %>
     <% if starting_over %>
       <% header.action do %>
         <%= ui_button(label: "Start over", href: starting_over, variant: :secondary) %>
