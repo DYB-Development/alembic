@@ -54,6 +54,18 @@ module Alembic
       Alembic.finish_title = nil
     end
 
+    test "a host app sets the finish page's subtitle" do
+      Alembic.finish_subtitle = "Here is how you did"
+      run = started_run
+      patch alembic.run_path(run), params: { answers: { budget: "low" } }
+
+      get alembic.run_path(run)
+
+      assert_select "h1 + p", text: "Here is how you did"
+    ensure
+      Alembic.finish_subtitle = nil
+    end
+
     test "a host app sets where Start over leads from a run" do
       Alembic.start_over_address = ->(flow) { "/play/#{flow.public_code}" }
 
