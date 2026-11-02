@@ -20,4 +20,8 @@ class AlembicTest < ActiveSupport::TestCase
   ensure
     Alembic.admin_layout = nil
   end
+
+  test "with no finish title set, the finish page is titled That's everything" do
+    assert_equal "That's everything", Alembic.finish_title
+  end
 end
