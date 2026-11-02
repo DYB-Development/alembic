@@ -385,6 +385,12 @@ module Alembic
       assert_select "[data-answer=?]", "budget"
     end
 
+    test "a player at their own pace sees no Right answer on a scored quiz's question" do
+      get alembic.flow_step_path(quizzed.slug)
+
+      assert_select ".ks-badge", text: "Right answer", count: 0
+    end
+
     test "a finished quiz marks a question answered right with a check" do
       get alembic.flow_step_path(quizzed.slug), params: { answers: { paris: "true", rome: "true" } }
 
