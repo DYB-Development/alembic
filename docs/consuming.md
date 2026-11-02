@@ -107,6 +107,18 @@ With the setting left unset the finish page shows no extra link. Like the Start
 over address, it reaches the visitor pages only, so a preview's finish page
 shows no finish link.
 
+The default finish page's wording can be set too. Each setting is a string, and
+any left unset keeps alembic's own wording:
+
+```ruby
+Alembic.finish_title = "Thanks for playing"            # default "That's everything"
+Alembic.finish_subtitle = "Here is how you did"        # default "Thanks — here's what you told us"
+Alembic.finish_answers_heading = "Your answers"        # default "What you told us"
+```
+
+The heading over the answers shows only when the flow has a summary, as it does
+today. A flow's own finish page, built from blocks, is not changed by these.
+
 ## 3. Summarising
 
 A flow's summary is a list of outputs, recorded as numbered versions:
@@ -268,8 +280,9 @@ The answer key at `/alembic/manage/flows/:id/answer_key/step` steps through the
 same preview with each question's right answer already chosen: the option
 carrying points on a single-choice question, every option carrying points on a
 multiple-select question, and the first accepted answer on a fill-in-the-blank
-question. It saves no run, opens only the owner's flows, and the flow's details
-page links to it. A host links to it with
+question. Under each question a green Right answer badge names that answer. It
+saves no run, opens only the owner's flows, and the flow's details page links to
+it. A host links to it with
 `alembic.step_manage_flow_answer_key_path(flow)`.
 
 ## 5. Uploading questions from a CSV file
