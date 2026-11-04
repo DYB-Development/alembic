@@ -97,5 +97,14 @@ module Alembic
     ensure
       Alembic.admin_authentication_method = nil
     end
+
+    test "editing a quiz's title leaves its slug alone" do
+      post "/alembic/manage/quizzes", params: { quiz: { title: "Morning Routine" } }
+      flow = EasyFlow::Definition.find_by!(host: "alembic", title: "Morning Routine")
+
+      patch easy_flow.manage_flow_path(flow), params: { flow: { title: "Evening Routine" } }
+
+      assert_equal "morning-routine", flow.reload.slug
+    end
   end
 end
