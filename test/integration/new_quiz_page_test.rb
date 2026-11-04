@@ -31,5 +31,11 @@ module Alembic
 
       assert_redirected_to "/alembic/manage/flows/#{EasyFlow::Definition.find_by!(host: "alembic", title: "Morning Routine").public_code}"
     end
+
+    test "a second quiz with the same title gets a different slug" do
+      2.times { post "/alembic/manage/quizzes", params: { quiz: { title: "Morning Routine" } } }
+
+      assert_equal %w[morning-routine morning-routine-2], EasyFlow::Definition.where(host: "alembic", title: "Morning Routine").order(:id).pluck(:slug)
+    end
   end
 end

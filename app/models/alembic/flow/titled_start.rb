@@ -32,7 +32,6 @@ module Alembic
       def free_slug
         made = @flow.title.parameterize.presence || FALLBACK_SLUG
         numbered = (2..).lazy.map { |number| "#{made}-#{number}" }
-
         taken = unavailable
 
         [ made ].chain(numbered).find { |candidate| taken.exclude?(candidate) }
