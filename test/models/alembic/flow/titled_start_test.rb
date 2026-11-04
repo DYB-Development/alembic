@@ -7,6 +7,12 @@ module Alembic
         assert_equal "morning-routine", started("Morning Routine").slug
       end
 
+      test "a second flow with the same title takes the next free number" do
+        started("Morning Routine")
+
+        assert_equal "morning-routine-2", started("Morning Routine").slug
+      end
+
       private
 
       def started(title, host: "alembic", owner: nil)
