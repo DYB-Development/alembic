@@ -55,7 +55,7 @@ module Alembic
     end
 
     test "a flow created on alembic's management pages belongs to the alembic host" do
-      post easy_flow.manage_flows_path, params: { flow: { slug: "made-here", kind: "guide" } }
+      post easy_flow.manage_flows_path, params: { flow: { slug: "made-here" } }
 
       assert_equal "alembic", EasyFlow::Definition.find_by!(slug: "made-here").host
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_25_031225) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_04_190049) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -111,7 +111,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_031225) do
     t.integer "definition_cursor"
     t.json "document"
     t.string "host", null: false
-    t.string "kind"
     t.integer "owner_id"
     t.string "owner_type"
     t.string "persists", default: "unsaved", null: false

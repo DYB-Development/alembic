@@ -7,9 +7,16 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - The default finish page draws the green Right check from one app-wide setting, `Alembic.marks_right_answers`, and no longer reads the flow's stored kind.
+- alembic requires easy_flow 0.32, which removes a flow's stored kind. Nothing in alembic sets or reads it, apart from the migration that moves flows onto easy_flow.
+
+### Fixed
+
+- The migration that moves flows onto easy_flow no longer fails when easy_flow's migration removing a flow's kind has already run, and it keeps those flows. It still copies each flow's kind while easy_flow stores it.
 
 ### Upgrading
 
+- Stop setting `kind` on a flow, then take easy_flow 0.32, and copy and run its migration in a later deploy with `bin/rails easy_flow:install:migrations` and `bin/rails db:migrate`. An app that already ran alembic's migration has nothing to re-run for it.
+- On SQLite, an app whose flows have already moved onto easy_flow adds `disable_ddl_transaction!` to its copy of easy_flow's `RemoveKindFromEasyFlowDefinitions` before running it, since run in a transaction it deletes the summary rows of every flow, as the install guide describes.
 - The Right check is now off unless an app turns it on, so an app that wants it must set `Alembic.marks_right_answers = true`, as the install guide describes.
 
 ## [0.13.0] - 2026-11-02
