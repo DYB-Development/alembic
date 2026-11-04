@@ -33,6 +33,12 @@ module Alembic
         assert_equal "runs-2", started("Runs").slug
       end
 
+      test "no title takes a slug that is the first word of one of alembic's routes" do
+        words = Alembic::Engine.routes.routes.filter_map { |route| route.path.spec.to_s[%r{\A/([a-z]+)}, 1] }.uniq
+
+        assert_empty words.map { |word| started(word.capitalize).slug } & words
+      end
+
       private
 
       def started(title, host: "alembic", owner: nil)

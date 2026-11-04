@@ -2,7 +2,7 @@ module Alembic
   module Flow
     class TitledStart
       FALLBACK_SLUG = "quiz"
-      SLUGS_THE_ROUTES_USE = %w[runs].freeze
+      SLUGS_THE_ROUTES_USE = %w[manage pages runs].freeze
 
       def initialize(flow)
         @flow = flow
