@@ -1,6 +1,8 @@
 module Alembic
   module Flow
     class TitledStart
+      FALLBACK_SLUG = "quiz"
+
       def initialize(flow)
         @flow = flow
       end
@@ -13,7 +15,7 @@ module Alembic
       private
 
       def free_slug
-        made = @flow.title.parameterize
+        made = @flow.title.parameterize.presence || FALLBACK_SLUG
         numbered = (2..).lazy.map { |number| "#{made}-#{number}" }
 
         [ made ].chain(numbered).find { |candidate| slugs_in_use.exclude?(candidate) }
