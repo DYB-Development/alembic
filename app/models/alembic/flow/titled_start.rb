@@ -2,6 +2,7 @@ module Alembic
   module Flow
     class TitledStart
       FALLBACK_SLUG = "quiz"
+      MADE_SLUG_LENGTH = 100
       TRIES_FOR_A_FREE_SLUG = 3
       SLUGS_THE_ROUTES_USE = %w[manage pages runs].freeze
 
@@ -30,7 +31,7 @@ module Alembic
       end
 
       def free_slug
-        made = @flow.title.parameterize.presence || FALLBACK_SLUG
+        made = @flow.title.parameterize.first(MADE_SLUG_LENGTH).presence || FALLBACK_SLUG
         numbered = (2..).lazy.map { |number| "#{made}-#{number}" }
         taken = unavailable
 

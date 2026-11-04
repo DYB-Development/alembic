@@ -66,6 +66,10 @@ module Alembic
         assert_raises(ActiveRecord::RecordNotUnique) { TitledStart.new(flow).save }
       end
 
+      test "a very long title makes a slug cut to the fixed length" do
+        assert_equal 100, started(Random.new(1).alphanumeric(6000)).slug.length
+      end
+
       private
 
       def started(title, host: "alembic", owner: nil)
