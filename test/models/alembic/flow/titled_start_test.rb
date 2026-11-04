@@ -56,6 +56,16 @@ module Alembic
         assert_equal "morning-routine-2", flow.slug
       end
 
+      test "a flow that keeps losing the race for its slug stops trying" do
+        flow = EasyFlow::Definition.new(host: "alembic", title: "Morning Routine")
+        flow.define_singleton_method(:save) do |**options|
+          EasyFlow::Definition.create!(host: "alembic", slug: slug)
+          super(**options)
+        end
+
+        assert_raises(ActiveRecord::RecordNotUnique) { TitledStart.new(flow).save }
+      end
+
       private
 
       def started(title, host: "alembic", owner: nil)

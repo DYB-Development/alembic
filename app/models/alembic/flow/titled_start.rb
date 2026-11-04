@@ -2,6 +2,7 @@ module Alembic
   module Flow
     class TitledStart
       FALLBACK_SLUG = "quiz"
+      TRIES_FOR_A_FREE_SLUG = 3
       SLUGS_THE_ROUTES_USE = %w[manage pages runs].freeze
 
       def initialize(flow)
@@ -11,11 +12,13 @@ module Alembic
       def save
         return refuse_blank_title if @flow.title.blank?
 
+        tries = 0
         begin
           @flow.slug = free_slug
           @flow.save
         rescue ActiveRecord::RecordNotUnique
-          retry
+          retry if (tries += 1) < TRIES_FOR_A_FREE_SLUG
+          raise
         end
       end
 
