@@ -36,11 +36,12 @@ That migration deletes each flow's stored kind. Alembic's migration that moves
 flows onto easy_flow runs in either order and keeps the flows, copying the kind
 only while easy_flow still stores it.
 
-On SQLite, an app whose flows have already moved onto easy_flow adds
-`disable_ddl_transaction!` to its copy of `RemoveKindFromEasyFlowDefinitions`
-before running it. Run in a transaction, it rebuilds the flow table on SQLite and
+On SQLite, an app that copied `RemoveKindFromEasyFlowDefinitions` from easy_flow
+0.32.0 and has not run it adds `disable_ddl_transaction!` to its copy before
+running it. Run in a transaction, that copy rebuilds the flow table on SQLite and
 deletes every flow's summary text, summary versions and the summary version each
-run is pinned to. Postgres does not rebuild the table and keeps them.
+run is pinned to. A copy made from easy_flow 0.32.1 or later already has the line,
+and Postgres keeps these rows either way.
 
 easy_flow's migrations give every flow a host. Alembic's flows belong to the
 host named `alembic`, so code that stores a flow for Alembic names it:
