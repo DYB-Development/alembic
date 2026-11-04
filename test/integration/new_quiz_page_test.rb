@@ -87,5 +87,15 @@ module Alembic
     ensure
       Alembic.admin_authentication_method = nil
     end
+
+    test "creating a quiz runs the admin check the host gave alembic" do
+      Alembic.admin_authentication_method = :require_an_admin
+
+      post "/alembic/manage/quizzes", params: { quiz: { title: "Morning Routine" } }
+
+      assert_redirected_to "/host-login"
+    ensure
+      Alembic.admin_authentication_method = nil
+    end
   end
 end
