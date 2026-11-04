@@ -11,8 +11,12 @@ module Alembic
       def save
         return refuse_blank_title if @flow.title.blank?
 
-        @flow.slug = free_slug
-        @flow.save
+        begin
+          @flow.slug = free_slug
+          @flow.save
+        rescue ActiveRecord::RecordNotUnique
+          retry
+        end
       end
 
       private

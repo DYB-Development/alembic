@@ -45,6 +45,17 @@ module Alembic
         assert_not TitledStart.new(flow).save
       end
 
+      test "a flow that loses a race for its slug takes the next number" do
+        flow = EasyFlow::Definition.new(host: "alembic", title: "Morning Routine")
+        flow.define_singleton_method(:save) do |**options|
+          EasyFlow::Definition.create!(host: "alembic", slug: "morning-routine") unless EasyFlow::Definition.exists?(host: "alembic", slug: "morning-routine")
+          super(**options)
+        end
+        TitledStart.new(flow).save
+
+        assert_equal "morning-routine-2", flow.slug
+      end
+
       private
 
       def started(title, host: "alembic", owner: nil)
