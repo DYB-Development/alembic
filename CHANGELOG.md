@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- A new quiz page at `/manage/quizzes/new` under alembic's mount asks for a title and nothing else, and alembic makes the slug from that title. easy_flow's new flow page is unchanged, and nothing links to the new page until a host does.
+
 ## [0.14.0] - 2026-11-04
 
 ### Changed

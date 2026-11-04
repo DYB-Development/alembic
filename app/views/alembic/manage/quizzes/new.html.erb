@@ -1,0 +1,11 @@
+<% content_for(:title, "New quiz") %>
+
+<%= ui_page(max_width: :md) do %>
+  <%= ui_page_header(title: "New quiz") %>
+
+  <%= ui_form(action: alembic.manage_quizzes_path, method: :post) do %>
+    <%= ui_form_field(attribute: "quiz[title]", label: "Title", value: @flow.title, errors: @flow.errors.full_messages_for(:title)) %>
+
+    <%= ui_button(label: "Create", type: :submit) %>
+  <% end %>
+<% end %>
