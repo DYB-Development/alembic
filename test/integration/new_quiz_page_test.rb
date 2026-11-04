@@ -77,5 +77,15 @@ module Alembic
     ensure
       Alembic.owner_method = nil
     end
+
+    test "the new quiz page runs the admin check the host gave alembic" do
+      Alembic.admin_authentication_method = :require_an_admin
+
+      get "/alembic/manage/quizzes/new"
+
+      assert_redirected_to "/host-login"
+    ensure
+      Alembic.admin_authentication_method = nil
+    end
   end
 end
