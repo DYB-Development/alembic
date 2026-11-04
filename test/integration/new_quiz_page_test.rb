@@ -43,5 +43,11 @@ module Alembic
 
       assert_response :unprocessable_entity
     end
+
+    test "a blank title on the page says the title cannot be blank" do
+      post "/alembic/manage/quizzes", params: { quiz: { title: "" } }
+
+      assert_select "*", text: /Title can.t be blank/
+    end
   end
 end
