@@ -19,6 +19,12 @@ module Alembic
         assert_equal "morning-routine", started("Morning Routine").slug
       end
 
+      test "a flow keeps the plain slug when only another owner uses the title" do
+        started("Morning Routine", owner: Customer.create!(name: "Theirs"))
+
+        assert_equal "morning-routine", started("Morning Routine", owner: Customer.create!(name: "Ours")).slug
+      end
+
       private
 
       def started(title, host: "alembic", owner: nil)
