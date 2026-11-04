@@ -66,5 +66,16 @@ module Alembic
     ensure
       Alembic.owner_method = nil
     end
+
+    test "a second quiz with the same title for one owner gets a different slug" do
+      Alembic.owner_method = :current_customer
+      owner = Customer.create!(name: "Ours")
+
+      2.times { post "/alembic/manage/quizzes", params: { quiz: { title: "Morning Routine" } }, headers: { "X-Customer" => owner.id.to_s } }
+
+      assert_equal %w[morning-routine morning-routine-2], EasyFlow::Definition.where(host: "alembic", owner: owner).order(:id).pluck(:slug)
+    ensure
+      Alembic.owner_method = nil
+    end
   end
 end
