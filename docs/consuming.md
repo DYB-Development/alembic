@@ -119,6 +119,19 @@ Alembic.finish_answers_heading = "Your answers"        # default "What you told 
 The heading over the answers shows only when the flow has a summary, as it does
 today. A flow's own finish page, built from blocks, is not changed by these.
 
+The default finish page can draw a green Right check next to a correct answer.
+It is one setting for the whole app and is off unless the app turns it on:
+
+```ruby
+Alembic.marks_right_answers = true
+```
+
+An app whose flows are quizzes turns it on. An app whose flows are scorecards
+leaves it off, so its finish pages show no check. Only an answer with a positive
+weight is marked right, and a multiple select or fill in the blank question is
+marked right when it is answered correctly. A flow's own finish page, built from
+blocks, draws no check either way.
+
 ## 3. Summarising
 
 A flow's summary is a list of outputs, recorded as numbered versions:

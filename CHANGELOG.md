@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- The default finish page draws the green Right check from one app-wide setting, `Alembic.marks_right_answers`, and no longer reads the flow's stored kind.
+
+### Upgrading
+
+- The Right check is now off unless an app turns it on, so an app that wants it must set `Alembic.marks_right_answers = true`, as the install guide describes.
+
 ## [0.13.0] - 2026-11-02
 
 ### Added

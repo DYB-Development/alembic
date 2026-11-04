@@ -2,6 +2,8 @@ require "test_helper"
 
 module Alembic
   class GradedQuestionTypesTest < ActionDispatch::IntegrationTest
+    teardown { Alembic.marks_right_answers = nil }
+
     def quiz
       { "slug" => "mixed", "entry" => "flags",
         "nodes" => [ { "id" => "flags", "type" => "multiple_select", "question" => "Which colours are on the French flag?",
@@ -79,7 +81,7 @@ module Alembic
     private
 
     def finished(flags:, capital:)
-      mixed.update!(kind: "scored")
+      Alembic.marks_right_answers = true
       Flow::Summaries.new(mixed).record("outputs" => [ { "id" => "score", "type" => "weighted_sum", "label" => "Your score" } ])
       post alembic.flow_runs_path(mixed.slug)
       EasyFlow::Run.last.tap do |run|

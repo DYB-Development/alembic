@@ -97,7 +97,7 @@ module Alembic
     end
 
     def answered_right?(step, value)
-      (run&.flow || flow).scored? && Outputs::WeightedSum.weight_of(step_settings(step), value).positive?
+      Alembic.marks_right_answers && Outputs::WeightedSum.weight_of(step_settings(step), value).positive?
     end
 
     def step_settings(id)
