@@ -106,5 +106,11 @@ module Alembic
 
       assert_equal "morning-routine", flow.reload.slug
     end
+
+    test "the easy_flow new flow page still asks for a slug" do
+      get "/alembic/manage/flows/new"
+
+      assert_select "input[name=?]", "flow[slug]"
+    end
   end
 end
