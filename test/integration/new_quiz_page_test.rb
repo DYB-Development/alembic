@@ -20,6 +20,12 @@ module Alembic
       assert EasyFlow::Definition.exists?(host: "alembic", title: "Morning Routine")
     end
 
+    test "a quiz created from the page has a slug made from the title typed" do
+      post "/alembic/manage/quizzes", params: { quiz: { title: "Morning Routine" } }
+
+      assert_equal "morning-routine", EasyFlow::Definition.find_by!(host: "alembic", title: "Morning Routine").slug
+    end
+
     test "creating a quiz goes to the flow's builder" do
       post "/alembic/manage/quizzes", params: { quiz: { title: "Morning Routine" } }
 
