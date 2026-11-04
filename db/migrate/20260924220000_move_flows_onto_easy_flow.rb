@@ -130,7 +130,7 @@ class MoveFlowsOntoEasyFlow < ActiveRecord::Migration[8.1]
 
   def copy_flows
     OldFlow.order(:id).to_h do |flow|
-      [ flow.id, Definition.create!(flow.attributes.slice(*FLOW_COLUMNS).merge("host" => HOST)).id ]
+      [ flow.id, Definition.create!(flow.attributes.slice(*FLOW_COLUMNS & Definition.column_names).merge("host" => HOST)).id ]
     end
   end
 

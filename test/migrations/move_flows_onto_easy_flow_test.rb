@@ -29,6 +29,15 @@ class MoveFlowsOntoEasyFlowTest < ActiveSupport::TestCase
     assert_equal [ [ "alembic", "Old flow", "guide" ] ], connection.select_rows("SELECT host, title, kind FROM easy_flow_definitions WHERE slug = 'old'")
   end
 
+  test "keeps each flow when easy_flow no longer stores a flow's kind" do
+    migrated do
+      connection.remove_column :easy_flow_definitions, :kind, if_exists: true
+      old_flow
+    end
+
+    assert_equal [ [ "alembic", "Old flow" ] ], connection.select_rows("SELECT host, title FROM easy_flow_definitions WHERE slug = 'old'")
+  end
+
   def old_version(flow_id, number: 1, status: "live")
     connection.insert("INSERT INTO alembic_flow_versions (flow_id, number, definition, status, created_at) VALUES (#{flow_id}, #{number}, '{\"headline\":\"Hi\"}', '#{status}', '2026-01-01')")
   end
