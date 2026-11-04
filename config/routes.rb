@@ -18,6 +18,8 @@ Alembic::Engine.routes.draw do
         get :step
       end
     end
+
+    resources :quizzes, only: [ :new, :create ]
   end
 
   constraints(->(request) { request.path_info.match?(%r{\A/manage/flows(/|\z)}) }) do
