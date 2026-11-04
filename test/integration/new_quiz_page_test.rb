@@ -13,5 +13,11 @@ module Alembic
 
       assert_select "input[name*=?]", "slug", count: 0
     end
+
+    test "a quiz created from the page has the title typed" do
+      post "/alembic/manage/quizzes", params: { quiz: { title: "Morning Routine" } }
+
+      assert EasyFlow::Definition.exists?(host: "alembic", title: "Morning Routine")
+    end
   end
 end
