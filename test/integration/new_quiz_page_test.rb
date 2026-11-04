@@ -128,5 +128,11 @@ module Alembic
     ensure
       Alembic.admin_layout = nil
     end
+
+    test "the new quiz page names itself in the page title" do
+      get "/alembic/manage/quizzes/new"
+
+      assert_select "title", text: "New quiz"
+    end
   end
 end
