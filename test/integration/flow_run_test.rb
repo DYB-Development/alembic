@@ -392,15 +392,29 @@ module Alembic
     end
 
     test "a finished quiz marks a question answered right with a check" do
+      Alembic.marks_right_answers = true
+
       get alembic.flow_step_path(quizzed.slug), params: { answers: { paris: "true", rome: "true" } }
 
       assert_select "[data-answer=paris] [aria-label=Right]"
+    ensure
+      Alembic.marks_right_answers = nil
     end
 
     test "a finished quiz shows no check on a question answered wrong" do
+      Alembic.marks_right_answers = true
+
       get alembic.flow_step_path(quizzed.slug), params: { answers: { paris: "true", rome: "true" } }
 
       assert_select "[data-answer=rome] [aria-label=Right]", count: 0
+    ensure
+      Alembic.marks_right_answers = nil
+    end
+
+    test "a finished quiz shows no check in an app that leaves the setting off" do
+      get alembic.flow_step_path(quizzed.slug), params: { answers: { paris: "true", rome: "true" } }
+
+      assert_select "[aria-label=Right]", count: 0
     end
 
     test "a finished flow that is not a quiz shows no checks" do
