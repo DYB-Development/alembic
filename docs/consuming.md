@@ -22,6 +22,26 @@ $ bin/rails alembic:install:migrations
 $ bin/rails db:migrate
 ```
 
+A flow has no kind from easy_flow 0.32, which alembic requires. An app that
+upgrades stops setting `kind` on a flow first, since `EasyFlow::Definition` raises
+`ActiveModel::UnknownAttributeError` for it on that version. Then it takes the
+new gem versions, and copies and runs easy_flow's migration in a later deploy:
+
+```bash
+$ bin/rails easy_flow:install:migrations
+$ bin/rails db:migrate
+```
+
+That migration deletes each flow's stored kind. Alembic's migration that moves
+flows onto easy_flow runs in either order and keeps the flows, copying the kind
+only while easy_flow still stores it.
+
+On SQLite, an app whose flows have already moved onto easy_flow adds
+`disable_ddl_transaction!` to its copy of `RemoveKindFromEasyFlowDefinitions`
+before running it. Run in a transaction, it rebuilds the flow table on SQLite and
+deletes every flow's summary text, summary versions and the summary version each
+run is pinned to. Postgres does not rebuild the table and keeps them.
+
 easy_flow's migrations give every flow a host. Alembic's flows belong to the
 host named `alembic`, so code that stores a flow for Alembic names it:
 
