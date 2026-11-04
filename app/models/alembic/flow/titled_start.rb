@@ -2,6 +2,7 @@ module Alembic
   module Flow
     class TitledStart
       FALLBACK_SLUG = "quiz"
+      SLUGS_THE_ROUTES_USE = %w[runs].freeze
 
       def initialize(flow)
         @flow = flow
@@ -18,11 +19,13 @@ module Alembic
         made = @flow.title.parameterize.presence || FALLBACK_SLUG
         numbered = (2..).lazy.map { |number| "#{made}-#{number}" }
 
-        [ made ].chain(numbered).find { |candidate| slugs_in_use.exclude?(candidate) }
+        taken = unavailable
+
+        [ made ].chain(numbered).find { |candidate| taken.exclude?(candidate) }
       end
 
-      def slugs_in_use
-        @slugs_in_use ||= EasyFlow::Definition.where(host: @flow.host, owner: @flow.owner).pluck(:slug)
+      def unavailable
+        EasyFlow::Definition.where(host: @flow.host, owner: @flow.owner).pluck(:slug) + SLUGS_THE_ROUTES_USE
       end
     end
   end
