@@ -74,6 +74,12 @@ module Alembic
         assert_equal "a" * 99, started("#{"a" * 99} b").slug
       end
 
+      test "a repeated very long title takes the next free number" do
+        started("a" * 200)
+
+        assert_equal "#{"a" * 100}-2", started("a" * 200).slug
+      end
+
       private
 
       def started(title, host: "alembic", owner: nil)
