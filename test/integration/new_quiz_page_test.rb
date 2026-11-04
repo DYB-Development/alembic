@@ -19,5 +19,11 @@ module Alembic
 
       assert EasyFlow::Definition.exists?(host: "alembic", title: "Morning Routine")
     end
+
+    test "creating a quiz goes to the flow's builder" do
+      post "/alembic/manage/quizzes", params: { quiz: { title: "Morning Routine" } }
+
+      assert_redirected_to "/alembic/manage/flows/#{EasyFlow::Definition.find_by!(host: "alembic", title: "Morning Routine").public_code}"
+    end
   end
 end
