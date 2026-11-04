@@ -31,7 +31,7 @@ module Alembic
       end
 
       def free_slug
-        made = @flow.title.parameterize.first(MADE_SLUG_LENGTH).presence || FALLBACK_SLUG
+        made = @flow.title.parameterize.first(MADE_SLUG_LENGTH).chomp("-").presence || FALLBACK_SLUG
         numbered = (2..).lazy.map { |number| "#{made}-#{number}" }
         taken = unavailable
 

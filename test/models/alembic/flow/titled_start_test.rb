@@ -70,6 +70,10 @@ module Alembic
         assert_equal 100, started(Random.new(1).alphanumeric(6000)).slug.length
       end
 
+      test "a slug cut to the fixed length does not end on a hyphen" do
+        assert_equal "a" * 99, started("#{"a" * 99} b").slug
+      end
+
       private
 
       def started(title, host: "alembic", owner: nil)
