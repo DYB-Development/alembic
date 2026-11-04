@@ -7,5 +7,11 @@ module Alembic
 
       assert_select "input[name=?]", "quiz[title]"
     end
+
+    test "the new quiz page does not ask for a slug" do
+      get "/alembic/manage/quizzes/new"
+
+      assert_select "input[name*=?]", "slug", count: 0
+    end
   end
 end
