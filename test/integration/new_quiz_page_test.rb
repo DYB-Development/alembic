@@ -112,5 +112,11 @@ module Alembic
 
       assert_select "input[name=?]", "flow[slug]"
     end
+
+    test "the easy_flow new flow page still creates a flow under the slug chosen" do
+      post "/alembic/manage/flows", params: { flow: { slug: "chosen-slug" } }
+
+      assert EasyFlow::Definition.exists?(host: "alembic", slug: "chosen-slug")
+    end
   end
 end
