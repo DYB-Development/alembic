@@ -37,5 +37,11 @@ module Alembic
 
       assert_equal %w[morning-routine morning-routine-2], EasyFlow::Definition.where(host: "alembic", title: "Morning Routine").order(:id).pluck(:slug)
     end
+
+    test "a blank title is sent back as unprocessable" do
+      post "/alembic/manage/quizzes", params: { quiz: { title: "" } }
+
+      assert_response :unprocessable_entity
+    end
   end
 end

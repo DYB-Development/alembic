@@ -9,8 +9,12 @@ module Alembic
 
       def create
         @flow = hosted_flows.new(params.require(:quiz).permit(:title))
-        Flow::TitledStart.new(@flow).save
-        redirect_to easy_flow.manage_flow_path(@flow), notice: "Quiz created."
+
+        if Flow::TitledStart.new(@flow).save
+          redirect_to easy_flow.manage_flow_path(@flow), notice: "Quiz created."
+        else
+          render :new, status: :unprocessable_entity
+        end
       end
     end
   end
