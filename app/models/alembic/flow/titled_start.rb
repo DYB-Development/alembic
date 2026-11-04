@@ -20,7 +20,7 @@ module Alembic
       end
 
       def slugs_in_use
-        @slugs_in_use ||= EasyFlow::Definition.pluck(:slug)
+        @slugs_in_use ||= EasyFlow::Definition.where(host: @flow.host).pluck(:slug)
       end
     end
   end
