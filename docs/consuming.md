@@ -69,9 +69,26 @@ mount Alembic::Engine => "/alembic"
 | `/alembic/pages/:slug` | a published page |
 | `/alembic/manage/flows` | easy_flow's flow builder |
 | `/alembic/manage/flows/:id/edit` | a flow's details, with its summary text |
+| `/alembic/manage/quizzes/new` | starting a quiz by its title, with the slug made for you |
 | `/alembic/manage/flows/:id/preview` | trying a flow before it is published |
 | `/alembic/manage/flows/:id/answer_key/step` | a quiz's answer key, each question with its right answer chosen |
 | `/alembic/manage/pages` | the page builder |
+
+The new quiz page asks for a title and nothing else. It answers to the same admin
+check and owner as the flow builder, creates a flow of the host named `alembic`,
+and goes to that flow's builder. Nothing in Alembic or easy_flow links to it, so a
+host that wants it links to `alembic.new_manage_quiz_path`. easy_flow's own new
+flow page at `/alembic/manage/flows/new` still asks for a slug.
+
+The slug is made from the title:
+
+- A title the same owner already used takes the next free number, such as
+  `checkup-2`.
+- A title with no usable letters or numbers takes the slug `quiz`.
+- A title that makes `manage`, `pages` or `runs` takes the next free number, since
+  Alembic's routes use those words.
+- A blank title is refused on the page with an error.
+- Editing the title later leaves the slug as it is.
 
 ## 2. Settings
 
