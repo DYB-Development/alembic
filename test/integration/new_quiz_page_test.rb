@@ -134,5 +134,13 @@ module Alembic
 
       assert_select "title", text: "New quiz"
     end
+
+    test "a very long title creates a quiz with the title as typed" do
+      title = Random.new(1).alphanumeric(6000)
+
+      post "/alembic/manage/quizzes", params: { quiz: { title: title } }
+
+      assert EasyFlow::Definition.exists?(host: "alembic", title: title)
+    end
   end
 end
