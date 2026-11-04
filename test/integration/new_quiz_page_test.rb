@@ -49,5 +49,11 @@ module Alembic
 
       assert_select "*", text: /Title can.t be blank/
     end
+
+    test "a slug posted to the page is ignored" do
+      post "/alembic/manage/quizzes", params: { quiz: { title: "Morning Routine", slug: "typed-by-hand" } }
+
+      assert_equal "morning-routine", EasyFlow::Definition.find_by!(host: "alembic", title: "Morning Routine").slug
+    end
   end
 end
