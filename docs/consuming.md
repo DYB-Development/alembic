@@ -87,6 +87,8 @@ The slug is made from the title:
 - A title with no usable letters or numbers takes the slug `quiz`.
 - A title that makes `manage`, `pages` or `runs` takes the next free number, since
   Alembic's routes use those words.
+- A very long title makes a slug cut to 100 characters, and the number of a repeated
+  title goes after that. The title itself stays as typed.
 - A blank title is refused on the page with an error.
 - Editing the title later leaves the slug as it is.
 
