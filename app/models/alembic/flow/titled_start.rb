@@ -9,11 +9,18 @@ module Alembic
       end
 
       def save
+        return refuse_blank_title if @flow.title.blank?
+
         @flow.slug = free_slug
         @flow.save
       end
 
       private
+
+      def refuse_blank_title
+        @flow.errors.add(:title, :blank)
+        false
+      end
 
       def free_slug
         made = @flow.title.parameterize.presence || FALLBACK_SLUG

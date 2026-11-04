@@ -39,6 +39,12 @@ module Alembic
         assert_empty words.map { |word| started(word.capitalize).slug } & words
       end
 
+      test "a blank title is refused" do
+        flow = EasyFlow::Definition.new(host: "alembic", title: "  ")
+
+        assert_not TitledStart.new(flow).save
+      end
+
       private
 
       def started(title, host: "alembic", owner: nil)
