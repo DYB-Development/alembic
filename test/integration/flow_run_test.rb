@@ -23,7 +23,7 @@ module Alembic
     end
 
     def quizzed
-      @quizzed ||= EasyFlow::Definition.create!(host: "alembic", slug: "quizzed", kind: "scored").tap do |flow|
+      @quizzed ||= EasyFlow::Definition.create!(host: "alembic", slug: "quizzed").tap do |flow|
         flow.record_definition(flowing(
           "slug" => "quizzed", "entry" => "paris",
           "nodes" => [ { "id" => "paris", "type" => "question", "text" => "Paris is the capital of France.",
