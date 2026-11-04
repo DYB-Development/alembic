@@ -55,5 +55,16 @@ module Alembic
 
       assert_equal "morning-routine", EasyFlow::Definition.find_by!(host: "alembic", title: "Morning Routine").slug
     end
+
+    test "a quiz created from the page belongs to the current owner" do
+      Alembic.owner_method = :current_customer
+      owner = Customer.create!(name: "Ours")
+
+      post "/alembic/manage/quizzes", params: { quiz: { title: "Morning Routine" } }, headers: { "X-Customer" => owner.id.to_s }
+
+      assert_equal owner, EasyFlow::Definition.find_by!(host: "alembic", title: "Morning Routine").owner
+    ensure
+      Alembic.owner_method = nil
+    end
   end
 end
