@@ -13,7 +13,7 @@ module Alembic
                           visitor_authorization_method refusal_method owner_method].freeze
 
   class << self
-    attr_accessor :lead_address, :lead_fields_partial, :lead_note, :start_over_address, :finish_link
+    attr_accessor :lead_address, :lead_fields_partial, :lead_note, :start_over_address, :finish_link, :marks_right_answers
     attr_reader :admin_authentication_method, :visitor_authorization_method, :refusal_method, :owner_method
     attr_writer :finish_title, :finish_subtitle, :finish_answers_heading
 

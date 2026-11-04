@@ -32,4 +32,8 @@ class AlembicTest < ActiveSupport::TestCase
   test "with no answers heading set, the finish page heads the answers What you told us" do
     assert_equal "What you told us", Alembic.finish_answers_heading
   end
+
+  test "with the setting left unset, alembic marks no answers right" do
+    assert_not Alembic.marks_right_answers
+  end
 end
