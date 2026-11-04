@@ -118,5 +118,15 @@ module Alembic
 
       assert EasyFlow::Definition.exists?(host: "alembic", slug: "chosen-slug")
     end
+
+    test "the new quiz page is drawn in the admin layout the host gave alembic" do
+      Alembic.admin_layout = "mailer"
+
+      get "/alembic/manage/quizzes/new"
+
+      assert_select "meta[http-equiv=Content-Type]"
+    ensure
+      Alembic.admin_layout = nil
+    end
   end
 end
