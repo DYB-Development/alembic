@@ -82,7 +82,6 @@ module Alembic
 
     def finished(flags:, capital:)
       Alembic.marks_right_answers = true
-      mixed.update!(kind: "scored")
       Flow::Summaries.new(mixed).record("outputs" => [ { "id" => "score", "type" => "weighted_sum", "label" => "Your score" } ])
       post alembic.flow_runs_path(mixed.slug)
       EasyFlow::Run.last.tap do |run|

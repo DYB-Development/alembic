@@ -417,12 +417,6 @@ module Alembic
       assert_select "[aria-label=Right]", count: 0
     end
 
-    test "a finished flow that is not a quiz shows no checks" do
-      get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
-
-      assert_select "[aria-label=Right]", count: 0
-    end
-
     test "the finished page shows each question in the look's muted text" do
       get alembic.flow_step_path(flowed.slug), params: { answers: { budget: "low", plain: "b" } }
 
