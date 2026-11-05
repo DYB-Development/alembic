@@ -51,6 +51,14 @@ class FlowHostSettingsTest < ActiveSupport::TestCase
     assert flow_host.hide_step_type_codes?
   end
 
+  test "finding flows across owners stays on after an alembic option is set" do
+    flow_host.finds_flows_across_owners = true
+
+    Alembic.owner_method = :current_customer
+
+    assert flow_host.finds_flows_across_owners
+  end
+
   private
 
   def flow_host
