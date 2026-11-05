@@ -36,8 +36,12 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     assert_match(/smaller line a player sees under/, explained("question", "answers", "hint"))
   end
 
-  test "a question answer's info is explained as saved detail that alembic's question page does not show" do
+  test "a question answer's info is explained as saved detail that the question page does not show" do
     assert_match(/saved with this answer.*does not show/, explained("question", "answers", "info"))
+  end
+
+  test "no explanation names the gem to the admin reading it" do
+    assert_empty Alembic::AnswerExplanations::TEXT.values.flat_map(&:values).grep(/alembic/i)
   end
 
   test "a multiple select answer's value is explained as what is saved and what shows when the label is blank" do
