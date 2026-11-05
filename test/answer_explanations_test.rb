@@ -34,6 +34,10 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     assert_match(/smaller line a player sees under/, explained("question", "answers", "hint"))
   end
 
+  test "a question answer's info is explained as saved detail that alembic's question page does not show" do
+    assert_match(/saved with this answer.*does not show/, explained("question", "answers", "info"))
+  end
+
   private
 
   def explained(step_type, list, field, host: flow_host)

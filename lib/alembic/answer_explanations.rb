@@ -2,6 +2,7 @@ module Alembic
   module AnswerExplanations
     TEXT = {
       "question" => {
+        "answers.info" => "Extra detail saved with this answer, which alembic's own question page does not show to a player.",
         "answers.hint" => "A smaller line a player sees under this answer's text.",
         "answers.label" => "The text a player sees for this answer in place of its value.",
         "answers.value" => "The text saved when a player picks this answer, which the player also sees when the label is blank or the flow shows answer values.",
