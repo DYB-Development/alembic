@@ -79,6 +79,12 @@ class FlowHostSettingsTest < ActiveSupport::TestCase
     assert_equal "mailer", flow_host.admin_layout
   end
 
+  test "the admin authentication method given to alembic reaches its easy_flow host" do
+    Alembic.admin_authentication_method = :require_admin
+
+    assert_equal :require_admin, flow_host.admin_authentication_method
+  end
+
   private
 
   def flow_host
