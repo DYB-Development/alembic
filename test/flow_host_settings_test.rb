@@ -106,6 +106,15 @@ class FlowHostSettingsTest < ActiveSupport::TestCase
     assert_equal "mailer", flow_host.layout
   end
 
+  test "every option reaches an easy_flow host declared again once another option is set" do
+    Alembic.layout = "mailer"
+    EasyFlow.host(Alembic::FLOW_HOST)
+
+    Alembic.owner_method = :current_customer
+
+    assert_equal "mailer", flow_host.layout
+  end
+
   private
 
   def flow_host
