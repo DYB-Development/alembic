@@ -42,6 +42,10 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     assert_match(/saved when a player ticks.*label is blank/, explained("multiple_select", "answers", "value"))
   end
 
+  test "a multiple select answer's label is explained as the text a player sees in place of the value" do
+    assert_match(/player sees.*in place of its value/, explained("multiple_select", "answers", "label"))
+  end
+
   private
 
   def explained(step_type, list, field, host: flow_host)
