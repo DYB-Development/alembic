@@ -73,6 +73,12 @@ class FlowHostSettingsTest < ActiveSupport::TestCase
     assert_equal "mailer", flow_host.layout
   end
 
+  test "the admin layout given to alembic reaches its easy_flow host" do
+    Alembic.admin_layout = "mailer"
+
+    assert_equal "mailer", flow_host.admin_layout
+  end
+
   private
 
   def flow_host
