@@ -12,6 +12,10 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     assert_match(/points.*above zero.*right answer/, explained("question", "answers", "weight"))
   end
 
+  test "a multiple select answer weight is explained as one point for ticking exactly the right answers" do
+    assert_match(/above zero.*one point.*every right answer and no others/, explained("multiple_select", "answers", "weight"))
+  end
+
   private
 
   def explained(step_type, list, field, host: flow_host)
