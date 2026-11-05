@@ -38,8 +38,12 @@ module Alembic
     end
 
     def set_up_flow_host
-      host = flow_host.extend(AnswerExplanations)
+      host = explain_answer_fields
       FLOW_HOST_SETTINGS.each { |name| host.public_send(:"#{name}=", public_send(name)) }
+    end
+
+    def explain_answer_fields
+      flow_host.extend(AnswerExplanations)
     end
 
     def lead_partial=(_partial)

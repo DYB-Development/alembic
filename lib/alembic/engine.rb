@@ -33,6 +33,10 @@ module Alembic
       end
     end
 
+    initializer "alembic.answer_explanations" do |app|
+      app.config.to_prepare { Alembic.explain_answer_fields }
+    end
+
     initializer "alembic.question_importer" do |app|
       app.config.to_prepare { require "alembic/question_importer" if defined?(Ixport::Importer) }
     end

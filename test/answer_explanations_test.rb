@@ -76,6 +76,14 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     Alembic.owner_method = nil
   end
 
+  test "a host declared again before the app is prepared still carries alembic's text" do
+    EasyFlow.host(Alembic::FLOW_HOST)
+
+    Rails.application.reloader.prepare!
+
+    assert_match(/points/, explained("question", "answers", "weight"))
+  end
+
   private
 
   def explained(step_type, list, field, host: flow_host)
