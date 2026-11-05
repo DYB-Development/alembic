@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.16.0] - 2026-11-05
+
 ### Added
 
 - The canvas explains the answer fields of question, multiple select and fill in the blank steps on alembic's easy_flow host: a weight, a value, a label, a hint and an info where the step type has that field. A host app's own `setting_explanations` on that host replace alembic's sentence for each field they name, and every other field keeps alembic's. Other step types and other easy_flow hosts are unchanged.
