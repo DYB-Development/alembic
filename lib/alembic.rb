@@ -37,9 +37,8 @@ module Alembic
     end
 
     def set_up_flow_host
-      EasyFlow.host(FLOW_HOST) do |host|
-        FLOW_HOST_SETTINGS.each { |name| host.public_send(:"#{name}=", public_send(name)) }
-      end
+      host = flow_host
+      FLOW_HOST_SETTINGS.each { |name| host.public_send(:"#{name}=", public_send(name)) }
     end
 
     def lead_partial=(_partial)
@@ -68,6 +67,13 @@ module Alembic
     # chrome. Defaults to the conventional application layout.
     def admin_layout
       @admin_layout || "application"
+    end
+
+    private
+
+    def flow_host
+      host = EasyFlow.host_named(FLOW_HOST)
+      host.set_up? ? host : EasyFlow.host(FLOW_HOST)
     end
   end
 

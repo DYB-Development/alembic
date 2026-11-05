@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - The answer key's Right answer badge names every accepted answer of a fill-in-the-blank question, joined with "or". The input still holds the first accepted answer, a question with one accepted answer looks as it did, and a player sees no accepted answers.
 
+### Fixed
+
+- Setting an alembic option no longer replaces the easy_flow host named `alembic`, so what a host app set on it directly stays set, such as `offers`, `back_link`, `publish_note`, `always_show_insert_buttons`, `hide_step_type_codes`, `finds_flows_across_owners` and `allowed_answers`. Every alembic option still reaches the host in any order, and each option set writes all six over the host's values of the same names.
+
 ## [0.15.0] - 2026-11-04
 
 ### Added

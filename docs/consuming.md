@@ -113,6 +113,17 @@ Alembic.refusal_method = :alembic_refused
 `Alembic.base_controller` has to be set before any flow page is loaded, which an
 initializer does.
 
+Anything else on that easy_flow host, such as `offers`, `back_link` or
+`publish_note`, is set on the host directly, before or after Alembic's settings,
+and setting an Alembic option leaves it as it was. The layout, the admin layout,
+the admin check, the visitor check, the refusal answer and the owner method are
+set through Alembic only, since setting any Alembic option writes all six onto
+the host:
+
+```ruby
+EasyFlow.host_named(Alembic::FLOW_HOST).offers = %i[question checklist]
+```
+
 The Start over link on a run's question page and its finish page leads to the
 flow's intro page in Alembic. That address is the flow's public code in a host
 whose easy_flow host finds flows across owners, and its slug otherwise. To send
