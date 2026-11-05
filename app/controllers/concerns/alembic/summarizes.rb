@@ -10,7 +10,7 @@ module Alembic
       helper ContentBlocksHelper
       helper KsBlocks::LayoutHelper
       after_action :keep_ended_inner_run, only: :step
-      helper_method :flow_summary, :first_step_path, :summary_values, :intro_values, :start_over_path, :finish_link, :visited_flow_address, :answered_right?, :single_choice?, :drawing_of, :chosen_answer, :step_category, :shown
+      helper_method :flow_summary, :first_step_path, :summary_values, :intro_values, :start_over_path, :finish_link, :visited_flow_address, :answered_right?, :single_choice?, :drawing_of, :chosen_answer, :named_right_answer, :step_category, :shown
     end
 
     private
@@ -40,6 +40,11 @@ module Alembic
     end
 
     def chosen_answer(_question); end
+
+    def named_right_answer(question)
+      chosen = chosen_answer(question)
+      @guide.choice_label(question.id, chosen) if chosen.present?
+    end
 
     def start_over_path
       flow_start_path(visited_flow_address)
