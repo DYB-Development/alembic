@@ -136,5 +136,14 @@ module Alembic
 
       assert_no_match(/Aurum|Oro/, response.body)
     end
+
+    test "a player taking a quiz on one page sees no accepted answers" do
+      one_page = published_fill_in_quiz
+      Flow::Summaries.new(one_page).ask_on_one_page(true)
+
+      get alembic.flow_step_path(one_page.slug)
+
+      assert_no_match(/Aurum|Oro/, response.body)
+    end
   end
 end
