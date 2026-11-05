@@ -17,6 +17,19 @@ module Alembic
       end
     end
 
+    def fill_in_quiz(*accepted)
+      EasyFlow::Definition.create!(host: "alembic", slug: "accepted").tap do |flow|
+        flow.edit_history.edit_document(flowing(
+          "slug" => "accepted", "entry" => "gold",
+          "nodes" => [ { "id" => "gold", "type" => "fill_in_the_blank", "question" => "Symbol for gold?",
+                         "accepted_answers" => accepted.map { |value| { "value" => value } } },
+                       { "id" => "end", "type" => "terminal" } ],
+          "edges" => [ { "from" => "gold", "to" => "end" } ]
+        ))
+        flow.create_version
+      end
+    end
+
     test "walking through the answer key to the end saves no run and no score" do
       Flow::Summaries.new(quiz).record("outputs" => [ { "id" => "score", "type" => "weighted_sum", "label" => "Score" } ])
 
@@ -89,6 +102,12 @@ module Alembic
       get alembic.step_manage_flow_answer_key_path(quiz)
 
       assert_select ".ks-value-list-row:has(.ks-badge-success)", text: /Right answer\s+paris/
+    end
+
+    test "the answer key names every accepted answer of a fill-in-the-blank question beside the Right answer badge" do
+      get alembic.step_manage_flow_answer_key_path(fill_in_quiz("Au", "AU", "Gold"))
+
+      assert_equal "Right answer Au, AU, or Gold", css_select(".ks-value-list-row:has(.ks-badge-success)").text.squish
     end
   end
 end
