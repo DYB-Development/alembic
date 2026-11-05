@@ -46,6 +46,10 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     assert_match(/player sees.*in place of its value/, explained("multiple_select", "answers", "label"))
   end
 
+  test "a fill in the blank accepted answer is explained as what a typed answer must match to score one point" do
+    assert_match(/matches this text.*capitals.*one point/, explained("fill_in_the_blank", "accepted_answers", "value"))
+  end
+
   private
 
   def explained(step_type, list, field, host: flow_host)

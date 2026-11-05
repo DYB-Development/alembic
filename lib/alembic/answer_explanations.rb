@@ -12,6 +12,9 @@ module Alembic
         "answers.label" => "The text a player sees for this answer in place of its value.",
         "answers.value" => "The text saved when a player ticks this answer, which the player also sees when the label is blank.",
         "answers.weight" => "Any weight above zero makes this a right answer, whatever its size, and the question scores one point only when a player ticks every right answer and no others."
+      },
+      "fill_in_the_blank" => {
+        "accepted_answers.value" => "A typed answer that matches this text, ignoring capitals and the spaces around it, is right and scores one point."
       }
     }.freeze
 
