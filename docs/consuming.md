@@ -124,6 +124,17 @@ the host:
 EasyFlow.host_named(Alembic::FLOW_HOST).offers = %i[question checklist]
 ```
 
+Alembic explains the answer fields of question, multiple select and fill in the
+blank steps on the canvas. A host app replaces any of those sentences with
+`setting_explanations` on the same host, whether set before or after Alembic's
+settings. A field it leaves out or sets blank keeps Alembic's sentence:
+
+```ruby
+EasyFlow.host_named(Alembic::FLOW_HOST).setting_explanations = {
+  question: { "answers.weight" => "Points toward your team's score." }
+}
+```
+
 The Start over link on a run's question page and its finish page leads to the
 flow's intro page in Alembic. That address is the flow's public code in a host
 whose easy_flow host finds flows across owners, and its slug otherwise. To send

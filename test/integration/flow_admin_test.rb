@@ -20,6 +20,14 @@ module Alembic
       end
     end
 
+    test "the canvas explains the answer fields of question, multiple select and fill in the blank steps" do
+      get easy_flow.manage_flow_canvas_path(easy_flow_definitions(:business_scorecard))
+
+      palette = response.parsed_body["palette"]
+      explained = palette.filter_map { |entry| entry["type"] if entry["record_explanations"].values.any?(&:any?) }
+      assert_equal %w[fill_in_the_blank multiple_select question], explained.sort
+    end
+
     test "the canvas is drawn from alembic's address" do
       flow = easy_flow_definitions(:business_scorecard)
 

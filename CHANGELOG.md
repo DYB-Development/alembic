@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- The canvas explains the answer fields of question, multiple select and fill in the blank steps on alembic's easy_flow host: a weight, a value, a label, a hint and an info where the step type has that field. A host app's own `setting_explanations` on that host replace alembic's sentence for each field they name, and every other field keeps alembic's. Other step types and other easy_flow hosts are unchanged.
+
 ### Changed
 
 - The answer key's Right answer badge names every accepted answer of a fill-in-the-blank question, joined with "or". The input still holds the first accepted answer, a question with one accepted answer looks as it did, and a player sees no accepted answers.
+- alembic requires easy_flow 0.35 or later, which explains a step type's settings on the canvas.
 
 ### Fixed
 
