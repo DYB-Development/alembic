@@ -19,6 +19,14 @@ class FlowHostSettingsTest < ActiveSupport::TestCase
     assert_not flow_host.offers?(:checklist)
   end
 
+  test "a back link a host set stays after an alembic option is set" do
+    flow_host.back_link = { label: "Games", address: "/admin/games" }
+
+    Alembic.owner_method = :current_customer
+
+    assert_equal "Games", flow_host.back_link&.label
+  end
+
   private
 
   def flow_host
