@@ -1,6 +1,8 @@
 require "test_helper"
 
 class AnswerExplanationsTest < ActiveSupport::TestCase
+  ANSWERED_STEP_TYPES = %w[question multiple_select fill_in_the_blank].freeze
+
   setup { @original_host = EasyFlow.host_named(Alembic::FLOW_HOST) }
 
   teardown do
@@ -50,14 +52,26 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     assert_match(/matches this text.*capitals.*one point/, explained("fill_in_the_blank", "accepted_answers", "value"))
   end
 
+  test "every other step type offers the same palette entry on alembic's host as on a plain host" do
+    assert_equal other_entries(EasyFlow::Host.new("plain")), other_entries(flow_host)
+  end
+
   private
 
   def explained(step_type, list, field, host: flow_host)
     palette_entry(step_type, host)["record_explanations"][list][field]
   end
 
+  def other_entries(host)
+    palette(host).reject { |entry| ANSWERED_STEP_TYPES.include?(entry["type"]) }
+  end
+
   def palette_entry(step_type, host)
-    EasyFlow::Canvas.new(EasyFlow::Document.new({}), host: host).to_h["palette"].find { |entry| entry["type"] == step_type }
+    palette(host).find { |entry| entry["type"] == step_type }
+  end
+
+  def palette(host)
+    EasyFlow::Canvas.new(EasyFlow::Document.new({}), host: host).to_h["palette"]
   end
 
   def flow_host
