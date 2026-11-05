@@ -8,6 +8,10 @@ module Alembic
         else Outputs::WeightedSum.right_answers(step).first
         end
       end
+
+      def self.accepted(step)
+        Array(step["accepted_answers"]).filter_map { |answer| answer["value"].presence }
+      end
     end
   end
 end

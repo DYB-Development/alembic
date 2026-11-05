@@ -21,6 +21,11 @@ module Alembic
         Flow::AnswerKey.chosen(step_settings(question.id))
       end
 
+      def named_right_answer(question)
+        accepted = Flow::AnswerKey.accepted(step_settings(question.id))
+        accepted.any? ? accepted.to_sentence(two_words_connector: " or ", last_word_connector: ", or ") : super
+      end
+
       def shows_answer_values?
         Flow::Summaries.new(previewed).shows_answer_values?
       end

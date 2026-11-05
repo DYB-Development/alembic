@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- The answer key's Right answer badge names every accepted answer of a fill-in-the-blank question, joined with "or". The input still holds the first accepted answer, a question with one accepted answer looks as it did, and a player sees no accepted answers.
+
 ## [0.15.0] - 2026-11-04
 
 ### Added

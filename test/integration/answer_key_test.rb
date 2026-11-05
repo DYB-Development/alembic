@@ -17,6 +17,32 @@ module Alembic
       end
     end
 
+    def fill_in_quiz(*accepted)
+      EasyFlow::Definition.create!(host: "alembic", slug: "accepted").tap do |flow|
+        flow.edit_history.edit_document(flowing(
+          "slug" => "accepted", "entry" => "gold",
+          "nodes" => [ { "id" => "gold", "type" => "fill_in_the_blank", "question" => "Symbol for gold?",
+                         "accepted_answers" => accepted.map { |value| { "value" => value } } },
+                       { "id" => "end", "type" => "terminal" } ],
+          "edges" => [ { "from" => "gold", "to" => "end" } ]
+        ))
+        flow.create_version
+      end
+    end
+
+    def published_fill_in_quiz
+      EasyFlow::Definition.create!(host: "alembic", slug: "published", persists: :each_step).tap do |flow|
+        flow.record_definition(flowing(
+          "slug" => "published", "entry" => "gold",
+          "nodes" => [ { "id" => "gold", "type" => "fill_in_the_blank", "question" => "Symbol for gold?",
+                         "accepted_answers" => [ { "value" => "Aurum" }, { "value" => "Oro" } ] },
+                       { "id" => "end", "type" => "terminal" } ],
+          "edges" => [ { "from" => "gold", "to" => "end" } ]
+        ))
+        flow.publish
+      end
+    end
+
     test "walking through the answer key to the end saves no run and no score" do
       Flow::Summaries.new(quiz).record("outputs" => [ { "id" => "score", "type" => "weighted_sum", "label" => "Score" } ])
 
@@ -89,6 +115,35 @@ module Alembic
       get alembic.step_manage_flow_answer_key_path(quiz)
 
       assert_select ".ks-value-list-row:has(.ks-badge-success)", text: /Right answer\s+paris/
+    end
+
+    test "the answer key names every accepted answer of a fill-in-the-blank question beside the Right answer badge" do
+      get alembic.step_manage_flow_answer_key_path(fill_in_quiz("Au", "AU", "Gold"))
+
+      assert_equal "Right answer Au, AU, or Gold", css_select(".ks-value-list-row:has(.ks-badge-success)").text.squish
+    end
+
+    test "the answer key names a fill-in-the-blank question's one accepted answer on its own" do
+      get alembic.step_manage_flow_answer_key_path(fill_in_quiz("Au"))
+
+      assert_equal "Right answer Au", css_select(".ks-value-list-row:has(.ks-badge-success)").text.squish
+    end
+
+    test "a player taking a quiz question by question sees no accepted answers" do
+      post alembic.flow_runs_path(published_fill_in_quiz.slug)
+
+      get alembic.run_path(EasyFlow::Run.last)
+
+      assert_no_match(/Aurum|Oro/, response.body)
+    end
+
+    test "a player taking a quiz on one page sees no accepted answers" do
+      one_page = published_fill_in_quiz
+      Flow::Summaries.new(one_page).ask_on_one_page(true)
+
+      get alembic.flow_step_path(one_page.slug)
+
+      assert_no_match(/Aurum|Oro/, response.body)
     end
   end
 end
