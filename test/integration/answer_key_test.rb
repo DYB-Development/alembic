@@ -30,6 +30,19 @@ module Alembic
       end
     end
 
+    def published_fill_in_quiz
+      EasyFlow::Definition.create!(host: "alembic", slug: "published", persists: :each_step).tap do |flow|
+        flow.record_definition(flowing(
+          "slug" => "published", "entry" => "gold",
+          "nodes" => [ { "id" => "gold", "type" => "fill_in_the_blank", "question" => "Symbol for gold?",
+                         "accepted_answers" => [ { "value" => "Aurum" }, { "value" => "Oro" } ] },
+                       { "id" => "end", "type" => "terminal" } ],
+          "edges" => [ { "from" => "gold", "to" => "end" } ]
+        ))
+        flow.publish
+      end
+    end
+
     test "walking through the answer key to the end saves no run and no score" do
       Flow::Summaries.new(quiz).record("outputs" => [ { "id" => "score", "type" => "weighted_sum", "label" => "Score" } ])
 
@@ -114,6 +127,14 @@ module Alembic
       get alembic.step_manage_flow_answer_key_path(fill_in_quiz("Au"))
 
       assert_equal "Right answer Au", css_select(".ks-value-list-row:has(.ks-badge-success)").text.squish
+    end
+
+    test "a player taking a quiz question by question sees no accepted answers" do
+      post alembic.flow_runs_path(published_fill_in_quiz.slug)
+
+      get alembic.run_path(EasyFlow::Run.last)
+
+      assert_no_match(/Aurum|Oro/, response.body)
     end
   end
 end
