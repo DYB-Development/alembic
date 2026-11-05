@@ -2,6 +2,7 @@ module Alembic
   module AnswerExplanations
     TEXT = {
       "question" => {
+        "answers.value" => "The text saved when a player picks this answer, which the player also sees when the label is blank or the flow shows answer values.",
         "answers.weight" => "The points a player scores by picking this answer, and any weight above zero makes it a right answer."
       },
       "multiple_select" => {

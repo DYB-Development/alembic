@@ -22,6 +22,10 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     assert_equal "The host app's words.", explained("question", "answers", "weight")
   end
 
+  test "a question answer's value is explained as what is saved and what shows when the label is blank or values are shown" do
+    assert_match(/saved.*label is blank.*shows answer values/, explained("question", "answers", "value"))
+  end
+
   private
 
   def explained(step_type, list, field, host: flow_host)
