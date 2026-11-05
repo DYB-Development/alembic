@@ -1,6 +1,7 @@
 require "json"
 require "alembic/version"
 require "alembic/engine"
+require "alembic/answer_explanations"
 
 module Alembic
   NotPublished = EasyFlow::NotPublished
@@ -37,7 +38,7 @@ module Alembic
     end
 
     def set_up_flow_host
-      host = flow_host
+      host = flow_host.extend(AnswerExplanations)
       FLOW_HOST_SETTINGS.each { |name| host.public_send(:"#{name}=", public_send(name)) }
     end
 
