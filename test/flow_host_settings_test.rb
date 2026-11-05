@@ -85,6 +85,12 @@ class FlowHostSettingsTest < ActiveSupport::TestCase
     assert_equal :require_admin, flow_host.admin_authentication_method
   end
 
+  test "the visitor authorization method given to alembic reaches its easy_flow host" do
+    Alembic.visitor_authorization_method = :visitor_permitted?
+
+    assert_equal :visitor_permitted?, flow_host.visitor_authorization_method
+  end
+
   private
 
   def flow_host
