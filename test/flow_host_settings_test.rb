@@ -59,6 +59,14 @@ class FlowHostSettingsTest < ActiveSupport::TestCase
     assert flow_host.finds_flows_across_owners
   end
 
+  test "a host's allowed answers stay after an alembic option is set" do
+    flow_host.allowed_answers = ->(_step, answers) { answers.first(1) }
+
+    Alembic.owner_method = :current_customer
+
+    assert_equal [ "a" ], flow_host.answers_allowed(nil, [ "a", "b" ])
+  end
+
   private
 
   def flow_host
