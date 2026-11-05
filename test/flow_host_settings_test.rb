@@ -91,6 +91,12 @@ class FlowHostSettingsTest < ActiveSupport::TestCase
     assert_equal :visitor_permitted?, flow_host.visitor_authorization_method
   end
 
+  test "the refusal method given to alembic reaches its easy_flow host" do
+    Alembic.refusal_method = :refuse_visitor
+
+    assert_equal :refuse_visitor, flow_host.refusal_method
+  end
+
   private
 
   def flow_host
