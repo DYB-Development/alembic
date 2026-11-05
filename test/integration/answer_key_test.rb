@@ -109,5 +109,11 @@ module Alembic
 
       assert_equal "Right answer Au, AU, or Gold", css_select(".ks-value-list-row:has(.ks-badge-success)").text.squish
     end
+
+    test "the answer key names a fill-in-the-blank question's one accepted answer on its own" do
+      get alembic.step_manage_flow_answer_key_path(fill_in_quiz("Au"))
+
+      assert_equal "Right answer Au", css_select(".ks-value-list-row:has(.ks-badge-success)").text.squish
+    end
   end
 end
