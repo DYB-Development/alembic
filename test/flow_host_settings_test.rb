@@ -97,6 +97,15 @@ class FlowHostSettingsTest < ActiveSupport::TestCase
     assert_equal :refuse_visitor, flow_host.refusal_method
   end
 
+  test "an option set before a host setting and another option still reaches the easy_flow host" do
+    Alembic.layout = "mailer"
+    flow_host.offers = %i[question]
+
+    Alembic.owner_method = :current_customer
+
+    assert_equal "mailer", flow_host.layout
+  end
+
   private
 
   def flow_host
