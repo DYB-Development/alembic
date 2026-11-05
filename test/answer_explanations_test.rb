@@ -30,6 +30,10 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     assert_match(/player sees.*in place of its value/, explained("question", "answers", "label"))
   end
 
+  test "a question answer's hint is explained as a smaller line a player sees under the answer" do
+    assert_match(/smaller line a player sees under/, explained("question", "answers", "hint"))
+  end
+
   private
 
   def explained(step_type, list, field, host: flow_host)
