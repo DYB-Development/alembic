@@ -38,6 +38,10 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     assert_match(/saved with this answer.*does not show/, explained("question", "answers", "info"))
   end
 
+  test "a multiple select answer's value is explained as what is saved and what shows when the label is blank" do
+    assert_match(/saved when a player ticks.*label is blank/, explained("multiple_select", "answers", "value"))
+  end
+
   private
 
   def explained(step_type, list, field, host: flow_host)
