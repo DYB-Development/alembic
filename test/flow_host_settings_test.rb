@@ -43,6 +43,14 @@ class FlowHostSettingsTest < ActiveSupport::TestCase
     assert flow_host.always_show_insert_buttons?
   end
 
+  test "hiding step type codes stays on after an alembic option is set" do
+    flow_host.hide_step_type_codes = true
+
+    Alembic.owner_method = :current_customer
+
+    assert flow_host.hide_step_type_codes?
+  end
+
   private
 
   def flow_host
