@@ -35,6 +35,14 @@ class FlowHostSettingsTest < ActiveSupport::TestCase
     assert_equal "Players see this at once.", flow_host.publish_note
   end
 
+  test "always showing insert buttons stays on after an alembic option is set" do
+    flow_host.always_show_insert_buttons = true
+
+    Alembic.owner_method = :current_customer
+
+    assert flow_host.always_show_insert_buttons?
+  end
+
   private
 
   def flow_host
