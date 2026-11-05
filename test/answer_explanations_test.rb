@@ -66,6 +66,16 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     assert_match(/in place of its value/, explained("question", "answers", "label"))
   end
 
+  test "setting an alembic option keeps what a host app explained" do
+    flow_host.setting_explanations = { question: { "answers.weight" => "The host app's words." } }
+
+    Alembic.owner_method = :current_customer
+
+    assert_equal "The host app's words.", explained("question", "answers", "weight")
+  ensure
+    Alembic.owner_method = nil
+  end
+
   private
 
   def explained(step_type, list, field, host: flow_host)
