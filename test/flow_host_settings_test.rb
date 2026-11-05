@@ -27,6 +27,14 @@ class FlowHostSettingsTest < ActiveSupport::TestCase
     assert_equal "Games", flow_host.back_link&.label
   end
 
+  test "a publish note a host set stays after an alembic option is set" do
+    flow_host.publish_note = "Players see this at once."
+
+    Alembic.owner_method = :current_customer
+
+    assert_equal "Players see this at once.", flow_host.publish_note
+  end
+
   private
 
   def flow_host
