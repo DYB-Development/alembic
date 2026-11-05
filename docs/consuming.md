@@ -333,9 +333,10 @@ The answer key at `/alembic/manage/flows/:id/answer_key/step` steps through the
 same preview with each question's right answer already chosen: the option
 carrying points on a single-choice question, every option carrying points on a
 multiple-select question, and the first accepted answer on a fill-in-the-blank
-question. Under each question a green Right answer badge names that answer. It
-saves no run, opens only the owner's flows, and the flow's details page links to
-it. A host links to it with
+question. Under each question a green Right answer badge names that answer, and
+on a fill-in-the-blank question it names every accepted answer, joined with "or".
+It saves no run, opens only the owner's flows, and the flow's details page links
+to it. A host links to it with
 `alembic.step_manage_flow_answer_key_path(flow)`.
 
 ## 5. Uploading questions from a CSV file
