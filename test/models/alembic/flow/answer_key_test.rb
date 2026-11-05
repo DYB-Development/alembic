@@ -26,6 +26,12 @@ module Alembic
 
         assert_equal %w[Paris Paree], AnswerKey.accepted(step)
       end
+
+      test "a blank accepted answer is not listed" do
+        step = { "type" => "fill_in_the_blank", "accepted_answers" => [ { "value" => "" }, { "value" => "Paris" } ] }
+
+        assert_equal %w[Paris], AnswerKey.accepted(step)
+      end
     end
   end
 end

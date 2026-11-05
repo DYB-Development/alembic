@@ -10,7 +10,7 @@ module Alembic
       end
 
       def self.accepted(step)
-        Array(step["accepted_answers"]).map { |answer| answer["value"] }
+        Array(step["accepted_answers"]).filter_map { |answer| answer["value"].presence }
       end
     end
   end
