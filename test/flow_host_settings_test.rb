@@ -3,7 +3,7 @@ require "test_helper"
 class FlowHostSettingsTest < ActiveSupport::TestCase
   setup do
     @original_options = Alembic::FLOW_HOST_SETTINGS.index_with { |name| Alembic.public_send(name) }
-    @original_host = flow_host.dup
+    @original_host = flow_host.clone
   end
 
   teardown do
