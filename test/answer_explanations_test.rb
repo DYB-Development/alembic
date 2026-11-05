@@ -26,6 +26,10 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     assert_match(/saved.*label is blank.*shows answer values/, explained("question", "answers", "value"))
   end
 
+  test "a question answer's label is explained as the text a player sees in place of the value" do
+    assert_match(/player sees.*in place of its value/, explained("question", "answers", "label"))
+  end
+
   private
 
   def explained(step_type, list, field, host: flow_host)
