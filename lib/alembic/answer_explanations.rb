@@ -10,7 +10,7 @@ module Alembic
     }.freeze
 
     def explanation_for(step_type, setting)
-      TEXT.dig(step_type.to_s, setting.to_s)
+      super || TEXT.dig(step_type.to_s, setting.to_s)
     end
   end
 end
