@@ -56,6 +56,10 @@ class AnswerExplanationsTest < ActiveSupport::TestCase
     assert_equal other_entries(EasyFlow::Host.new("plain")), other_entries(flow_host)
   end
 
+  test "another easy_flow host gets none of alembic's explanations" do
+    assert_nil explained("question", "answers", "weight", host: EasyFlow::Host.new("console"))
+  end
+
   private
 
   def explained(step_type, list, field, host: flow_host)
