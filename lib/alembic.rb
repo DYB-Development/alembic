@@ -1,4 +1,5 @@
 require "json"
+require "question_kit"
 require "alembic/version"
 require "alembic/engine"
 require "alembic/answer_explanations"

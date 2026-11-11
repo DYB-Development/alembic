@@ -99,7 +99,7 @@ module Alembic
         pinned = RunSummary.find_by(run: run)
         return if pinned.nil? || pinned.score || pinned.seconds_taken
 
-        pinned.update!(score: score_of(run, state), seconds_taken: seconds_taken_by(run))
+        pinned.update!(score: score_of(run, state), seconds_taken: QuestionKit::TimeTaken.seconds(run))
       end
 
       def ranked
@@ -118,13 +118,6 @@ module Alembic
       end
 
       private
-
-      def seconds_taken_by(run)
-        return unless run.flow.each_step?
-
-        last_answered = run.completed_at.values.max
-        (last_answered - run.created_at).to_i if last_answered
-      end
 
       def versions
         SummaryVersion.where(flow: @flow)
