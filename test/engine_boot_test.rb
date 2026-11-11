@@ -22,6 +22,10 @@ class EngineBootTest < ActiveSupport::TestCase
     assert_includes KsBlocks.registry.block_types(kind: :pages).map(&:key), :alembic_hero
   end
 
+  test "loads question_kit's answer rules once the app boots" do
+    assert defined?(QuestionKit::Score)
+  end
+
   private
 
   def boot_with_root(root)
