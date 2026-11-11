@@ -44,7 +44,7 @@ module Alembic
     end
 
     def explain_answer_fields
-      flow_host.extend(AnswerExplanations)
+      flow_host.tap { QuestionKit.flow_host = FLOW_HOST }
     end
 
     def lead_partial=(_partial)
