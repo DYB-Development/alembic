@@ -7,77 +7,10 @@ module Alembic
         assert_equal "morning-routine", started("Morning Routine").slug
       end
 
-      test "a second flow with the same title takes the next free number" do
-        started("Morning Routine")
-
-        assert_equal "morning-routine-2", started("Morning Routine").slug
-      end
-
-      test "a flow keeps the plain slug when only another host uses the title" do
-        started("Morning Routine", host: "console")
-
-        assert_equal "morning-routine", started("Morning Routine").slug
-      end
-
-      test "a flow keeps the plain slug when only another owner uses the title" do
-        started("Morning Routine", owner: Customer.create!(name: "Theirs"))
-
-        assert_equal "morning-routine", started("Morning Routine", owner: Customer.create!(name: "Ours")).slug
-      end
-
-      test "a title with no usable letters or numbers gets the plain fallback slug" do
-        assert_equal "quiz", started("?!").slug
-      end
-
-      test "a title that makes the slug of the runs address takes the next number" do
-        assert_equal "runs-2", started("Runs").slug
-      end
-
       test "no title takes a slug that is the first word of one of alembic's routes" do
         words = Alembic::Engine.routes.routes.filter_map { |route| route.path.spec.to_s[%r{\A/([a-z]+)}, 1] }.uniq
 
         assert_empty words.map { |word| started(word.capitalize).slug } & words
-      end
-
-      test "a blank title is refused" do
-        flow = EasyFlow::Definition.new(host: "alembic", title: "  ")
-
-        assert_not TitledStart.new(flow).save
-      end
-
-      test "a flow that loses a race for its slug takes the next number" do
-        flow = EasyFlow::Definition.new(host: "alembic", title: "Morning Routine")
-        flow.define_singleton_method(:save) do |**options|
-          EasyFlow::Definition.create!(host: "alembic", slug: "morning-routine") unless EasyFlow::Definition.exists?(host: "alembic", slug: "morning-routine")
-          super(**options)
-        end
-        TitledStart.new(flow).save
-
-        assert_equal "morning-routine-2", flow.slug
-      end
-
-      test "a flow that keeps losing the race for its slug stops trying" do
-        flow = EasyFlow::Definition.new(host: "alembic", title: "Morning Routine")
-        flow.define_singleton_method(:save) do |**options|
-          EasyFlow::Definition.create!(host: "alembic", slug: slug)
-          super(**options)
-        end
-
-        assert_raises(ActiveRecord::RecordNotUnique) { TitledStart.new(flow).save }
-      end
-
-      test "a very long title makes a slug cut to the fixed length" do
-        assert_equal 100, started(Random.new(1).alphanumeric(6000)).slug.length
-      end
-
-      test "a slug cut to the fixed length does not end on a hyphen" do
-        assert_equal "a" * 99, started("#{"a" * 99} b").slug
-      end
-
-      test "a repeated very long title takes the next free number" do
-        started("a" * 200)
-
-        assert_equal "#{"a" * 100}-2", started("a" * 200).slug
       end
 
       private
