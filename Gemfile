@@ -31,5 +31,5 @@ gem "rubocop-rails-omakase", require: false
 # The CSV upload a host offers through alembic's question importer. Hosts add
 # ixport themselves; here it's for testing the importer.
 group :development, :test do
-  gem "ixport", "~> 0.4"
+  gem "ixport", "~> 0.5"
 end
